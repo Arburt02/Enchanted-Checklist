@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Enchanted Checklist</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      color: white;
+      background: linear-gradient(to bottom, #b0ddf4, #6fb2dc, #2f77a7);
+      background-attachment: fixed;
+    }
+
+    #header {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(to right, #b0ddf4, #6fb2dc, #2f77a7);
+      padding: 1rem;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .task-container {
+      padding: 1rem;
+      background: linear-gradient(to bottom, #e0e0e0, #cfcfcf);
+      color: black;
+      min-height: 100vh;
+    }
+
+    .task-card {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      color: white;
+    }
+
+    .task-card:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .explore-button {
+      background-color: #ffffff;
+      color: #2f77a7;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
+
+    .explore-button:hover {
+      background-color: #e0f0fa;
+    }
+
+    .clickable {
+      background-color: rgba(255,255,255,0.15);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .clickable:hover {
+      background-color: rgba(255,255,255,0.3);
+    }
+
+    .progress-bar-container {
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      height: 16px;
+      margin: 0.5rem 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, #deb6ee, #dc81ff, #c075e4);
+      transition: width 0.3s;
+    }
+
+	body.dark {
+  background: #121212;
+  color: white;
+}
+body.dark .task-container {
+  background: #1e1e1e;
+  color: white;
+}
+body.dark .task-card {
+  background: rgba(255, 255, 255, 0.05);
+}
+body.dark .clickable {
+  background-color: rgba(255,255,255,0.1);
+}
+body.dark .explore-button {
+  background-color: #333;
+  color: #fff;
+}
+
+  </style>
+</head>
+<body>
+  <div id="header">
+    <button id="back-button" class="explore-button" style="display:none">← Back</button>
+    <h2 id="page-title" style="margin: 0.5rem 0 0.25rem 0;"></h2>
+    <p id="task-count" style="margin: 0;"></p>
+    <div id="area-progress" style="display:none">
+      <div class="progress-bar-container">
+        <div id="progress-fill" class="progress-bar"></div>
+      </div>
+      <p id="progress-label" style="font-size: 0.9rem;"></p>
+    </div>
+  </div>
+
+  <div class="task-container" id="checklist"></div>
+
+  <script>
+    const checklistDiv = document.getElementById('checklist');
+    const pageTitle = document.getElementById('page-title');
+    const taskCount = document.getElementById('task-count');
+    const backButton = document.getElementById('back-button');
+    const progressBar = document.getElementById('progress-fill');
+    const progressLabel = document.getElementById('progress-label');
+    const areaProgress = document.getElementById('area-progress');
+
+    let fullData = [];
+    let navStack = [];
+
+    fetch('checklist.json')
+      .then(res => res.json())
+      .then(data => {
+        fullData = data;
+        renderExperiences();
+      });
+	  if (localStorage.getItem("dark_mode") === "true") {
+  document.body.classList.add("dark");
+}
+
+    function renderExperiences() {
+      checklistDiv.innerHTML = '';
+      pageTitle.textContent = "Choose Your Destination";
+      taskCount.textContent = `${fullData.length} total tasks`;
+      backButton.style.display = "none";
+      areaProgress.style.display = "none";
+
+      const experiences = [...new Set(fullData.map(t => t.Experience))];
+      // Preferences button
+const prefBtn = document.createElement('div');
+prefBtn.textContent = "⚙️ Preferences";
+prefBtn.className = 'clickable';
+prefBtn.onclick = () => {
+  navStack = [renderExperiences];
+  renderPreferences();
+};
+checklistDiv.appendChild(prefBtn);
+
+experiences.forEach(exp => {
+        const div = document.createElement('div');
+        div.textContent = exp;
+        div.className = 'clickable';
+        div.onclick = () => {
+          navStack = [];
+          const filtered = fullData.filter(t => t.Experience === exp);
+          renderParks(filtered, exp);
+        };
+        checklistDiv.appendChild(div);
+      });
+    }
+
+    function renderParks(data, experienceName) {
+      checklistDiv.innerHTML = '';
+      pageTitle.textContent = experienceName;
+      taskCount.textContent = `${data.length} tasks`;
+      areaProgress.style.display = "none";
+      backButton.style.display = "inline-block";
+      backButton.onclick = () => renderExperiences();
+      navStack = [renderExperiences];
+
+      const parks = [...new Set(data.map(t => t.Park))];
+      parks.forEach(park => {
+        const div = document.createElement('div');
+        div.textContent = park;
+        div.className = 'clickable';
+        div.onclick = () => {
+          const parkData = data.filter(t => t.Park === park);
+          const areaCheck = parkData.some(t => t.Area);
+          areaCheck ? renderAreas(parkData, experienceName, park) : renderTasks(parkData, `${experienceName} → ${park}`);
+        };
+        checklistDiv.appendChild(div);
+      });
+    }
+
+function renderAreas(data, experienceName, parkName) {
+  checklistDiv.innerHTML = '';
+  pageTitle.textContent = parkName;
+  taskCount.textContent = `${data.length} tasks`;
+  areaProgress.style.display = "none";
+  backButton.style.display = "inline-block";
+  backButton.onclick = () => renderParks(fullData.filter(t => t.Experience === experienceName), experienceName);
+  navStack.push(() => renderParks(fullData.filter(t => t.Experience === experienceName), experienceName));
+
+  const areaGroups = {};
+  data.forEach(task => {
+    const area = task.Area || "Unknown Area";
+    if (!areaGroups[area]) areaGroups[area] = [];
+    areaGroups[area].push(task);
+  });
+
+  for (const area in areaGroups) {
+    const div = document.createElement('div');
+    div.textContent = `📍 ${area}`;
+    div.className = 'clickable';
+
+    // Special case for EPCOT → World Showcase
+    if (parkName === "EPCOT" && area === "World Showcase") {
+      div.onclick = () => renderPavilions(areaGroups[area], experienceName, parkName, area);
+    } else {
+      div.onclick = () => renderTasks(areaGroups[area], `${parkName} → ${area}`);
+    }
+
+    checklistDiv.appendChild(div);
+  }
+}
+
+function renderPavilions(data, experienceName, parkName, areaName) {
+  checklistDiv.innerHTML = '';
+  pageTitle.textContent = `${parkName} → ${areaName}`;
+  taskCount.textContent = `${data.length} tasks`;
+  areaProgress.style.display = "none";
+  backButton.style.display = "inline-block";
+  backButton.onclick = () => renderAreas(fullData.filter(t => t.Park === parkName), experienceName, parkName);
+  navStack.push(() => renderAreas(fullData.filter(t => t.Park === parkName), experienceName, parkName));
+
+  const pavilionGroups = {};
+  data.forEach(task => {
+    const pavilion = task.Pavilion || "Unknown Pavilion";
+    if (!pavilionGroups[pavilion]) pavilionGroups[pavilion] = [];
+    pavilionGroups[pavilion].push(task);
+  });
+
+  for (const pavilion in pavilionGroups) {
+    const div = document.createElement('div');
+    div.textContent = `🏛️ ${pavilion}`;
+    div.className = 'clickable';
+    div.onclick = () => renderTasks(pavilionGroups[pavilion], `${parkName} → ${areaName} → ${pavilion}`);
+    checklistDiv.appendChild(div);
+  }
+}
+    function renderTasks(tasks, label) {
+      checklistDiv.innerHTML = '';
+      pageTitle.textContent = label;
+      taskCount.textContent = `${tasks.length} tasks`;
+      backButton.style.display = "inline-block";
+      areaProgress.style.display = "block";
+
+      // Back button
+      backButton.onclick = () => {
+        navStack.pop();
+        const lastView = navStack[navStack.length - 1];
+        if (lastView) lastView();
+        else renderExperiences();
+      };
+
+      // Progress bar
+      const completed = tasks.filter(task => {
+        const taskId = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+        return localStorage.getItem(taskId) === "complete";
+      }).length;
+      const percent = tasks.length ? Math.round((completed / tasks.length) * 100) : 0;
+      progressBar.style.width = `${percent}%`;
+      progressLabel.textContent = `${completed} / ${tasks.length} tasks (${percent}%)`;
+
+      // Render each task
+      tasks.forEach(task => {
+        const taskId = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+        const isComplete = localStorage.getItem(taskId) === "complete";
+
+        const card = document.createElement('div');
+        card.className = 'task-card';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'task-checkbox';
+        checkbox.setAttribute('data-task-id', taskId);
+        if (isComplete) checkbox.checked = true;
+
+        const title = document.createElement('strong');
+        title.textContent = task.Task;
+
+        const summaryDiv = document.createElement('div');
+        summaryDiv.style.display = 'none';
+        summaryDiv.innerHTML = `
+          <em>${task.Subcategory || ''}</em><br/>
+          ${task.URL ? `<a href="${task.URL}" class="explore-button explore-link" data-url="${task.URL}">Explore this Task Online?</a>` : ''}
+        `;
+
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.alignItems = 'center';
+        row.style.gap = '0.5rem';
+
+        row.appendChild(checkbox);
+
+        const titleWrapper = document.createElement('span');
+        titleWrapper.style.cursor = 'pointer';
+        titleWrapper.appendChild(title);
+        titleWrapper.onclick = e => {
+          e.stopPropagation();
+          summaryDiv.style.display = summaryDiv.style.display === 'none' ? 'block' : 'none';
+        };
+
+        row.appendChild(titleWrapper);
+        card.appendChild(row);
+        card.appendChild(summaryDiv);
+        checklistDiv.appendChild(card);
+      });
+    }
+
+    // Explore button behavior
+    checklistDiv.addEventListener('click', function (event) {
+      if (event.target.matches('.explore-link')) {
+        event.preventDefault();
+        const url = event.target.getAttribute('data-url');
+        const confirmOpen = confirm("Explore this task in a new tab?");
+        if (confirmOpen && url) {
+          window.open(url, '_blank');
+        }
+      }
+    });
+
+    // Checkbox handler
+    checklistDiv.addEventListener('change', function (event) {
+      if (event.target.matches('.task-checkbox')) {
+        const taskId = event.target.getAttribute('data-task-id');
+        if (event.target.checked) {
+          localStorage.setItem(taskId, "complete");
+        } else {
+          localStorage.removeItem(taskId);
+        }
+
+        // Recalculate progress only if we're on a task view
+        if (pageTitle.textContent.includes("→")) {
+          const label = pageTitle.textContent;
+          const tasks = fullData.filter(task => {
+            const id = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+            return label.includes(task.Park)
+              && (label.includes(task.Area || '') || label.includes(task.Pavilion || ''));
+          });
+          const completed = tasks.filter(task => localStorage.getItem(task.id || `${task.Park}-${task.Area}-${task.Task}`) === "complete").length;
+          const percent = tasks.length ? Math.round((completed / tasks.length) * 100) : 0;
+          progressBar.style.width = `${percent}%`;
+          progressLabel.textContent = `${completed} / ${tasks.length} tasks (${percent}%)`;
+        }
+      }
+    });
+	function renderPreferences() {
+  checklistDiv.innerHTML = '';
+  pageTitle.textContent = "Preferences";
+  taskCount.textContent = "";
+  backButton.style.display = "inline-block";
+  areaProgress.style.display = "none";
+  backButton.onclick = () => {
+    navStack.pop();
+    const last = navStack[navStack.length - 1];
+    if (last) last();
+    else renderExperiences();
+  };
+
+  const prefs = [
+    { label: "WDW: Include Resorts", key: "wdw_resorts", default: true },
+    { label: "WDW: Include Disney Springs", key: "wdw_springs", default: true },
+    { label: "WDW: Include Park Hopper Plus", key: "wdw_hopper", default: true },
+    { label: "Disneyland: Include Resorts", key: "dlr_resorts", default: true },
+    { label: "Disneyland: Include Downtown Disney", key: "dlr_downtown", default: true },
+    { label: "Enable Dark Mode", key: "dark_mode", default: false },
+  ];
+
+  prefs.forEach(pref => {
+    const div = document.createElement('div');
+    div.className = 'clickable';
+    div.style.display = 'flex';
+    div.style.justifyContent = 'space-between';
+    div.style.alignItems = 'center';
+
+    const label = document.createElement('span');
+    label.textContent = pref.label;
+
+    const toggle = document.createElement('input');
+    toggle.type = 'checkbox';
+    toggle.checked = localStorage.getItem(pref.key) !== "false";
+    toggle.onchange = () => {
+      localStorage.setItem(pref.key, toggle.checked ? "true" : "false");
+      if (pref.key === "dark_mode") {
+        document.body.classList.toggle('dark', toggle.checked);
+      }
+    };
+
+    div.appendChild(label);
+    div.appendChild(toggle);
+    checklistDiv.appendChild(div);
+  });
+
+  // Placeholder for change password
+  const pw = document.createElement('div');
+  pw.className = 'clickable';
+  pw.textContent = "🔒 Change Password (coming soon)";
+  checklistDiv.appendChild(pw);
+}
+  </script>
+</body>
+</html>
