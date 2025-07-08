@@ -5,70 +5,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Enchanted Checklist</title>
   <style>
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    background: linear-gradient(to bottom, #b0ddf4, #6fb2dc, #2f77a7);
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-    min-height: 100vh;
-  }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(to bottom, #b0ddf4, #6fb2dc, #2f77a7);
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-size: cover;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      min-height: 100vh;
+    }
 
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
 
-  input, button {
-    margin: 0.5rem 0;
-    padding: 0.6rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-  }
+    input, button {
+      margin: 0.5rem 0;
+      padding: 0.6rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
 
-  input {
-    width: 220px;
-  }
+    input {
+      width: 220px;
+    }
 
-  button {
-    background-color: white;
-    color: #2f77a7;
-    cursor: pointer;
-    font-weight: bold;
-  }
+    button {
+      background-color: white;
+      color: #2f77a7;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-  #main-menu button {
-    font-size: 1rem;
-    padding: 0.75rem 1.25rem;
-    margin: 0.5rem;
-    border: none;
-    border-radius: 10px;
-    background-color: #ffffff;
-    color: #2f77a7;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
+    #main-menu button {
+      font-size: 1rem;
+      padding: 0.75rem 1.25rem;
+      margin: 0.5rem;
+      border: none;
+      border-radius: 10px;
+      background-color: #ffffff;
+      color: #2f77a7;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
 
-  #main-menu button:hover {
-    background-color: #e0f0fa;
-  }
+    #main-menu button:hover {
+      background-color: #e0f0fa;
+    }
 
-  #checklistArea {
-    margin-top: 2rem;
-    display: none;
-  }
+    body.dark {
+      background: #121212;
+      color: white;
+    }
+
+    .preferences-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0.5rem 0;
+      background: rgba(255,255,255,0.15);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
   <h1>✨ The Enchanted Checklist</h1>
+
+  <!-- 🔐 Auth Section -->
   <div id="authSection">
     <input type="email" id="email" placeholder="Email" /><br />
     <input type="password" id="password" placeholder="Password" /><br />
@@ -76,89 +88,162 @@
     <button onclick="register()">Register</button>
   </div>
 
-  	<div id="checklistArea">
-    <!-- Inside index.html, within <body> after user logs in -->
-	<div id="app">
-		
-  <!-- 🧭 Welcome Message -->
-  	<div id="welcome-message" style="margin-bottom: 2rem;">
+  <!-- 🏠 Landing Page -->
+  <div id="landingPage" style="display: none; text-align: center;">
     <h2>Welcome to ✨ The Enchanted Checklist</h2>
     <p>
-      Whether you're visiting for the first time or the fiftieth, there's always something magical left to discover. 
-      This checklist was built with a lifelong passion for Disney — a place where adventure lives in every corner and 
-      no two trips are ever the same. Walt Disney once said that Disneyland will never be completed, and your journey 
-      through the parks can be just as imaginative and ever-changing.
+      Whether you're visiting for the 1st time or the 50th, there's always something magical left to discover.<br>
+      Tap below to begin checking off items from Walt Disney World and Disneyland!
     </p>
-  	</div>
 
-  <!-- 🔢 Global Progress Bar -->
-	<div id="global-progress" style="margin-top: 1rem; width: 100%; max-width: 600px;">
-  	<label style="display: block; font-weight: bold; margin-bottom: 0.25rem;">Overall Progress</label>
-  	<div style="background: rgba(255,255,255,0.2); border-radius: 8px; height: 16px; overflow: hidden;">
-    <div id="progress-bar" style="height: 100%; width: 0%; background: linear-gradient(to right, #deb6ee, #dc81ff, #c075e4); transition: width 0.3s;"></div>
-  	</div>
-  	<p id="progress-text" style="margin-top: 0.25rem; font-size: 0.9rem;"></p>
-	</div>
+    <!-- 🚀 Main Menu -->
+    <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+      <button onclick="loadExperiences()">🎢 Your Experiences</button>
+      <button onclick="openPreferences()">⚙️ Preferences</button>
+    </div>
 
-	<div id="experiencesView" style="display: none; margin-top: 2rem;">
-  	<h2>Your Experiences</h2>
-  	<div id="experience-list" style="display: flex; flex-direction: column; gap: 1rem;">
-    <!-- Experiences like Walt Disney World, Disneyland, etc., will be injected here -->
-  	</div>
-	</div>
+    <!-- 📊 Global Progress Bar -->
+    <div id="progress-rings" style="display:flex; justify-content:center; align-items:center; margin: 2rem 0;">
+  <svg width="200" height="200" viewBox="0 0 200 200">
+    <!-- Outer Ring: Total -->
+    <circle cx="100" cy="100" r="90" stroke="#deb6ee" stroke-width="10" fill="none" opacity="0.2" />
+    <circle id="ring-total" cx="100" cy="100" r="90" stroke="#deb6ee" stroke-width="10" fill="none" stroke-linecap="round"
+            transform="rotate(-90 100 100)" stroke-dasharray="565.5" stroke-dashoffset="565.5" />
 
-  <!-- 🔘 Main Menu Buttons -->
-  <div id="main-menu">
-    <button onclick="loadExperiences()">🎢 Your Experiences</button>
-    <button onclick="openPreferences()">⚙️ Preferences</button>
-  </div>
+    <!-- Middle Ring: WDW -->
+    <circle cx="100" cy="100" r="70" stroke="#dc81ff" stroke-width="10" fill="none" opacity="0.2" />
+    <circle id="ring-wdw" cx="100" cy="100" r="70" stroke="#dc81ff" stroke-width="10" fill="none" stroke-linecap="round"
+            transform="rotate(-90 100 100)" stroke-dasharray="439.8" stroke-dashoffset="439.8" />
+
+    <!-- Inner Ring: Disneyland -->
+    <circle cx="100" cy="100" r="50" stroke="#c075e4" stroke-width="10" fill="none" opacity="0.2" />
+    <circle id="ring-dl" cx="100" cy="100" r="50" stroke="#c075e4" stroke-width="10" fill="none" stroke-linecap="round"
+            transform="rotate(-90 100 100)" stroke-dasharray="314.2" stroke-dashoffset="314.2" />
+  </svg>
 </div>
 
-<!-- Temporary JS hooks -->
-<script>
-  function loadExperiences() {
-  document.getElementById("welcome-message").style.display = "none";
-  document.getElementById("global-progress").style.display = "none";
-  document.getElementById("main-menu").style.display = "none";
-  document.getElementById("experiencesView").style.display = "block";
+<div style="text-align:center">
+  <div id="percent-total" style="font-weight:bold; font-size:1.2rem;"></div>
+  <div id="percent-wdw"></div>
+  <div id="percent-dl"></div>
+</div>
 
-  const experienceList = document.getElementById("experience-list");
-  experienceList.innerHTML = ''; // Clear previous entries
+  <!-- ⚙️ Preferences Page -->
+  <div id="preferencesPage" style="display: none; text-align: left; max-width: 400px;"></div>
 
-  // For now, hardcoded experience options
-  const experiences = [
-    { name: "Walt Disney World", icon: "🏰", id: "wdw" },
-    { name: "Disneyland", icon: "🎆", id: "dlr" } // Placeholder for later
-  ];
+  <script>
+    function loadExperiences() {
+      window.location.href = "checklist.html";
+    }
 
-  experiences.forEach(exp => {
-    const btn = document.createElement('button');
-    btn.textContent = `${exp.icon} ${exp.name}`;
-    btn.style.padding = '0.75rem 1.25rem';
-    btn.style.border = 'none';
-    btn.style.borderRadius = '10px';
-    btn.style.backgroundColor = '#ffffff';
-    btn.style.color = '#2f77a7';
-    btn.style.fontWeight = 'bold';
-    btn.style.cursor = 'pointer';
+    function openPreferences() {
+      hideAllSections();
+      document.getElementById("preferencesPage").style.display = "block";
+      renderPreferences();
+    }
 
-    btn.onclick = () => {
-      // In next step we'll handle WDW logic here
-      window.location.href = 'checklist.html'; // Placeholder for now
-    };
+    function renderPreferences() {
+      const container = document.getElementById("preferencesPage");
+      container.innerHTML = `
+        <h2>Preferences</h2>
+        <button onclick="returnToLanding()">← Back</button>
+      `;
 
-    experienceList.appendChild(btn);
-  });
+      const prefs = [
+        { label: "WDW: Include Resorts", key: "wdw_resorts", default: true },
+        { label: "WDW: Include Disney Springs", key: "wdw_springs", default: true },
+        { label: "WDW: Include Park Hopper Plus", key: "wdw_hopper", default: true },
+        { label: "Disneyland: Include Resorts", key: "dlr_resorts", default: true },
+        { label: "Disneyland: Include Downtown Disney", key: "dlr_downtown", default: true },
+        { label: "Enable Dark Mode", key: "dark_mode", default: false },
+      ];
+
+      prefs.forEach(pref => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'preferences-toggle';
+
+        const label = document.createElement('span');
+        label.textContent = pref.label;
+
+        const toggle = document.createElement('input');
+        toggle.type = 'checkbox';
+        toggle.checked = localStorage.getItem(pref.key) !== "false";
+        toggle.onchange = () => {
+          localStorage.setItem(pref.key, toggle.checked ? "true" : "false");
+          if (pref.key === "dark_mode") {
+            document.body.classList.toggle("dark", toggle.checked);
+          }
+        };
+
+        wrapper.appendChild(label);
+        wrapper.appendChild(toggle);
+        container.appendChild(wrapper);
+      });
+
+      const changePw = document.createElement('div');
+      changePw.style.marginTop = "1rem";
+      changePw.innerHTML = `<em>🔒 Change Password (coming soon)</em>`;
+      container.appendChild(changePw);
+    }
+
+    function returnToLanding() {
+      document.getElementById("preferencesPage").style.display = "none";
+      showLandingPage();
+    }
+
+    function updateGlobalProgress() {
+  fetch('checklist.json')
+    .then(res => res.json())
+    .then(data => {
+      let total = data.length;
+      let totalComplete = 0;
+
+      let wdw = data.filter(t => t.Experience === "Walt Disney World");
+      let dl = data.filter(t => t.Experience === "Disneyland");
+
+      let wdwComplete = 0;
+      let dlComplete = 0;
+
+      data.forEach(task => {
+        const taskId = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+        if (localStorage.getItem(taskId) === "complete") {
+          totalComplete++;
+          if (task.Experience === "Walt Disney World") wdwComplete++;
+          if (task.Experience === "Disneyland") dlComplete++;
+        }
+      });
+
+      // Stroke calculations
+      const totalPercent = totalComplete / total;
+      const wdwPercent = wdwComplete / wdw.length;
+      const dlPercent = dlComplete / dl.length;
+
+      document.getElementById("ring-total").style.strokeDashoffset = 565.5 * (1 - totalPercent);
+      document.getElementById("ring-wdw").style.strokeDashoffset = 439.8 * (1 - wdwPercent);
+      document.getElementById("ring-dl").style.strokeDashoffset = 314.2 * (1 - dlPercent);
+
+      document.getElementById("percent-total").textContent = `🎯 Total: ${(totalPercent * 100).toFixed(1)}% — ${totalComplete}/${total}`;
+      document.getElementById("percent-wdw").textContent = `🏰 Walt Disney World: ${(wdwPercent * 100).toFixed(1)}% — ${wdwComplete}/${wdw.length}`;
+      document.getElementById("percent-dl").textContent = `🌉 Disneyland: ${(dlPercent * 100).toFixed(1)}% — ${dlComplete}/${dl.length}`;
+    });
 }
 
-  function openPreferences() {
-    alert("Preferences view coming soon!");
-  }
-</script>
-    <button onclick="logout()">Log out</button>
-  </div>
-  
-  <!-- Firebase SDK -->
+    function showLandingPage() {
+      hideAllSections();
+      document.getElementById("landingPage").style.display = "block";
+      updateGlobalProgress();
+    }
+
+    function hideAllSections() {
+      document.getElementById("authSection").style.display = "none";
+      document.getElementById("landingPage").style.display = "none";
+      document.getElementById("preferencesPage").style.display = "none";
+    }
+	
+	document.addEventListener("DOMContentLoaded", updateGlobalProgress);
+  </script>
+
+  <!-- 🔌 Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
@@ -176,7 +261,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // 🔒 Handle Login
     window.login = async function () {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
@@ -187,7 +271,6 @@
       }
     }
 
-    // 🧾 Handle Registration
     window.register = async function () {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
@@ -198,48 +281,24 @@
       }
     }
 
-    // 🚪 Handle Logout
     window.logout = function () {
       signOut(auth);
     }
 
-    // 👀 Watch Auth State
     onAuthStateChanged(auth, user => {
       if (user) {
-        document.getElementById("authSection").style.display = "none";
-        document.getElementById("checklistArea").style.display = "block";
+        showLandingPage();
       } else {
+        hideAllSections();
         document.getElementById("authSection").style.display = "block";
-        document.getElementById("checklistArea").style.display = "none";
       }
     });
-	
-	function updateGlobalProgress() {
-  // Load checklist JSON
-  fetch('checklist.json')
-    .then(res => res.json())
-    .then(data => {
-      const total = data.length;
-      let completed = 0;
 
-      // Compare against localStorage keys
-      data.forEach(task => {
-        const taskId = task.id || `${task.Park}-${task.Area}-${task.Task}`;
-        if (localStorage.getItem(taskId) === "complete") {
-          completed++;
-        }
-      });
+    if (localStorage.getItem("dark_mode") === "true") {
+      document.body.classList.add("dark");
+    }
 
-      const percent = ((completed / total) * 100).toFixed(1);
-      document.getElementById("progress-bar").style.width = `${percent}%`;
-      document.getElementById("progress-text").textContent = `${percent}% Complete — ${completed} / ${total} tasks`;
-    });
-}
-
-// Call it once on load
-updateGlobalProgress();
-	
-</script>
+    updateGlobalProgress();
+  </script>
 </body>
-
 </html>
