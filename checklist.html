@@ -53,7 +53,7 @@
 			padding: 1rem;
 			margin-bottom: 1rem;
 			cursor: pointer;
-			color: white;
+			color: black;
 		}
 
 		.clickable {
@@ -241,7 +241,7 @@ const filtered = fullData.filter(task => {
     backButton.onclick = goBack;
 
     const parks = [...new Set(data.map(t => t.Park))];
-    const skipAreaParks = ["Downtown Disney District", "Disney Springs", "Walt Disney World Resorts", "Disneyland Resorts"];
+    const skipAreaParks = ["Downtown Disney District", "Disney Springs"];
 
     parks.forEach(park => {
       const div = document.createElement('div');
