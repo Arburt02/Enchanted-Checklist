@@ -71,6 +71,10 @@
       width: 100%;
       max-width: 300px;
     }
+	
+	.button-group button {
+  margin-bottom: 0.5rem;
+}
 
     #progress-rings svg {
       width: 150px;
@@ -118,10 +122,14 @@
       </p>
 
       <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
-        <button onclick="loadExperiences()">🎢 Your Experiences</button>
-        <button onclick="openPreferences()">⚙️ Preferences</button>
-        <button onclick="logout()">🚪 Logout</button>
-      </div>
+  <button onclick="loadExperiences()">🎢 Your Experiences</button>
+  <button onclick="openPreferences()">⚙️ Preferences</button>
+  <button onclick="openfavorites()">💾 My Saved Tasks</button>
+  <small style="display:block; margin-top:-0.25rem; margin-bottom:-0.25rem; color:white; opacity:0.8;" aria-live="polite">
+    (Empty for now? Tasks you save will appear here!)
+  </small>
+  <button onclick="logout()">🚪 Logout</button>
+</div>
 
       <!-- 📊 Progress Rings -->
       <div id="progress-rings" style="display:flex; justify-content:center; align-items:center; margin: 2rem 0;">
@@ -149,6 +157,10 @@
 		function loadExperiences() {
 			window.location.href = "checklist.html";
 		}
+		
+		function openfavorites() {
+  window.location.href = "favorites.html";
+}
 
 		function openPreferences() {
 			hideAllSections();
@@ -362,14 +374,20 @@ window.returnToLanding = function () {
 		};
 
 		onAuthStateChanged(auth, user => {
-			document.body.style.display = "block";
-			if (user) {
-				showLandingPage();
-			} else {
-				hideAllSections();
-				document.getElementById("authSection").style.display = "block";
-			}
-		});
+  document.body.style.display = "block";
+  if (localStorage.getItem("dark_mode") === "true") {
+    document.body.classList.add("dark");
+  } else {
+    document.body.classList.remove("dark");
+  }
+
+  if (user) {
+    showLandingPage();
+  } else {
+    hideAllSections();
+    document.getElementById("authSection").style.display = "block";
+  }
+});
 		
 		window.logout = async function () {
   try {
