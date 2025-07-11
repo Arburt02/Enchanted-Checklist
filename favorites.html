@@ -1,13 +1,15 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<title>The Enchanted Checklist</title>
 	<style>
 		body {
 			margin: 0;
-			font-family: system-ui, sans-serif;
+			  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
 			color: white;
-			background: linear-gradient(to bottom, #b0ddf4, #6fb2dc, #2f77a7);
+background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
 			background-attachment: fixed;
 		}
 
@@ -32,29 +34,36 @@
 		}
 
 		#header {
-			position: sticky;
-			top: 0;
-			background: linear-gradient(to right, #b0ddf4, #6fb2dc, #2f77a7);
-			padding: 1rem;
-			z-index: 10;
-			border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-		}
+	position: sticky;
+	top: 0;
+	background-color: rgba(255, 255, 255, 0.15); /* soft blur look */
+	backdrop-filter: blur(8px); /* adds the glassy feel */
+	-webkit-backdrop-filter: blur(8px); /* Safari support */
+	padding: 1rem;
+	z-index: 10;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
 
 		.task-container {
 			padding: 1rem;
-			background: linear-gradient(to bottom, #e0e0e0, #cfcfcf);
+			background: transparent;
 			color: black;
 			min-height: 100vh;
 		}
 
-		.task-card {
-			background: rgba(255, 255, 255, 0.15);
-			border-radius: 12px;
-			padding: 1rem;
-			margin-bottom: 1rem;
-			cursor: pointer;
-			color: black;
-		}
+.task-card {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  color: black;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+		
+		.task-card:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+}
 
 		.clickable {
 			background-color: rgba(255, 255, 255, 0.15);
@@ -64,6 +73,15 @@
 			font-weight: bold;
 			cursor: pointer;
 		}
+
+		.clickable {
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.clickable:hover {
+	transform: scale(1.02);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
 
 		.explore-button {
 			background-color: #ffffff;
@@ -103,8 +121,9 @@
 <body>
   <div class="main-container">
     <div id="header">
-      <button id="back-button" class="explore-button" style="display:none">← Back</button>
-      <button id="home-button" class="explore-button" onclick="goHome()">🏠 Home</button>
+      <button id="back-button" class="explore-button" style="display:none"><i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>
+ Back</button>
+      <button id="home-button" class="explore-button" onclick="goHome()"><i class="fas fa-house" style="margin-right: 0.5rem;"></i> Home</button>
       <h2 id="page-title" style="margin: 0.5rem 0 0.25rem 0;"></h2>
       <p id="task-count" style="margin: 0;"></p>
       <div id="area-progress" style="display:none">
@@ -177,10 +196,15 @@ fetch('checklist.json')
 	
 	if (savedTasks.length === 0) {
   checklistDiv.innerHTML = `
-    <p style="font-size: 1.1rem; padding: 1rem;">💫 Looks like your favorites list is empty!<br/>
-    Tap “Your Experiences” to start exploring and save some magical must-dos!</p>
+    <p style="font-size: 1.1rem; padding: 1rem;">
+  <i class="fas fa-magic" style="margin-right: 0.5rem;"></i>
+  Looks like your favorites list is empty!
+</p>
+<p style="font-size: 1.05rem; padding: 0 1rem;">
+  Tap <strong>Your Experiences</strong> to start exploring and save some magical must-dos!
+</p>
   `;
-  pageTitle.textContent = "My Saved Tasks";
+  pageTitle.innerHTML = `<i class="fas fa-star" style="margin-right: 0.5rem;"></i>My Saved Tasks`;
   taskCount.textContent = "0 saved tasks";
   return;
 }
@@ -196,12 +220,12 @@ fetch('checklist.json')
   })
   .catch(err => {
     console.error("Failed to load checklist.json:", err.message || err);
-    checklistDiv.innerHTML = `<p style="color:red; padding:1rem;">⚠️ Failed to load checklist. Please try again.</p>`;
+    checklistDiv.innerHTML = `<p style="color:red; padding:1rem;">Failed to load checklist. Please try again.</p>`;
   });
 
   function renderExperiences(savedTasks) {
   checklistDiv.innerHTML = '';
-  pageTitle.textContent = "My Saved Tasks";
+  pageTitle.innerHTML = `<i class="fas fa-star" style="margin-right: 0.5rem;"></i>My Saved Tasks`;;
 
   const intro = document.createElement('p');
   intro.textContent = "Here you can view all the tasks you have saved and want to prioritize for your next trip to Disney!";
@@ -310,15 +334,24 @@ if (isComplete) {
     };
 
     const saveIcon = document.createElement('span');
-    saveIcon.textContent = localStorage.getItem(`saved_${taskId}`) ? '💖' : '🤍';
+    saveIcon.innerHTML = localStorage.getItem(`saved_${taskId}`)
+  ? '<i class="fas fa-heart" style="color: hotpink;"></i>'
+  : '<i class="far fa-heart"></i>';
     saveIcon.style.cursor = 'pointer';
     saveIcon.title = "Remove from Saved Tasks";
     saveIcon.onclick = e => {
-      e.stopPropagation();
-      const key = `saved_${taskId}`;
-      localStorage.removeItem(key);
-      card.remove(); // Remove this task card from the DOM
-    };
+  e.stopPropagation();
+  const key = `saved_${taskId}`;
+  const isSaved = localStorage.getItem(key);
+  if (isSaved) {
+    localStorage.removeItem(key);
+    saveIcon.innerHTML = '<i class="far fa-heart"></i>';
+    card.remove(); // Remove task from UI
+  } else {
+    localStorage.setItem(key, "true");
+    saveIcon.innerHTML = '<i class="fas fa-heart" style="color: hotpink;"></i>';
+  }
+};
 
     row.appendChild(checkbox);
     row.appendChild(titleWrapper);
