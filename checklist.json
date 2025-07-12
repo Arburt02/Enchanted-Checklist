@@ -24,7 +24,7 @@
     "Pavilion": null,
     "Task": "Swiss Family Treehouse",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/swiss-family-treehouse/",
-    "Subcategory": "Climb this towering treehouse through rustic rooms with 360\u00b0 jungle views: it's like stepping into the Robinsons' adventurous hideaway."
+    "Subcategory": "Climb this towering treehouse through rustic rooms with 360 degree jungle views: it's like stepping into the Robinsons' adventurous hideaway."
   },
   {
     "Experience": "Walt Disney World",
@@ -123,7 +123,7 @@
     "Pavilion": null,
     "Task": "Jungle Navigation Co. LTD Skipper Canteen",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/jungle-navigation-skipper-canteen/",
-    "Subcategory": "Dine in a jungle-explorer's mess hall with quirky d\u00e9cor, spicy tropical dishes, and corny jokes from your Skipper server."
+    "Subcategory": "Dine in a jungle-explorer's mess hall with quirky decor, spicy tropical dishes, and corny jokes from your Skipper server."
   },
   {
     "Experience": "Walt Disney World",
@@ -445,7 +445,7 @@
     "Park": "Magic Kingdom",
     "Area": "Fantasyland",
     "Pavilion": null,
-    "Task": "\"It's a Small World\"",
+    "Task": "It's a Small World",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/its-a-small-world/",
     "Subcategory": "Splash, spray, and soak your squad: this circus-themed water play zone is perfect for Florida's heat."
   },
@@ -537,7 +537,7 @@
     "Pavilion": null,
     "Task": "Walt Disney World Railroad",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/walt-disney-world-railroad-fantasyland/",
-    "Subcategory": "Sip whimsical drinks and snack on treats at this Alice-in-Wonderland-inspired cottage caf\u00e9."
+    "Subcategory": "Sip whimsical drinks and snack on treats at this Alice-in-Wonderland-inspired cottage cafe."
   },
   {
     "Experience": "Walt Disney World",
@@ -587,7 +587,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Magic Kingdom",
-    "Area": "Fronteirland",
+    "Area": "Frontierland",
     "Pavilion": null,
     "Task": "Country Bear Musical Jamboree",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/country-bear-jamboree/",
@@ -596,7 +596,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Magic Kingdom",
-    "Area": "Fronteirland",
+    "Area": "Frontierland",
     "Pavilion": null,
     "Task": "Big Thunder Mountain Railroad",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/big-thunder-mountain-railroad/",
@@ -605,7 +605,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Magic Kingdom",
-    "Area": "Fronteirland",
+    "Area": "Frontierland",
     "Pavilion": null,
     "Task": "Tiana's Bayou Adventure",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/tianas-bayou-adventure/",
@@ -614,7 +614,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Magic Kingdom",
-    "Area": "Fronteirland",
+    "Area": "Frontierland",
     "Pavilion": null,
     "Task": "Walt Disney World Railroad",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/walt-disney-world-railroad-frontierland/",
@@ -1347,7 +1347,7 @@
     "Pavilion": "Canada Pavilion",
     "Task": "Canada Far and Wide",
     "URL": "https://disneyworld.disney.go.com/attractions/epcot/canada-far-and-wide/",
-    "Subcategory": "A breathtaking Circle-Vision 360\u00b0 film about Canada's natural beauty: bonus points for the updated narration."
+    "Subcategory": "A breathtaking Circle-Vision 360 degree film about Canada's natural beauty: bonus points for the updated narration."
   },
   {
     "Experience": "Walt Disney World",
@@ -1536,7 +1536,7 @@
     "Pavilion": "China Pavilion",
     "Task": "Reflections of China",
     "URL": "https://disneyworld.disney.go.com/attractions/epcot/reflections-of-china/",
-    "Subcategory": "A 360\u00b0 film tour through China's natural beauty and cities, complete with immersive visuals and narration."
+    "Subcategory": "A 360 degree film tour through China's natural beauty and cities, complete with immersive visuals and narration."
   },
   {
     "Experience": "Walt Disney World",
@@ -1608,7 +1608,7 @@
     "Pavilion": "Mexico Pavilion",
     "Task": "Gran Fiesta Tour featuring The Three Caballeros",
     "URL": "https://disneyworld.disney.go.com/attractions/epcot/gran-fiesta-tour-starring-three-caballeros/",
-    "Subcategory": "Take a slow ride with Donald, Panchito, and Jos\u00e9 Carioca through animated Mexico scenes and silly antics."
+    "Subcategory": "Take a slow ride with Donald, Panchito, and Jose Carioca through animated Mexico scenes and silly antics."
   },
   {
     "Experience": "Walt Disney World",
@@ -1905,7 +1905,7 @@
     "Pavilion": "Canada Pavilion",
     "Task": "Canada Popcorn Cart",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/popcorn-at-canada-pavilion/",
-    "Subcategory": "Romantic French bistro vibes and indulgent eats: oui oui to steak frites and cr\u00e8me br\u00fbl\u00e9e."
+    "Subcategory": "Romantic French bistro vibes and indulgent eats: oui oui to steak frites and cr eme brulee."
   },
   {
     "Experience": "Walt Disney World",
@@ -2004,7 +2004,7 @@
     "Pavilion": "Germany Pavilion",
     "Task": "Karamell-Kuche",
     "URL": "https://disneyworld.disney.go.com/shops/karamell-kuche/",
-    "Subcategory": "Take a break in this quiet Japanese caf\u00e9 with tempura, miso soup, and perfect pavilion views."
+    "Subcategory": "Take a break in this quiet Japanese cafe with tempura, miso soup, and perfect pavilion views."
   },
   {
     "Experience": "Walt Disney World",
@@ -2013,7 +2013,7 @@
     "Pavilion": "Japan Pavilion",
     "Task": "Katsura Grill",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/katsura-grill/",
-    "Subcategory": "Fresh-baked kringla, school bread, and cinnamon rolls: Norway's cozy caf\u00e9 is a must-snack."
+    "Subcategory": "Fresh-baked kringla, school bread, and cinnamon rolls: Norway's cozy cafe is a must-snack."
   },
   {
     "Experience": "Walt Disney World",
@@ -2076,7 +2076,7 @@
     "Pavilion": "Canada Pavilion",
     "Task": "Le Cellier Steakhouse",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/le-cellier-steakhouse/",
-    "Subcategory": "Crepes and cider in a chic, modern French caf\u00e9: sweet or savory, this spot is tr\u00e8s d\u00e9licieux."
+    "Subcategory": "Crepes and cider in a chic, modern French cafe: sweet or savory, this spot is tr es delicieux."
   },
   {
     "Experience": "Walt Disney World",
@@ -4119,7 +4119,7 @@
     "Pavilion": null,
     "Task": "Yak & Yeti Quality Beverages",
     "URL": "https://disneyworld.disney.go.com/dining/animal-kingdom/quality-beverages/",
-    "Subcategory": "Start your day with Starbucks staples and Disney treats in this convenient, jungle-themed caf\u00e9."
+    "Subcategory": "Start your day with Starbucks staples and Disney treats in this convenient, jungle-themed cafe."
   },
   {
     "Experience": "Walt Disney World",
@@ -5199,7 +5199,7 @@
     "Pavilion": null,
     "Task": "Olivia's Cafe",
     "URL": "https://disneyworld.disney.go.com/dining/old-key-west-resort/olivia-cafe/",
-    "Subcategory": "Enjoy homestyle breakfast and hearty seafood dishes in this cozy, Keys-inspired caf\u00e9."
+    "Subcategory": "Enjoy homestyle breakfast and hearty seafood dishes in this cozy, Keys-inspired cafe."
   },
   {
     "Experience": "Walt Disney World",
@@ -6045,7 +6045,7 @@
     "Pavilion": null,
     "Task": "Le Petit Cafe",
     "URL": "https://disneyworld.disney.go.com/dining/riviera-resort/le-petit-cafe/",
-    "Subcategory": "Espresso, pastries, and charm that feels straight from a Parisian caf\u00e9."
+    "Subcategory": "Espresso, pastries, and charm that feels straight from a Parisian cafe."
   },
   {
     "Experience": "Walt Disney World",
@@ -6216,7 +6216,7 @@
     "Pavilion": null,
     "Task": "Chill",
     "URL": "https://disneyworld.disney.go.com/dining/swan-hotel/chill/",
-    "Subcategory": "Chill out at this convenient grab-and-go caf\u00e9 inside the Swan: perfect for snacks, coffee, or a quick breakfast on your way to EPCOT."
+    "Subcategory": "Chill out at this convenient grab-and-go cafe inside the Swan: perfect for snacks, coffee, or a quick breakfast on your way to EPCOT."
   },
   {
     "Experience": "Walt Disney World",
@@ -6405,7 +6405,7 @@
     "Pavilion": null,
     "Task": "Todd English's bluezoo",
     "URL": "https://disneyworld.disney.go.com/dining/dolphin-hotel/todd-english-bluezoo/",
-    "Subcategory": "Enjoy elevated coastal cuisine at Todd English's bluezoo, known for its seafood-forward menu and sleek, modern d\u00e9cor."
+    "Subcategory": "Enjoy elevated coastal cuisine at Todd English's bluezoo, known for its seafood-forward menu and sleek, modern decor."
   },
   {
     "Experience": "Walt Disney World",
@@ -6819,7 +6819,7 @@
     "Pavilion": null,
     "Task": "Lava Lounge at Rainforest Cafe",
     "URL": "https://disneyworld.disney.go.com/dining/disney-springs/lava-lounge/",
-    "Subcategory": "This tiki-style lounge next to Rainforest Caf\u00e9 brings strong drinks and a volcano-side vibe."
+    "Subcategory": "This tiki-style lounge next to Rainforest Cafe brings strong drinks and a volcano-side vibe."
   },
   {
     "Experience": "Walt Disney World",
@@ -6864,7 +6864,7 @@
     "Pavilion": null,
     "Task": "Morimoto Asia",
     "URL": "https://disneyworld.disney.go.com/dining/disney-springs/morimoto-asia/",
-    "Subcategory": "Pan-Asian cuisine with bold flavors, sleek d\u00e9cor, and Iron Chef pedigree: Morimoto Asia is a showstopper."
+    "Subcategory": "Pan-Asian cuisine with bold flavors, sleek decor, and Iron Chef pedigree: Morimoto Asia is a showstopper."
   },
   {
     "Experience": "Walt Disney World",
@@ -6900,7 +6900,7 @@
     "Pavilion": null,
     "Task": "Pepe by Jose Andres",
     "URL": "https://disneyworld.disney.go.com/dining/disney-springs/pepe/",
-    "Subcategory": "Grab fast-casual Spanish sandwiches and snacks from this Jos\u00e9 Andr\u00e9s counter spot."
+    "Subcategory": "Grab fast-casual Spanish sandwiches and snacks from this Jose Andres counter spot."
   },
   {
     "Experience": "Walt Disney World",
@@ -7391,7 +7391,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disneyland Park",
-    "Area": "Fronteirland",
+    "Area": "Frontierland",
     "Pavilion": null,
     "Task": "The Golden Horseshoe",
     "URL": "https://disneyland.disney.go.com/dining/disneyland/golden-horseshoe-restaurant/",
@@ -7467,7 +7467,7 @@
     "Pavilion": null,
     "Task": "Jolly Holiday Bakery Cafe",
     "URL": "https://disneyland.disney.go.com/dining/disneyland/jolly-holiday-bakery-cafe/",
-    "Subcategory": "Mary Poppins-themed caf\u00e9 with pastries, sandwiches, and delightful views of the hub."
+    "Subcategory": "Mary Poppins-themed cafe with pastries, sandwiches, and delightful views of the hub."
   },
   {
     "Experience": "Disneyland",
@@ -7521,7 +7521,7 @@
     "Pavilion": null,
     "Task": "Maurice's Sweets",
     "URL": "https://disneyland.disney.go.com/dining/disneyland/maurices-treats/",
-    "Subcategory": "Belle's father's cottage turned snack stand: charming and themed to the last \u00e9clair."
+    "Subcategory": "Belle's father's cottage turned snack stand: charming and themed to the last eclair."
   },
   {
     "Experience": "Disneyland",
@@ -7697,7 +7697,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disneyland Park",
-    "Area": "Fronteirland",
+    "Area": "Frontierland",
     "Pavilion": null,
     "Task": "Pretzels near Big Thunder Mountain Railroad",
     "URL": "https://disneyland.disney.go.com/dining/pretzels/",
@@ -7742,7 +7742,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disneyland Park",
-    "Area": "Fronteirland",
+    "Area": "Frontierland",
     "Pavilion": null,
     "Task": "River Belle Terrace",
     "URL": "https://disneyland.disney.go.com/dining/disneyland/river-belle-terrace/",
@@ -8142,7 +8142,7 @@
     "Pavilion": null,
     "Task": "Fiddler, Fifer & Practical Cafe",
     "URL": "https://disneyland.disney.go.com/dining/disney-california-adventure/fiddler-fifer-and-practical-cafe/",
-    "Subcategory": "A charming Americana caf\u00e9 for coffee, sandwiches, and Main Street spirit."
+    "Subcategory": "A charming Americana cafe for coffee, sandwiches, and Main Street spirit."
   },
   {
     "Experience": "Disneyland",
@@ -8763,7 +8763,7 @@
     "Pavilion": null,
     "Task": "Palm Breeze Bar",
     "URL": "https://disneyland.disney.go.com/dining/disneyland-hotel/palm-breeze-bar/",
-    "Subcategory": "Tropical drinks and breezy vibes poolside at the Disneyland Hotel, this bar blends casual comfort with island-inspired cocktails. A great place to relax in a lounger with a rum runner or pi\u00f1a colada under swaying palms."
+    "Subcategory": "Tropical drinks and breezy vibes poolside at the Disneyland Hotel, this bar blends casual comfort with island-inspired cocktails. A great place to relax in a lounger with a rum runner or pina colada under swaying palms."
   },
   {
     "Experience": "Disneyland",
