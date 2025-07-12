@@ -13,6 +13,7 @@
       color: white;
       background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
       background-attachment: fixed;
+	  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
     }
 
     .main-container {
@@ -73,6 +74,21 @@
     body.dark .preference-card {
       background: rgba(255, 255, 255, 0.08);
     }
+	
+#header {
+			position: sticky;
+			top: 0;
+			background-color: rgba(255, 255, 255, 0.15);
+			/* soft blur look */
+			backdrop-filter: blur(8px);
+			/* adds the glassy feel */
+			-webkit-backdrop-filter: blur(8px);
+			/* Safari support */
+			padding: 1rem;
+			z-index: 10;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+		}
+
   </style>
 </head>
 
@@ -80,207 +96,129 @@
   <div class="main-container" id="preferencesPage"></div>
 
   <script>
+  function renderPreferences() {
+    const container = document.getElementById("preferencesPage");
 
-    function getCurrentPreferences() {
-      return {
-        dark_mode: localStorage.getItem("dark_mode") || "false",
-        "include_Park Hopper Plus": localStorage.getItem("include_Park Hopper Plus") || "true",
-        "include_Disney Springs": localStorage.getItem("include_Disney Springs") || "true",
-        "include_Walt Disney World Resorts": localStorage.getItem("include_Walt Disney World Resorts") || "true",
-        "include_Disneyland Park": localStorage.getItem("include_Disneyland Park") || "true",
-        "include_Disney California Adventure": localStorage.getItem("include_Disney California Adventure") || "true",
-        "include_Downtown Disney District": localStorage.getItem("include_Downtown Disney District") || "true",
-        "include_Disneyland Resorts": localStorage.getItem("include_Disneyland Resorts") || "true"
-      };
-    }
+container.innerHTML = `
+<div id="header">
+  <button id="home-button" class="explore-button" onclick="goHome()">
+    <i class="fas fa-house" style="margin-right: 0.5rem;"></i> Home
+  </button>
+  <h2 style="margin: 0.5rem 0 0.25rem 0;">Preferences</h2>
+</div>
 
-    async function saveProgress(userId, completed = [], saved = [], preferences = {}) {
-      try {
-        await setDoc(doc(db, "users", userId), {
-          completedTasks: completed,
-          savedTasks: saved,
-          preferences: preferences
-        });
-      } catch (e) {
-        console.error("Error saving to Firestore:", e);
-      }
-    }
+<div class="section-header">Checklist Customization</div>
+<div class="preference-card" onclick="openCustomizeChecklist()">
+  <i class="fas fa-folder-open" style="margin-right: 0.5rem;"></i>
+  Customize My Checklist
+</div>
 
-    function returnToLanding() {
-      window.location.href = "index.html";
-    }
-	
-	
-
-    function renderPreferences() {
-  const container = document.getElementById("preferencesPage");
-
-  container.innerHTML = `
-    <h2>Preferences</h2>
-    <button onclick="renderPreferences()">← Back</button>
-
-    <div class="section-header">Checklist Customization</div>
-    <div class="preference-card" onclick="openCustomizeChecklist()">
-      <i class="fas fa-folder-open" style="margin-right: 0.5rem;"></i>
-      Customize My Checklist
-    </div>
-
-    <div class="section-header">App Settings</div>
-    <div class="preference-card">
+<div class="section-header">App Settings</div>
+<div class="preference-card">
   <i class="fas fa-moon" style="margin-right: 0.5rem;"></i>
   <span style="flex-grow: 1;">Dark Mode</span>
   <input type="checkbox" id="darkModeToggle" />
 </div>
 
-    <div class="preference-card" style="opacity: 0.5;">
-      <span>
-        <i class="fas fa-lock" style="margin-right: 0.5rem;"></i>
-        Change Password (coming soon)
-      </span>
-    </div>
+<div class="preference-card" style="opacity: 0.5;">
+  <span>
+    <i class="fas fa-lock" style="margin-right: 0.5rem;"></i>
+    Change Password (coming soon)
+  </span>
+</div>
+`;
 
-    <button onclick="goHome()">← Back to Home</button>
-  `;
+    const darkModeToggle = document.getElementById("darkModeToggle");
+    darkModeToggle.checked = localStorage.getItem("dark_mode") === "true";
+    darkModeToggle.onchange = () => {
+      const value = darkModeToggle.checked ? "true" : "false";
+      localStorage.setItem("dark_mode", value);
+      document.body.classList.toggle("dark", value === "true");
+      console.log("✅ Preference saved locally.");
+    };
+  }
 
-  const darkModeToggle = document.getElementById("darkModeToggle");
-  darkModeToggle.checked = localStorage.getItem("dark_mode") === "true";
-  darkModeToggle.onchange = () => {
-    const value = darkModeToggle.checked ? "true" : "false";
-    localStorage.setItem("dark_mode", value);
-    document.body.classList.toggle("dark", value === "true");
-    if (auth.currentUser) {
-      saveProgress(auth.currentUser.uid, [], [], getCurrentPreferences());
-    }
-  };
-}
+  function openCustomizeChecklist() {
+    const container = document.getElementById("preferencesPage");
 
-    function openCustomizeChecklist() {
-      const container = document.getElementById("preferencesPage");
+    const wdwParks = [
+      "Magic Kingdom",
+      "EPCOT",
+      "Animal Kingdom",
+      "Hollywood Studios",
+      "Park Hopper Plus",
+      "Disney Springs",
+      "Walt Disney World Resorts"
+    ];
 
-      container.innerHTML = `
-        <h2>Customize My Checklist</h2>
+    const dlrParks = [
+      "Disneyland Park",
+      "Disney California Adventure",
+      "Downtown Disney District",
+      "Disneyland Resorts",
+      "Seasonal Events and Festivals",
+      "Bonus"
+    ];
+
+    let html = `
+      <div class="sticky-header">
         <button onclick="renderPreferences()">← Back</button>
-        <h3>Walt Disney World</h3>
+        <h2>Customize My Checklist</h2>
+        <div style="width:70px;"></div>
+      </div>
+
+      <div class="section-header">Walt Disney World</div>
+    `;
+
+    wdwParks.forEach(park => {
+      const key = `include_${park}`;
+      const isChecked = localStorage.getItem(key) !== "false";
+      html += `
+        <div class="preference-card">
+          <span>${park}</span>
+          <input type="checkbox" id="${key}" ${isChecked ? "checked" : ""}>
+        </div>
       `;
+    });
 
-      // Locked parks
-      ["Magic Kingdom", "EPCOT", "Animal Kingdom", "Hollywood Studios"].forEach(park => {
-        const locked = document.createElement("div");
-        locked.className = "preference-card";
-        locked.style.opacity = "0.5";
-        locked.innerHTML = `<i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i>${park} (locked)`;
-        container.appendChild(locked);
-      });
+    html += `<div class="section-header">Disneyland</div>`;
 
-      [
-        { label: "Include Park Hopper Plus", park: "Park Hopper Plus" },
-        { label: "Include Disney Springs", park: "Disney Springs" },
-        { label: "Include Resorts", park: "Walt Disney World Resorts" }
-      ].forEach(pref => {
-        const key = `include_${pref.park}`;
-        const card = document.createElement("div");
-        card.className = "preference-card";
+    dlrParks.forEach(park => {
+      const key = `include_${park}`;
+      const isChecked = localStorage.getItem(key) !== "false";
+      html += `
+        <div class="preference-card">
+          <span>${park}</span>
+          <input type="checkbox" id="${key}" ${isChecked ? "checked" : ""}>
+        </div>
+      `;
+    });
 
-        const isChecked = localStorage.getItem(key) !== "false";
-        card.innerHTML = `<span>${pref.label}</span><input type="checkbox" ${isChecked ? "checked" : ""}>`;
+    container.innerHTML = html;
 
-        const checkbox = card.querySelector("input");
+    [...wdwParks, ...dlrParks].forEach(park => {
+      const key = `include_${park}`;
+      const checkbox = document.getElementById(key);
+      if (checkbox) {
         checkbox.onchange = () => {
           localStorage.setItem(key, checkbox.checked ? "true" : "false");
-          if (auth.currentUser) {
-            saveProgress(auth.currentUser.uid, [], [], getCurrentPreferences());
-          }
+          console.log(`✅ Saved ${key} = ${checkbox.checked}`);
         };
-
-        container.appendChild(card);
-      });
-
-      container.innerHTML += `<h3>Disneyland</h3>`;
-
-      const dlrParks = [
-        "Disneyland Park",
-        "Disney California Adventure",
-        "Downtown Disney District",
-        "Disneyland Resorts"
-      ];
-
-      dlrParks.forEach(park => {
-        const key = `include_${park}`;
-        const card = document.createElement("div");
-        card.className = "preference-card";
-
-        const isChecked = localStorage.getItem(key) !== "false";
-        card.innerHTML = `<span>${park}</span><input type="checkbox" ${isChecked ? "checked" : ""} id="${key}">`;
-
-        const checkbox = card.querySelector("input");
-        checkbox.onchange = () => {
-          localStorage.setItem(key, checkbox.checked ? "true" : "false");
-          if (auth.currentUser) {
-            saveProgress(auth.currentUser.uid, [], [], getCurrentPreferences());
-          }
-        };
-
-        container.appendChild(card);
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      renderPreferences();
-      if (localStorage.getItem("dark_mode") === "true") {
-        document.body.classList.add("dark");
       }
     });
-	
-	function goHome() {
-  window.location.href = "index.html";
-}
+  }
 
-</script>
+  function goHome() {
+    window.location.href = "index.html";
+  }
 
-<!-- 🔌 Firebase SDK -->
-	<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-  import { getAuth } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
-    authDomain: "the-enchanted-checklist.firebaseapp.com",
-    projectId: "the-enchanted-checklist",
-    storageBucket: "the-enchanted-checklist.appspot.com",
-    messagingSenderId: "971177969419",
-    appId: "1:971177969419:web:3a48e119cb866f6551840e"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  window.auth = auth;
-
-  window.saveProgress = async function (userId, completed = [], saved = [], preferences = {}) {
-    try {
-      await setDoc(doc(db, "users", userId), {
-        completedTasks: completed,
-        savedTasks: saved,
-        preferences: preferences
-      });
-    } catch (e) {
-      console.error("Error saving to Firestore:", e);
+  document.addEventListener("DOMContentLoaded", () => {
+    renderPreferences();
+    if (localStorage.getItem("dark_mode") === "true") {
+      document.body.classList.add("dark");
     }
-  };
-
-  window.getCurrentPreferences = function () {
-    return {
-      dark_mode: localStorage.getItem("dark_mode") || "false",
-      "include_Park Hopper Plus": localStorage.getItem("include_Park Hopper Plus") || "true",
-      "include_Disney Springs": localStorage.getItem("include_Disney Springs") || "true",
-      "include_Walt Disney World Resorts": localStorage.getItem("include_Walt Disney World Resorts") || "true",
-      "include_Disneyland Park": localStorage.getItem("include_Disneyland Park") || "true",
-      "include_Disney California Adventure": localStorage.getItem("include_Disney California Adventure") || "true",
-      "include_Downtown Disney District": localStorage.getItem("include_Downtown Disney District") || "true",
-      "include_Disneyland Resorts": localStorage.getItem("include_Disneyland Resorts") || "true"
-    };
-  };
+  });
 </script>
+
 </body>
 </html>

@@ -239,42 +239,52 @@
 		<div class="task-container" id="checklist"></div>
 	</div>
 
-	<script>
-		const checklistDiv = document.getElementById('checklist');
-		const pageTitle = document.getElementById('page-title');
-		const taskCount = document.getElementById('task-count');
-		const backButton = document.getElementById('back-button');
-		const progressBar = document.getElementById('progress-fill');
-		const progressLabel = document.getElementById('progress-label');
-		const areaProgress = document.getElementById('area-progress');
+<script>
+	const checklistDiv = document.getElementById('checklist');
+	const pageTitle = document.getElementById('page-title');
+	const taskCount = document.getElementById('task-count');
+	const backButton = document.getElementById('back-button');
+	const progressBar = document.getElementById('progress-fill');
+	const progressLabel = document.getElementById('progress-label');
+	const areaProgress = document.getElementById('area-progress');
 
-		let fullData = [];
-		let navStack = [];
-		let currentTasks = [];
+	let fullData = [];
+	let navStack = [];
+	let currentTasks = [];
 
-		const wdwLocked = [
+	// Get filters from localStorage for all parks
+	function getWdwFilters() {
+		const parks = [
 			"Magic Kingdom",
 			"EPCOT",
 			"Animal Kingdom",
-			"Hollywood Studios"
+			"Hollywood Studios",
+			"Park Hopper Plus",
+			"Disney Springs",
+			"Walt Disney World Resorts"
 		];
+		const filters = {};
+		parks.forEach(park => {
+			filters[park] = localStorage.getItem(`include_${park}`) !== "false";
+		});
+		return filters;
+	}
 
-		function getWdwFilters() {
-			return {
-				"Park Hopper Plus": localStorage.getItem("Park Hopper Plus") === "true",
-				"Disney Springs": localStorage.getItem("Disney Springs") === "true",
-				"Walt Disney World Resorts": localStorage.getItem("Walt Disney World Resorts") === "true"
-			};
-		}
-
-		function getDlrFilters() {
-			return {
-				"Disneyland Park": localStorage.getItem("Disneyland Park") === "true",
-				"Disney California Adventure": localStorage.getItem("Disney California Adventure") === "true",
-				"Downtown Disney District": localStorage.getItem("Downtown Disney District") === "true",
-				"Disneyland Resorts": localStorage.getItem("Disneyland Resorts") === "true"
-			};
-		}
+	function getDlrFilters() {
+		const parks = [
+			"Disneyland Park",
+			"Disney California Adventure",
+			"Downtown Disney District",
+			"Disneyland Resorts",
+			"Seasonal Events and Festivals",
+			"Bonus"
+		];
+		const filters = {};
+		parks.forEach(park => {
+			filters[park] = localStorage.getItem(`include_${park}`) !== "false";
+		});
+		return filters;
+	}
 
 		// Dark mode support
 		if (localStorage.getItem("dark_mode") === "true") {
@@ -305,39 +315,40 @@
 				checklistDiv.innerHTML = `<p style="color:red; padding:1rem;"> Failed to load checklist. Please try again.</p>`;
 			});
 
-		function renderExperiences() {
-			checklistDiv.innerHTML = '';
-			pageTitle.textContent = "Choose Your Destination";
-			backButton.style.display = "none";
-			areaProgress.style.display = "none";
-			navStack = [];
+function renderExperiences() {
+	checklistDiv.innerHTML = '';
+	pageTitle.textContent = "Choose Your Destination";
+	backButton.style.display = "none";
+	areaProgress.style.display = "none";
+	navStack = [];
 
-			const wdwFilters = getWdwFilters();
-			const dlrFilters = getDlrFilters();
+	const wdwFilters = getWdwFilters();
+	const dlrFilters = getDlrFilters();
 
-			const lockedParks = ["Magic Kingdom", "EPCOT", "Animal Kingdom", "Hollywood Studios"];
-
-			const filtered = fullData.filter(task => {
-				const park = task.Park;
-				if (lockedParks.includes(park)) return true;
-				return localStorage.getItem(`include_${park}`) !== "false";
-			});
-
-			const experiences = [...new Set(filtered.map(t => t.Experience))];
-			experiences.forEach(exp => {
-				const div = document.createElement('div');
-				div.textContent = exp;
-				div.className = 'clickable';
-				div.onclick = () => {
-					navStack.push(renderExperiences);
-					const expFiltered = filtered.filter(t => t.Experience === exp);
-					renderParks(expFiltered, exp);
-				};
-				checklistDiv.appendChild(div);
-			});
-
-			taskCount.textContent = `${filtered.length} tasks`;
+	const filtered = fullData.filter(task => {
+		if (task.Experience === "Walt Disney World") {
+			return wdwFilters[task.Park];
+		} else if (task.Experience === "Disneyland") {
+			return dlrFilters[task.Park];
 		}
+		return false;
+	});
+
+	const experiences = [...new Set(filtered.map(t => t.Experience))];
+	experiences.forEach(exp => {
+		const div = document.createElement('div');
+		div.textContent = exp;
+		div.className = 'clickable';
+		div.onclick = () => {
+			navStack.push(renderExperiences);
+			const expFiltered = filtered.filter(t => t.Experience === exp);
+			renderParks(expFiltered, exp);
+		};
+		checklistDiv.appendChild(div);
+	});
+
+	taskCount.textContent = `${filtered.length} tasks`;
+}
 
 		function renderParks(data, experienceName) {
 			checklistDiv.innerHTML = '';

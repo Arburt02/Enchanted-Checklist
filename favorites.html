@@ -165,15 +165,16 @@ background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
       };
     }
 
-    function getDlrFilters() {
-      return {
-        "Disneyland Park": localStorage.getItem("Disneyland Park") === "true",
-        "Disney California Adventure": localStorage.getItem("Disney California Adventure") === "true",
-        "Downtown Disney District": localStorage.getItem("Downtown Disney District") === "true",
-        "Disneyland Resorts": localStorage.getItem("Disneyland Resorts") === "true"
-      };
-    }
-
+function getDlrFilters() {
+  return {
+    "Disneyland Park": localStorage.getItem("Disneyland Park") === "true",
+    "Disney California Adventure": localStorage.getItem("Disney California Adventure") === "true",
+    "Downtown Disney District": localStorage.getItem("Downtown Disney District") === "true",
+    "Disneyland Resorts": localStorage.getItem("Disneyland Resorts") === "true",
+    "Seasonal Events and Festivals": localStorage.getItem("Seasonal Events and Festivals") === "true",
+    "Bonus": localStorage.getItem("Bonus") === "true"
+  };
+}
     // Dark mode support
     if (localStorage.getItem("dark_mode") === "true") {
       document.body.classList.add("dark");
