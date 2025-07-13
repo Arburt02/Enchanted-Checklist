@@ -11,6 +11,7 @@
 			color: white;
 background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
 			background-attachment: fixed;
+			text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3)
 		}
 
 		/* 📱 Responsive container for all content */
@@ -47,8 +48,9 @@ background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
 		.task-container {
 			padding: 1rem;
 			background: transparent;
-			color: black;
+			color: white;
 			min-height: 100vh;
+			text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3)
 		}
 
 .task-card {
@@ -57,8 +59,9 @@ background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
   padding: 1rem;
   margin-bottom: 1rem;
   cursor: pointer;
-  color: black;
+  color: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3)
 }
 		
 		.task-card:hover {
@@ -126,12 +129,6 @@ background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
       <button id="home-button" class="explore-button" onclick="goHome()"><i class="fas fa-house" style="margin-right: 0.5rem;"></i> Home</button>
       <h2 id="page-title" style="margin: 0.5rem 0 0.25rem 0;"></h2>
       <p id="task-count" style="margin: 0;"></p>
-      <div id="area-progress" style="display:none">
-        <div class="progress-bar-container">
-          <div id="progress-fill" class="progress-bar"></div>
-        </div>
-        <p id="progress-label" style="font-size: 0.9rem;"></p>
-      </div>
     </div>
 
     <div class="task-container" id="checklist"></div>
@@ -142,82 +139,108 @@ background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
     const pageTitle = document.getElementById('page-title');
     const taskCount = document.getElementById('task-count');
     const backButton = document.getElementById('back-button');
-    const progressBar = document.getElementById('progress-fill');
-    const progressLabel = document.getElementById('progress-label');
-    const areaProgress = document.getElementById('area-progress');
 
-    let fullData = [];
-    let navStack = [];
-    let currentTasks = [];
+let fullData = [];
+let navStack = [];
+let currentTasks = [];
 
-    const wdwLocked = [
-      "Magic Kingdom",
-      "EPCOT",
-      "Animal Kingdom",
-      "Hollywood Studios"
-    ];
+const wdwLocked = [
+  "Magic Kingdom",
+  "EPCOT",
+  "Animal Kingdom",
+  "Hollywood Studios"
+];
 
-    function getWdwFilters() {
-      return {
-        "Park Hopper Plus": localStorage.getItem("Park Hopper Plus") === "true",
-        "Disney Springs": localStorage.getItem("Disney Springs") === "true",
-        "Walt Disney World Resorts": localStorage.getItem("Walt Disney World Resorts") === "true"
-      };
-    }
+// ✅ Filter helpers
+function getWdwFilters() {
+  const parks = [
+    "Magic Kingdom",
+    "EPCOT",
+    "Animal Kingdom",
+    "Hollywood Studios",
+    "Park Hopper Plus",
+    "Disney Springs",
+    "Walt Disney World Resorts"
+  ];
+  const filters = {};
+  parks.forEach(park => {
+    filters[park] = localStorage.getItem(`include_${park}`) !== "false";
+  });
+  return filters;
+}
 
 function getDlrFilters() {
-  return {
-    "Disneyland Park": localStorage.getItem("Disneyland Park") === "true",
-    "Disney California Adventure": localStorage.getItem("Disney California Adventure") === "true",
-    "Downtown Disney District": localStorage.getItem("Downtown Disney District") === "true",
-    "Disneyland Resorts": localStorage.getItem("Disneyland Resorts") === "true",
-    "Seasonal Events and Festivals": localStorage.getItem("Seasonal Events and Festivals") === "true",
-    "Bonus": localStorage.getItem("Bonus") === "true"
-  };
+  const parks = [
+    "Disneyland Park",
+    "Disney California Adventure",
+    "Downtown Disney District",
+    "Disneyland Resorts",
+    "Seasonal Events and Festivals",
+    "Bonus"
+  ];
+  const filters = {};
+  parks.forEach(park => {
+    filters[park] = localStorage.getItem(`include_${park}`) !== "false";
+  });
+  return filters;
 }
-    // Dark mode support
-    if (localStorage.getItem("dark_mode") === "true") {
-      document.body.classList.add("dark");
-    }
-	
+
+function getDclFilter() {
+  return localStorage.getItem("include_Disney Cruise Line") !== "false";
+}
+
+// ✅ Dark mode support
+if (localStorage.getItem("dark_mode") === "true") {
+  document.body.classList.add("dark");
+}
+
+// ✅ Fetch and process checklist
 fetch('checklist.json')
   .then(res => {
     if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-    return res.json(); // 🔥 This is the missing step!
+    return res.json();
   })
   .then(data => {
     fullData = data;
 
+    const wdwFilters = getWdwFilters();
+    const dlrFilters = getDlrFilters();
+    const dclFilter = getDclFilter();
+
     const savedTasks = fullData.filter(task => {
       const id = task.id || `${task.Park}-${task.Area}-${task.Task}`;
-      return localStorage.getItem(`saved_${id}`) === "true";
+      const isSaved = localStorage.getItem(`saved_${id}`) === "true";
+      if (!isSaved) return false;
+
+      if (task.Experience === "Walt Disney World") return wdwFilters[task.Park];
+      if (task.Experience === "Disneyland") return dlrFilters[task.Park];
+      if (task.Experience === "Disney Cruise Line") return dclFilter;
+
+      return false;
     });
 
-    renderExperiences(savedTasks); // ✅ make sure this is called here!
-	
-	if (savedTasks.length === 0) {
-  checklistDiv.innerHTML = `
-    <p style="font-size: 1.1rem; padding: 1rem;">
-  <i class="fas fa-magic" style="margin-right: 0.5rem;"></i>
-  Looks like your favorites list is empty!
-</p>
-<p style="font-size: 1.05rem; padding: 0 1rem;">
-  Tap <strong>Your Experiences</strong> to start exploring and save some magical must-dos!
-</p>
-  `;
-  pageTitle.innerHTML = `<i class="fas fa-star" style="margin-right: 0.5rem;"></i>My Saved Tasks`;
-  taskCount.textContent = "0 saved tasks";
-  return;
-}
+    renderExperiences(savedTasks);
 
-    // ✅ Optional logging
+    if (savedTasks.length === 0) {
+      checklistDiv.innerHTML = `
+        <p style="font-size: 1.1rem; padding: 1rem;">
+          <i class="fas fa-magic" style="margin-right: 0.5rem;"></i>
+          Looks like your favorites list is empty!
+        </p>
+        <p style="font-size: 1.05rem; padding: 0 1rem;">
+          Tap <strong>Your Experiences</strong> to start exploring and save some magical must-dos!
+        </p>
+      `;
+      pageTitle.innerHTML = `<i class="fas fa-heart" style="margin-right: 0.5rem;"></i>My Saved Tasks`;
+      taskCount.textContent = "0 saved tasks";
+      return;
+    }
+
+    // ✅ Logging (optional)
     console.log("Checklist loaded:", fullData.length);
-    console.log("localStorage keys:");
-    Object.keys(localStorage).forEach(key => {
-      console.log(`${key}: ${localStorage.getItem(key)}`);
-    });
-    console.log("WDW Filters:", getWdwFilters());
-    console.log("DLR Filters:", getDlrFilters());
+    console.log("WDW Filters:", wdwFilters);
+    console.log("DLR Filters:", dlrFilters);
+    console.log("DCL Filter:", dclFilter);
   })
   .catch(err => {
     console.error("Failed to load checklist.json:", err.message || err);
@@ -226,7 +249,7 @@ fetch('checklist.json')
 
   function renderExperiences(savedTasks) {
   checklistDiv.innerHTML = '';
-  pageTitle.innerHTML = `<i class="fas fa-star" style="margin-right: 0.5rem;"></i>My Saved Tasks`;;
+  pageTitle.innerHTML = `<i class="fas fa-heart" style="margin-right: 0.5rem;"></i>My Saved Tasks`;;
 
   const intro = document.createElement('p');
   intro.textContent = "Here you can view all the tasks you have saved and want to prioritize for your next trip to Disney!";
@@ -235,7 +258,6 @@ fetch('checklist.json')
   checklistDiv.appendChild(intro);
 
   backButton.style.display = "none";
-  areaProgress.style.display = "none";
   navStack = [];
 
   const experiences = [...new Set(savedTasks.map(t => t.Experience))];
@@ -258,7 +280,6 @@ fetch('checklist.json')
   checklistDiv.innerHTML = '';
   pageTitle.textContent = experienceName;
   taskCount.textContent = `${data.length} tasks`;
-  areaProgress.style.display = "none";
   backButton.style.display = "inline-block";
   backButton.onclick = goBack;
 

@@ -13,7 +13,7 @@
       color: white;
       background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
       background-attachment: fixed;
-	  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+	  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3)
     }
 
     .main-container {
@@ -75,6 +75,17 @@
       background: rgba(255, 255, 255, 0.08);
     }
 	
+	.sticky-header {
+  position: sticky;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 1rem;
+  z-index: 10;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 #header {
 			position: sticky;
 			top: 0;
@@ -88,6 +99,10 @@
 			z-index: 10;
 			border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 		}
+		
+		.preference-card:last-child {
+  margin-bottom: 0;
+}
 
   </style>
 </head>
@@ -138,75 +153,89 @@ container.innerHTML = `
     };
   }
 
-  function openCustomizeChecklist() {
-    const container = document.getElementById("preferencesPage");
+function openCustomizeChecklist() {
+  const container = document.getElementById("preferencesPage");
 
-    const wdwParks = [
-      "Magic Kingdom",
-      "EPCOT",
-      "Animal Kingdom",
-      "Hollywood Studios",
-      "Park Hopper Plus",
-      "Disney Springs",
-      "Walt Disney World Resorts"
-    ];
+  const wdwParks = [
+    "Magic Kingdom",
+    "EPCOT",
+    "Animal Kingdom",
+    "Hollywood Studios",
+    "Park Hopper Plus",
+    "Disney Springs",
+    "Walt Disney World Resorts"
+  ];
 
-    const dlrParks = [
-      "Disneyland Park",
-      "Disney California Adventure",
-      "Downtown Disney District",
-      "Disneyland Resorts",
-      "Seasonal Events and Festivals",
-      "Bonus"
-    ];
+  const dlrParks = [
+    "Disneyland Park",
+    "Disney California Adventure",
+    "Downtown Disney District",
+    "Disneyland Resorts",
+    "Seasonal Events and Festivals",
+    "Bonus"
+  ];
 
-    let html = `
-      <div class="sticky-header">
-        <button onclick="renderPreferences()">← Back</button>
-        <h2>Customize My Checklist</h2>
-        <div style="width:70px;"></div>
+  let html = `
+    <div class="sticky-header">
+      <button onclick="renderPreferences()">← Back</button>
+      <h2>Customize My Checklist</h2>
+      <div style="width:70px;"></div>
+    </div>
+
+    <div class="section-header">Walt Disney World</div>
+  `;
+
+  wdwParks.forEach(park => {
+    const key = `include_${park}`;
+    const isChecked = localStorage.getItem(key) !== "false";
+    html += `
+      <div class="preference-card">
+        <span>${park}</span>
+        <input type="checkbox" id="${key}" ${isChecked ? "checked" : ""}>
       </div>
-
-      <div class="section-header">Walt Disney World</div>
     `;
+  });
 
-    wdwParks.forEach(park => {
-      const key = `include_${park}`;
-      const isChecked = localStorage.getItem(key) !== "false";
-      html += `
-        <div class="preference-card">
-          <span>${park}</span>
-          <input type="checkbox" id="${key}" ${isChecked ? "checked" : ""}>
-        </div>
-      `;
-    });
+  html += `<div class="section-header">Disneyland</div>`;
 
-    html += `<div class="section-header">Disneyland</div>`;
+  dlrParks.forEach(park => {
+    const key = `include_${park}`;
+    const isChecked = localStorage.getItem(key) !== "false";
+    html += `
+      <div class="preference-card">
+        <span>${park}</span>
+        <input type="checkbox" id="${key}" ${isChecked ? "checked" : ""}>
+      </div>
+    `;
+  });
 
-    dlrParks.forEach(park => {
-      const key = `include_${park}`;
-      const isChecked = localStorage.getItem(key) !== "false";
-      html += `
-        <div class="preference-card">
-          <span>${park}</span>
-          <input type="checkbox" id="${key}" ${isChecked ? "checked" : ""}>
-        </div>
-      `;
-    });
+  // ✅ Disney Cruise Line
+  const dclKey = "include_Disney Cruise Line";
+  const isDclChecked = localStorage.getItem(dclKey) !== "false";
 
-    container.innerHTML = html;
+  html += `
+    <div class="section-header">Disney Cruise Line</div>
+    <div class="preference-card">
+      <span>Disney Cruise Line</span>
+      <input type="checkbox" id="${dclKey}" ${isDclChecked ? "checked" : ""}>
+    </div>
+  `;
 
-    [...wdwParks, ...dlrParks].forEach(park => {
-      const key = `include_${park}`;
-      const checkbox = document.getElementById(key);
-      if (checkbox) {
-        checkbox.onchange = () => {
-          localStorage.setItem(key, checkbox.checked ? "true" : "false");
-          console.log(`✅ Saved ${key} = ${checkbox.checked}`);
-        };
-      }
-    });
-  }
+  // ✅ Update DOM
+  container.innerHTML = html;
+
+  // ✅ Setup checkbox change handlers
+  [...wdwParks, ...dlrParks, "Disney Cruise Line"].forEach(park => {
+    const key = `include_${park}`;
+    const checkbox = document.getElementById(key);
+    if (checkbox) {
+      checkbox.onchange = () => {
+        localStorage.setItem(key, checkbox.checked ? "true" : "false");
+        console.log(`✅ Saved ${key} = ${checkbox.checked}`);
+      };
+    }
+  });
+}
 
   function goHome() {
     window.location.href = "index.html";
@@ -218,6 +247,7 @@ container.innerHTML = `
       document.body.classList.add("dark");
     }
   });
+  
 </script>
 
 </body>

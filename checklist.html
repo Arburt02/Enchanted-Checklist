@@ -285,6 +285,10 @@
 		});
 		return filters;
 	}
+	
+	function getDclFilter() {
+  return localStorage.getItem("include_Disney Cruise Line") !== "false";
+}
 
 		// Dark mode support
 		if (localStorage.getItem("dark_mode") === "true") {
@@ -309,6 +313,7 @@
 
 				console.log("WDW Filters:", getWdwFilters());
 				console.log("DLR Filters:", getDlrFilters());
+				console.log("DCL Filter:", getDclFilter())
 			})
 			.catch(err => {
 				console.error("Failed to load checklist.json:", err.message || err);
@@ -322,30 +327,34 @@ function renderExperiences() {
 	areaProgress.style.display = "none";
 	navStack = [];
 
-	const wdwFilters = getWdwFilters();
-	const dlrFilters = getDlrFilters();
+const wdwFilters = getWdwFilters();
+const dlrFilters = getDlrFilters();
+const dclFilter = getDclFilter();
 
-	const filtered = fullData.filter(task => {
-		if (task.Experience === "Walt Disney World") {
-			return wdwFilters[task.Park];
-		} else if (task.Experience === "Disneyland") {
-			return dlrFilters[task.Park];
-		}
-		return false;
-	});
+const filtered = fullData.filter(task => {
+  if (task.Experience === "Walt Disney World") {
+    return wdwFilters[task.Park];
+  } else if (task.Experience === "Disneyland") {
+    return dlrFilters[task.Park];
+  } else if (task.Experience === "Disney Cruise Line") {
+    return dclFilter;
+  }
+  return false;
+});
 
-	const experiences = [...new Set(filtered.map(t => t.Experience))];
-	experiences.forEach(exp => {
-		const div = document.createElement('div');
-		div.textContent = exp;
-		div.className = 'clickable';
-		div.onclick = () => {
-			navStack.push(renderExperiences);
-			const expFiltered = filtered.filter(t => t.Experience === exp);
-			renderParks(expFiltered, exp);
-		};
-		checklistDiv.appendChild(div);
-	});
+const experiences = [...new Set(filtered.map(t => t.Experience))];
+experiences.forEach(exp => {
+  const div = document.createElement('div');
+  div.textContent = exp;
+  div.className = 'clickable';
+  div.onclick = () => {
+    navStack.push(renderExperiences);
+    const expFiltered = filtered.filter(t => t.Experience === exp);
+    renderParks(expFiltered, exp);
+  };
+  checklistDiv.appendChild(div);
+});
+
 
 	taskCount.textContent = `${filtered.length} tasks`;
 }

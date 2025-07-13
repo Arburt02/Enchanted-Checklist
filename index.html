@@ -7,87 +7,110 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>The Enchanted Checklist</title>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
-      background-attachment: fixed;
-      background-repeat: no-repeat;
-      background-size: cover;
-      color: white;
-      padding: 2rem;
-      min-height: 100vh;
-	  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-    }
+  body {
+    margin: 0;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    padding: 2rem;
+    min-height: 100vh;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
 
-    body.dark {
-      background: #121212;
-      color: white;
-    }
+  body.dark {
+    background: #121212;
+    color: white;
+  }
 
-    .main-container {
-      width: 90%;
-      max-width: 600px;
-      margin: 0 auto;
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
+  .main-container {
+    width: 95%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
 
-    input, button {
-      margin: 0.5rem 0;
-      padding: 0.6rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
+  input, button {
+    margin: 0.5rem 0;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
 
-    input {
-      width: 100%;
-      max-width: 300px;
-    }
+  input {
+    width: 100%;
+    max-width: 300px;
+  }
 
-    button {
-      background-color: white;
-      color: #2f77a7;
-      cursor: pointer;
-      font-weight: bold;
-      width: 100%;
-      max-width: 300px;
-    }
+  button {
+    background-color: white;
+    color: #2f77a7;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    max-width: 300px;
+  }
 
-    #progress-rings svg {
-      width: 150px;
-      height: 150px;
-    }
+  /* 📊 Progress Rings Container */
+#progress-rings-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  max-width: 700px;
+  margin: 2rem auto;
+}
 
-    @media (min-width: 768px) {
-      #progress-rings svg {
-        width: 200px;
-        height: 200px;
-      }
-    }
+#progress-rings-container svg {
+  width: 280px;
+  height: 280px;
+}
 
-    #progress-rings circle {
-      filter: url(#glow);
-      transition: stroke-dashoffset 1.5s ease-out;
-    }
 
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.05); opacity: 0.75; }
-      100% { transform: scale(1); opacity: 1; }
-    }
+  #progress-rings circle {
+    filter: url(#glow);
+    transition: stroke-dashoffset 1.5s ease-out;
+  }
 
-    .pulse-once {
-      animation: pulse 1.2s ease-out;
-    }
-  </style>
+  /* 📝 Ring Labels Positioned Right of SVG */
+.ring-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+  text-align: left;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.ring-labels div {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+
+  /* ✨ Pulse animation when rings update */
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.75; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .pulse-once {
+    animation: pulse 1.2s ease-out;
+  }
+</style>
 </head>
 
 <body style="display: none;">
@@ -113,7 +136,7 @@
         Use this guide to track progress across all that Disney has to offer.
       </p>
 
-      <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+      <div style="margin-top: 1rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
         <button onclick="loadExperiences()">
           <i class="fas fa-map-marked-alt" style="margin-right: 0.5rem;"></i>
           Your Experiences
@@ -123,7 +146,7 @@
           Preferences
         </button>
         <button onclick="openFavorites()">
-          <i class="fas fa-star" style="margin-right: 0.5rem;"></i>
+          <i class="fas fa-heart" style="margin-right: 0.5rem;"></i>
           For The Next Trip
         </button>
         <small style="display:block; margin-top:-0.25rem; margin-bottom:-0.25rem; color:white; opacity:0.8;" aria-live="polite">
@@ -135,36 +158,48 @@
         </button>
       </div>
 
-      <div id="progress-rings" style="display:flex; justify-content:center; align-items:center; margin: 2rem 0;">
-        <svg viewBox="0 0 200 200">
-          <defs>
-            <filter id="glow">
-              <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#000000" flood-opacity="0.25" />
-            </filter>
-          </defs>
-          <circle cx="100" cy="100" r="90" stroke="#deb6ee" stroke-width="10" fill="none" opacity="0.2" />
-          <circle cx="100" cy="100" r="70" stroke="#dc81ff" stroke-width="10" fill="none" opacity="0.2" />
-          <circle cx="100" cy="100" r="50" stroke="#c075e4" stroke-width="10" fill="none" opacity="0.2" />
+      <!-- 📊 RINGS + LABELS LAYOUT -->
+<div id="progress-rings-container">
+  <svg viewBox="0 0 280 280">
+    <defs>
+      <filter id="glow">
+        <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#000000" flood-opacity="0.25" />
+      </filter>
+    </defs>
 
-          <circle id="ring-total" cx="100" cy="100" r="90" stroke="#deb6ee" stroke-width="10" fill="none"
-            stroke-linecap="round" transform="rotate(-90 100 100)" stroke-dasharray="565.5" stroke-dashoffset="565.5"
-            filter="url(#glow)" />
-          <circle id="ring-wdw" cx="100" cy="100" r="70" stroke="#dc81ff" stroke-width="10" fill="none"
-            stroke-linecap="round" transform="rotate(-90 100 100)" stroke-dasharray="439.8" stroke-dashoffset="439.8"
-            filter="url(#glow)" />
-          <circle id="ring-dl" cx="100" cy="100" r="50" stroke="#c075e4" stroke-width="10" fill="none"
-            stroke-linecap="round" transform="rotate(-90 100 100)" stroke-dasharray="314.2" stroke-dashoffset="314.2"
-            filter="url(#glow)" />
-        </svg>
-      </div>
+    <!-- Outer orbit: Total -->
+    <circle cx="140" cy="140" r="115" stroke="#deb6ee" stroke-width="10" fill="none" opacity="0.2" />
+    <circle id="ring-total" cx="140" cy="140" r="115" stroke="#deb6ee" stroke-width="10" fill="none"
+      stroke-linecap="round" transform="rotate(-90 140 140)" stroke-dasharray="722.6" stroke-dashoffset="722.6"
+      filter="url(#glow)" />
 
-      <div style="text-align:center; margin-top: 1rem;">
-        <div id="percent-total" style="font-weight:bold; font-size:1.2rem;"></div>
-        <div id="percent-wdw"></div>
-        <div id="percent-dl"></div>
-      </div>
-    </div>
+    <!-- WDW -->
+    <circle cx="140" cy="140" r="90" stroke="#dc81ff" stroke-width="10" fill="none" opacity="0.2" />
+    <circle id="ring-wdw" cx="140" cy="140" r="90" stroke="#dc81ff" stroke-width="10" fill="none"
+      stroke-linecap="round" transform="rotate(-90 140 140)" stroke-dasharray="565.5" stroke-dashoffset="565.5"
+      filter="url(#glow)" />
+
+    <!-- DLR -->
+    <circle cx="140" cy="140" r="60" stroke="#c075e4" stroke-width="10" fill="none" opacity="0.2" />
+    <circle id="ring-dl" cx="140" cy="140" r="60" stroke="#c075e4" stroke-width="10" fill="none"
+      stroke-linecap="round" transform="rotate(-90 140 140)" stroke-dasharray="376.9" stroke-dashoffset="376.9"
+      filter="url(#glow)" />
+
+    <!-- DCL -->
+    <circle cx="140" cy="140" r="35" stroke="#89cff0" stroke-width="10" fill="none" opacity="0.2" />
+    <circle id="ring-dcl" cx="140" cy="140" r="35" stroke="#89cff0" stroke-width="10" fill="none"
+      stroke-linecap="round" transform="rotate(-90 140 140)" stroke-dasharray="219.9" stroke-dashoffset="219.9"
+      filter="url(#glow)" />
+  </svg>
+
+  <!-- Side Labels -->
+  <div class="ring-labels">
+    <div id="percent-total"><i class="fas fa-bullseye"></i> Total: --%</div>
+    <div id="percent-wdw"><i class="fas fa-landmark-dome"></i> WDW: --%</div>
+    <div id="percent-dl"><i class="fas fa-bridge"></i> DLR: --%</div>
+    <div id="percent-dcl"><i class="fas fa-anchor"></i> DCL: --%</div>
   </div>
+</div>
 
   <!-- 🔧 App logic -->
   <script>
@@ -177,10 +212,10 @@
     }
 
     function updateGlobalProgress() {
-      fetch("checklist.json")
-        .then(res => res.json())
-        .then(data => {
-          const wdwParks = [
+  fetch("checklist.json")
+    .then(res => res.json())
+    .then(data => {
+      const wdwParks = [
   "Magic Kingdom",
   "EPCOT",
   "Animal Kingdom",
@@ -198,45 +233,49 @@ const dlrParks = [
   "Bonus"
 ];
 
-const wdwFilters = Object.fromEntries(wdwParks.map(p => [p, localStorage.getItem(`include_${p}`) !== "false"]));
-const dlrFilters = Object.fromEntries(dlrParks.map(p => [p, localStorage.getItem(`include_${p}`) !== "false"]));
+      const wdwFilters = Object.fromEntries(wdwParks.map(p => [p, localStorage.getItem(`include_${p}`) !== "false"]));
+      const dlrFilters = Object.fromEntries(dlrParks.map(p => [p, localStorage.getItem(`include_${p}`) !== "false"]));
+      const dclFilter = localStorage.getItem("include_Disney Cruise Line") !== "false";
 
-const filteredData = data.filter(task => {
-  if (task.Experience === "Walt Disney World") {
-    return wdwFilters[task.Park];
-  } else if (task.Experience === "Disneyland") {
-    return dlrFilters[task.Park];
-  }
-  return false;
-});
+      const filtered = data.filter(task => {
+        if (task.Experience === "Walt Disney World") return wdwFilters[task.Park];
+        if (task.Experience === "Disneyland") return dlrFilters[task.Park];
+        if (task.Experience === "Disney Cruise Line") return dclFilter;
+        return false;
+      });
 
-          const wdw = filteredData.filter(t => t.Experience === "Walt Disney World");
-          const dl = filteredData.filter(t => t.Experience === "Disneyland");
+      const wdw = filtered.filter(t => t.Experience === "Walt Disney World");
+      const dl = filtered.filter(t => t.Experience === "Disneyland");
+      const dcl = filtered.filter(t => t.Experience === "Disney Cruise Line");
 
-          let totalComplete = 0, wdwComplete = 0, dlComplete = 0;
+      let totalComplete = 0, wdwComplete = 0, dlComplete = 0, dclComplete = 0;
 
-          filteredData.forEach(task => {
-            const taskId = task.id || `${task.Park}-${task.Area}-${task.Task}`;
-            if (localStorage.getItem(taskId) === "complete") {
-              totalComplete++;
-              if (task.Experience === "Walt Disney World") wdwComplete++;
-              if (task.Experience === "Disneyland") dlComplete++;
-            }
-          });
+      filtered.forEach(task => {
+        const taskId = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+        if (localStorage.getItem(taskId) === "complete") {
+          totalComplete++;
+          if (task.Experience === "Walt Disney World") wdwComplete++;
+          if (task.Experience === "Disneyland") dlComplete++;
+          if (task.Experience === "Disney Cruise Line") dclComplete++;
+        }
+      });
 
-          const totalPercent = totalComplete / filteredData.length || 0;
-          const wdwPercent = wdwComplete / wdw.length || 0;
-          const dlPercent = dlComplete / dl.length || 0;
+      const totalPercent = totalComplete / filtered.length || 0;
+      const wdwPercent = wdwComplete / wdw.length || 0;
+      const dlPercent = dlComplete / dl.length || 0;
+      const dclPercent = dclComplete / dcl.length || 0;
 
-          document.getElementById("ring-total").style.strokeDashoffset = 565.5 * (1 - totalPercent);
-          document.getElementById("ring-wdw").style.strokeDashoffset = 439.8 * (1 - wdwPercent);
-          document.getElementById("ring-dl").style.strokeDashoffset = 314.2 * (1 - dlPercent);
+      document.getElementById("ring-total").style.strokeDashoffset = 722.6 * (1 - totalPercent);
+      document.getElementById("ring-wdw").style.strokeDashoffset = 565.5 * (1 - wdwPercent);
+      document.getElementById("ring-dl").style.strokeDashoffset = 376.9 * (1 - dlPercent);
+      document.getElementById("ring-dcl").style.strokeDashoffset = 219.9 * (1 - dclPercent);
 
-          document.getElementById("percent-total").innerHTML = `<i class="fas fa-bullseye"></i> Total: ${(totalPercent * 100).toFixed(1)}% — ${totalComplete}/${filteredData.length}`;
-          document.getElementById("percent-wdw").innerHTML = `<i class="fas fa-landmark-dome"></i> WDW: ${(wdwPercent * 100).toFixed(1)}% — ${wdwComplete}/${wdw.length}`;
-          document.getElementById("percent-dl").innerHTML = `<i class="fas fa-bridge"></i> DLR: ${(dlPercent * 100).toFixed(1)}% — ${dlComplete}/${dl.length}`;
-        });
-    }
+      document.getElementById("percent-total").innerHTML = `<i class="fas fa-bullseye"></i> Total: ${(totalPercent * 100).toFixed(1)}% — ${totalComplete}/${filtered.length}`;
+      document.getElementById("percent-wdw").innerHTML = `<i class="fas fa-landmark-dome"></i> WDW: ${(wdwPercent * 100).toFixed(1)}% — ${wdwComplete}/${wdw.length}`;
+      document.getElementById("percent-dl").innerHTML = `<i class="fas fa-bridge"></i> DLR: ${(dlPercent * 100).toFixed(1)}% — ${dlComplete}/${dl.length}`;
+      document.getElementById("percent-dcl").innerHTML = `<i class="fas fa-anchor"></i> DCL: ${(dclPercent * 100).toFixed(1)}% — ${dclComplete}/${dcl.length}`;
+    });
+}
 
     function showLandingPage() {
       document.getElementById("authSection").style.display = "none";
@@ -308,6 +347,11 @@ const filteredData = data.filter(task => {
         document.getElementById("authSection").style.display = "block";
       }
     });
+	
+	function goHome() {
+  window.location.href = "index.html";
+}
   </script>
+  
 </body>
 </html>
