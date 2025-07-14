@@ -121,8 +121,8 @@ background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
 	</style>
 	
 </head>
-<body>
-  <div class="main-container">
+<body style="display: none;">
+  <div class="main-container" id="mainContent" style="display: none;">
     <div id="header">
       <button id="back-button" class="explore-button" style="display:none"><i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>
  Back</button>
@@ -134,261 +134,289 @@ background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
     <div class="task-container" id="checklist"></div>
   </div>
 
- <script>
-    const checklistDiv = document.getElementById('checklist');
-    const pageTitle = document.getElementById('page-title');
-    const taskCount = document.getElementById('task-count');
-    const backButton = document.getElementById('back-button');
+<script type="module">
+  // ✅ Firebase imports
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+  import {
+    getFirestore, getDoc, doc, getDocs, collection, setDoc, deleteDoc
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-let fullData = [];
-let navStack = [];
-let currentTasks = [];
+  // ✅ Initialize Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
+    authDomain: "the-enchanted-checklist.firebaseapp.com",
+    projectId: "the-enchanted-checklist",
+    storageBucket: "the-enchanted-checklist.appspot.com",
+    messagingSenderId: "971177969419",
+    appId: "1:971177969419:web:3a48e119cb866f6551840e"
+  };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-const wdwLocked = [
-  "Magic Kingdom",
-  "EPCOT",
-  "Animal Kingdom",
-  "Hollywood Studios"
-];
+  // ✅ App State
+  const checklistDiv = document.getElementById("checklist");
+  const pageTitle = document.getElementById("page-title");
+  const taskCount = document.getElementById("task-count");
+  const backButton = document.getElementById("back-button");
+  let navStack = [];
+  let fullData = [];
+  let prefs = {};
+  let savedMap = {};
+  let progressMap = {};
+  let currentTasks = [];
 
-// ✅ Filter helpers
-function getWdwFilters() {
-  const parks = [
-    "Magic Kingdom",
-    "EPCOT",
-    "Animal Kingdom",
-    "Hollywood Studios",
-    "Park Hopper Plus",
-    "Disney Springs",
-    "Walt Disney World Resorts"
-  ];
-  const filters = {};
-  parks.forEach(park => {
-    filters[park] = localStorage.getItem(`include_${park}`) !== "false";
-  });
-  return filters;
-}
+  // ✅ Auth & Main Logic
+  onAuthStateChanged(auth, async user => {
+    if (!user) return window.location.href = "login.html";
+    const uid = user.uid;
 
-function getDlrFilters() {
-  const parks = [
-    "Disneyland Park",
-    "Disney California Adventure",
-    "Downtown Disney District",
-    "Disneyland Resorts",
-    "Seasonal Events and Festivals",
-    "Bonus"
-  ];
-  const filters = {};
-  parks.forEach(park => {
-    filters[park] = localStorage.getItem(`include_${park}`) !== "false";
-  });
-  return filters;
-}
+    try {
+      // Load preferences
+      const prefsSnap = await getDoc(doc(db, `users/${uid}/preferences/default`));
+      prefs = prefsSnap.exists() ? prefsSnap.data() : {};
+      if (prefs.dark_mode) document.body.classList.add("dark");
 
-function getDclFilter() {
-  return localStorage.getItem("include_Disney Cruise Line") !== "false";
-}
+      // Load saved tasks
+      const savedSnap = await getDocs(collection(db, `users/${uid}/saved`));
+      const savedIds = savedSnap.docs.map(doc => doc.id);
+      savedMap = Object.fromEntries(savedIds.map(id => [id, true]));
 
-// ✅ Dark mode support
-if (localStorage.getItem("dark_mode") === "true") {
-  document.body.classList.add("dark");
-}
+      // Load checklist
+      const res = await fetch("checklist.json");
+      if (!res.ok) throw new Error("Failed to load checklist.json");
+      fullData = await res.json();
 
-// ✅ Fetch and process checklist
-fetch('checklist.json')
-  .then(res => {
-    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-    return res.json();
-  })
-  .then(data => {
-    fullData = data;
+      // Filter preferences
+      const wdwFilters = getFilters([
+        "Magic Kingdom", "EPCOT", "Animal Kingdom", "Hollywood Studios",
+        "Park Hopper Plus", "Disney Springs", "Walt Disney World Resorts"
+      ]);
+      const dlrFilters = getFilters([
+        "Disneyland Park", "Disney California Adventure", "Downtown Disney District",
+        "Disneyland Resorts", "Seasonal Events and Festivals", "Bonus"
+      ]);
+      const dclFilter = prefs["include_Disney Cruise Line"] !== false;
 
-    const wdwFilters = getWdwFilters();
-    const dlrFilters = getDlrFilters();
-    const dclFilter = getDclFilter();
+      const savedTasks = fullData.filter(task => {
+        const id = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+        if (!savedMap[id]) return false;
 
-    const savedTasks = fullData.filter(task => {
-      const id = task.id || `${task.Park}-${task.Area}-${task.Task}`;
-      const isSaved = localStorage.getItem(`saved_${id}`) === "true";
-      if (!isSaved) return false;
+        if (task.Experience === "Walt Disney World") return wdwFilters[task.Park];
+        if (task.Experience === "Disneyland") return dlrFilters[task.Park];
+        if (task.Experience === "Disney Cruise Line") return dclFilter;
 
-      if (task.Experience === "Walt Disney World") return wdwFilters[task.Park];
-      if (task.Experience === "Disneyland") return dlrFilters[task.Park];
-      if (task.Experience === "Disney Cruise Line") return dclFilter;
+        return false;
+      });
 
-      return false;
-    });
+      if (savedTasks.length === 0) {
+        checklistDiv.innerHTML = `
+          <p style="font-size: 1.1rem; padding: 1rem;">
+            <i class="fas fa-magic" style="margin-right: 0.5rem;"></i>
+            Looks like your favorites list is empty!
+          </p>
+          <p style="font-size: 1.05rem; padding: 0 1rem;">
+            Tap <strong>Your Experiences</strong> to start exploring and save some magical must-dos!
+          </p>
+        `;
+        pageTitle.innerHTML = `<i class="fas fa-heart" style="margin-right: 0.5rem;"></i>My Saved Tasks`;
+        taskCount.textContent = "0 saved tasks";
+        return;
+      }
 
-    renderExperiences(savedTasks);
+      renderExperiences(savedTasks);
+      document.body.style.display = "block";
+      document.getElementById("mainContent").style.display = "block";
 
-    if (savedTasks.length === 0) {
-      checklistDiv.innerHTML = `
-        <p style="font-size: 1.1rem; padding: 1rem;">
-          <i class="fas fa-magic" style="margin-right: 0.5rem;"></i>
-          Looks like your favorites list is empty!
-        </p>
-        <p style="font-size: 1.05rem; padding: 0 1rem;">
-          Tap <strong>Your Experiences</strong> to start exploring and save some magical must-dos!
-        </p>
-      `;
-      pageTitle.innerHTML = `<i class="fas fa-heart" style="margin-right: 0.5rem;"></i>My Saved Tasks`;
-      taskCount.textContent = "0 saved tasks";
-      return;
+    } catch (err) {
+      console.error("Error:", err);
+      checklistDiv.innerHTML = `<p style="color:red; padding:1rem;">Failed to load data. Please try again.</p>`;
     }
-
-    // ✅ Logging (optional)
-    console.log("Checklist loaded:", fullData.length);
-    console.log("WDW Filters:", wdwFilters);
-    console.log("DLR Filters:", dlrFilters);
-    console.log("DCL Filter:", dclFilter);
-  })
-  .catch(err => {
-    console.error("Failed to load checklist.json:", err.message || err);
-    checklistDiv.innerHTML = `<p style="color:red; padding:1rem;">Failed to load checklist. Please try again.</p>`;
   });
+
+  // ✅ Helpers
+  function getFilters(parks) {
+    return Object.fromEntries(parks.map(p => [p, prefs[`include_${p}`] !== false]));
+  }
 
   function renderExperiences(savedTasks) {
-  checklistDiv.innerHTML = '';
-  pageTitle.innerHTML = `<i class="fas fa-heart" style="margin-right: 0.5rem;"></i>My Saved Tasks`;;
+    checklistDiv.innerHTML = '';
+    pageTitle.innerHTML = `<i class="fas fa-heart" style="margin-right: 0.5rem;"></i>My Saved Tasks`;
 
-  const intro = document.createElement('p');
-  intro.textContent = "Here you can view all the tasks you have saved and want to prioritize for your next trip to Disney!";
-  intro.style.fontSize = '0.95rem';
-  intro.style.margin = '0.5rem 0 1rem 0';
-  checklistDiv.appendChild(intro);
+    const intro = document.createElement('p');
+    intro.textContent = "Here you can view all the tasks you have saved and want to prioritize for your next trip to Disney!";
+    intro.style.fontSize = '0.95rem';
+    intro.style.margin = '0.5rem 0 1rem 0';
+    checklistDiv.appendChild(intro);
 
-  backButton.style.display = "none";
-  navStack = [];
+    backButton.style.display = "none";
+    navStack = [];
 
-  const experiences = [...new Set(savedTasks.map(t => t.Experience))];
-  experiences.forEach(exp => {
-    const div = document.createElement('div');
-    div.textContent = exp;
-    div.className = 'clickable';
-    div.onclick = () => {
-      navStack.push(() => renderExperiences(savedTasks));
-      const expFiltered = savedTasks.filter(t => t.Experience === exp);
-      renderParks(expFiltered, exp);
-    };
-    checklistDiv.appendChild(div);
-  });
+	currentTasks = savedTasks;
 
-  taskCount.textContent = `${savedTasks.length} saved tasks`;
+if (savedTasks.length === 0) {
+  checklistDiv.innerHTML = "<p style='text-align:center;'>You haven't saved any tasks yet.</p>";
+  return;
 }
+ 
+const experiences = [...new Set(savedTasks.map(t => t.Experience))];
+    experiences.forEach(exp => {
+      const div = document.createElement('div');
+      div.textContent = exp;
+      div.className = 'clickable';
+      div.onclick = () => {
+        navStack.push(() => renderExperiences(savedTasks));
+        const filtered = savedTasks.filter(t => t.Experience === exp);
+        renderParks(filtered, exp);
+      };
+      checklistDiv.appendChild(div);
+    });
+
+    taskCount.textContent = `${savedTasks.length} saved tasks`;
+  }
 
   function renderParks(data, experienceName) {
-  checklistDiv.innerHTML = '';
-  pageTitle.textContent = experienceName;
-  taskCount.textContent = `${data.length} tasks`;
-  backButton.style.display = "inline-block";
-  backButton.onclick = goBack;
+    checklistDiv.innerHTML = '';
+    pageTitle.textContent = experienceName;
+    taskCount.textContent = `${data.length} tasks`;
+    backButton.style.display = "inline-block";
+    backButton.onclick = goBack;
 
-  const parks = [...new Set(data.map(t => t.Park))];
-
-  parks.forEach(park => {
-    const div = document.createElement('div');
-    div.textContent = park;
-    div.className = 'clickable';
-    div.onclick = () => {
-      const parkTasks = data.filter(t => t.Park === park);
-      navStack.push(() => renderParks(data, experienceName));
-      renderTasks(parkTasks, `${experienceName} → ${park}`);
-    };
-    checklistDiv.appendChild(div);
-  });
-}
-
-function renderTasks(tasks, label) {
-  checklistDiv.innerHTML = '';
-  pageTitle.textContent = label;
-  taskCount.textContent = `${tasks.length} tasks`;
-  backButton.style.display = "inline-block";
-  backButton.onclick = goBack;
-
-  currentTasks = tasks;
-
-  tasks.forEach(task => {
-    const taskId = task.id || `${task.Park}-${task.Area}-${task.Task}`;
-    const isComplete = localStorage.getItem(taskId) === "complete";
-
-    const card = document.createElement('div');
-    card.className = 'task-card';
-    card.style.display = 'flex';
-    card.style.flexDirection = 'column';
-    card.style.gap = '0.5rem';
-
- const checkbox = document.createElement('input');
-checkbox.type = 'checkbox';
-checkbox.className = 'task-checkbox';
-checkbox.setAttribute('data-task-id', taskId);
-
-const title = document.createElement('strong');
-title.textContent = task.Task;
-title.style.wordBreak = 'break-word';
-title.style.fontSize = '1rem';
-
-if (isComplete) {
-  checkbox.checked = true;
-  card.style.opacity = 0.6;
-  title.style.textDecoration = 'line-through';
-  title.style.color = '#555';
-}
-
-    const summaryDiv = document.createElement('div');
-    summaryDiv.style.display = 'none';
-    summaryDiv.innerHTML = `
-      <em>${task.Subcategory || ''}</em><br/>
-      ${task.URL ? `<a href="${task.URL}" class="explore-button explore-link" data-url="${task.URL}">Explore this Task</a>` : ''}
-    `;
-
-    const row = document.createElement('div');
-    row.style.display = 'flex';
-    row.style.alignItems = 'center';
-    row.style.gap = '0.75rem';
-    row.style.flexWrap = 'wrap';
-
-    const titleWrapper = document.createElement('span');
-    titleWrapper.style.cursor = 'pointer';
-    titleWrapper.appendChild(title);
-    titleWrapper.onclick = e => {
-      e.stopPropagation();
-      summaryDiv.style.display = summaryDiv.style.display === 'none' ? 'block' : 'none';
-    };
-
-    const saveIcon = document.createElement('span');
-    saveIcon.innerHTML = localStorage.getItem(`saved_${taskId}`)
-  ? '<i class="fas fa-heart" style="color: hotpink;"></i>'
-  : '<i class="far fa-heart"></i>';
-    saveIcon.style.cursor = 'pointer';
-    saveIcon.title = "Remove from Saved Tasks";
-    saveIcon.onclick = e => {
-  e.stopPropagation();
-  const key = `saved_${taskId}`;
-  const isSaved = localStorage.getItem(key);
-  if (isSaved) {
-    localStorage.removeItem(key);
-    saveIcon.innerHTML = '<i class="far fa-heart"></i>';
-    card.remove(); // Remove task from UI
-  } else {
-    localStorage.setItem(key, "true");
-    saveIcon.innerHTML = '<i class="fas fa-heart" style="color: hotpink;"></i>';
+    const parks = [...new Set(data.map(t => t.Park))];
+    parks.forEach(park => {
+      const div = document.createElement('div');
+      div.textContent = park;
+      div.className = 'clickable';
+      div.onclick = () => {
+        navStack.push(() => renderParks(data, experienceName));
+        const parkTasks = data.filter(t => t.Park === park);
+        renderTasks(parkTasks, `${experienceName} → ${park}`);
+      };
+      checklistDiv.appendChild(div);
+    });
   }
-};
 
-    row.appendChild(checkbox);
-    row.appendChild(titleWrapper);
-    row.appendChild(saveIcon);
+  async function renderTasks(tasks, label) {
+    const user = auth.currentUser;
+    if (!user) return;
 
-    card.appendChild(row);
-    card.appendChild(summaryDiv);
-    checklistDiv.appendChild(card);
-  });
-}
+    const uid = user.uid;
+    const taskSnap = await getDocs(collection(db, `users/${uid}/progress`));
+    progressMap = {};
+    taskSnap.forEach(doc => {
+      progressMap[doc.id] = doc.data().complete === true;
+    });
 
-  function goBack() {
-    const last = navStack.pop();
-    if (last) last();
+    checklistDiv.innerHTML = '';
+    pageTitle.textContent = label;
+    taskCount.textContent = `${tasks.length} tasks`;
+    backButton.style.display = "inline-block";
+    backButton.onclick = goBack;
+    currentTasks = tasks;
+
+    tasks.forEach(task => {
+      const taskId = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+      const isComplete = progressMap[taskId];
+      const isSaved = savedMap[taskId];
+
+      const card = document.createElement('div');
+      card.className = 'task-card';
+      card.style.display = 'flex';
+      card.style.flexDirection = 'column';
+      card.style.gap = '0.5rem';
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.className = 'task-checkbox';
+      checkbox.setAttribute('data-task-id', taskId);
+      if (isComplete) {
+        checkbox.checked = true;
+        card.style.opacity = 0.6;
+      }
+
+      const title = document.createElement('strong');
+      title.textContent = task.Task;
+      title.style.wordBreak = 'break-word';
+      title.style.fontSize = '1rem';
+      if (isComplete) {
+        title.style.textDecoration = 'line-through';
+        title.style.color = '#555';
+      }
+
+      const summaryDiv = document.createElement('div');
+      summaryDiv.style.display = 'none';
+      summaryDiv.innerHTML = `
+        <em>${task.Subcategory || ''}</em><br/>
+        ${task.URL ? `<a href="${task.URL}" class="explore-button explore-link" data-url="${task.URL}">Explore this Task</a>` : ''}
+      `;
+
+      const row = document.createElement('div');
+      row.style.display = 'flex';
+      row.style.alignItems = 'center';
+      row.style.gap = '0.75rem';
+      row.style.flexWrap = 'wrap';
+
+      const titleWrapper = document.createElement('span');
+      titleWrapper.style.cursor = 'pointer';
+      titleWrapper.appendChild(title);
+      titleWrapper.onclick = e => {
+        e.stopPropagation();
+        summaryDiv.style.display = summaryDiv.style.display === 'none' ? 'block' : 'none';
+      };
+
+      const saveIcon = document.createElement('span');
+      saveIcon.innerHTML = isSaved
+        ? '<i class="fas fa-heart" style="color: hotpink;"></i>'
+        : '<i class="far fa-heart"></i>';
+      saveIcon.style.cursor = 'pointer';
+      saveIcon.title = "Remove from Saved Tasks";
+      saveIcon.onclick = async e => {
+        e.stopPropagation();
+        const ref = doc(db, `users/${uid}/saved/${taskId}`);
+        if (isSaved) {
+          await deleteDoc(ref);
+          card.remove();
+        } else {
+          await setDoc(ref, { saved: true });
+          saveIcon.innerHTML = '<i class="fas fa-heart" style="color: hotpink;"></i>';
+        }
+      };
+
+      row.appendChild(checkbox);
+      row.appendChild(titleWrapper);
+      row.appendChild(saveIcon);
+
+      card.appendChild(row);
+      card.appendChild(summaryDiv);
+      checklistDiv.appendChild(card);
+    });
   }
+
+
+  // ✅ Interactivity
+  checklistDiv.addEventListener('change', async e => {
+    if (e.target.matches('.task-checkbox')) {
+      const user = auth.currentUser;
+      if (!user) return;
+      const taskId = e.target.getAttribute('data-task-id');
+      const ref = doc(db, `users/${user.uid}/progress/${taskId}`);
+      const card = e.target.closest('.task-card');
+      const title = card.querySelector('strong');
+
+      if (e.target.checked) {
+        await setDoc(ref, { complete: true });
+        card.style.opacity = 0.6;
+        title.style.textDecoration = 'line-through';
+        title.style.color = '#555';
+      } else {
+        await deleteDoc(ref);
+        card.style.opacity = 1;
+        title.style.textDecoration = 'none';
+        title.style.color = 'white';
+      }
+    }
+  });
 
   checklistDiv.addEventListener('click', e => {
     if (e.target.matches('.explore-link')) {
@@ -399,22 +427,24 @@ if (isComplete) {
       }
     }
   });
-  
-  checklistDiv.addEventListener('change', e => {
-  if (e.target.matches('.task-checkbox')) {
-    const taskId = e.target.getAttribute('data-task-id');
-    if (e.target.checked) {
-      localStorage.setItem(taskId, "complete");
-    } else {
-      localStorage.removeItem(taskId);
-    }
+
+  function goBack() {
+    const last = navStack.pop();
+    if (last) last();
   }
-});
 
-function goHome() {
-  window.location.replace("index.html");
-}
+  window.goHome = function () {
+    window.location.href = "index.html";
+  };
 
+  window.logout = async function () {
+    try {
+      await signOut(auth);
+      window.location.href = "login.html";
+    } catch (err) {
+      alert("Logout failed: " + err.message);
+    }
+  };
 </script>
 </body>
 </html>

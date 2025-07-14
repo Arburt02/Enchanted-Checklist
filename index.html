@@ -114,19 +114,11 @@
 </head>
 
 <body style="display: none;">
-  <div class="main-container">
+  <div class="main-container" id="mainContent" style="display: none;">
     <h1>
       <i class="fas fa-wand-magic-sparkles" style="margin-right: 0.5rem;"></i>
       The Enchanted Checklist
     </h1>
-
-    <!-- 🔐 Auth -->
-    <div id="authSection" style="display: none;">
-      <input type="email" id="email" placeholder="Email" /><br />
-      <input type="password" id="password" placeholder="Password" /><br />
-      <button onclick="login()">Login</button>
-      <button onclick="register()">Register</button>
-    </div>
 
     <!-- 🏠 Landing -->
     <div id="landingPage" style="display: none; text-align: center;">
@@ -202,156 +194,152 @@
 </div>
 
   <!-- 🔧 App logic -->
-  <script>
-    function loadExperiences() {
-      window.location.href = "checklist.html";
-    }
-
-    function openFavorites() {
-      window.location.href = "favorites.html";
-    }
-
-    function updateGlobalProgress() {
-  fetch("checklist.json")
-    .then(res => res.json())
-    .then(data => {
-      const wdwParks = [
-  "Magic Kingdom",
-  "EPCOT",
-  "Animal Kingdom",
-  "Hollywood Studios",
-  "Park Hopper Plus",
-  "Disney Springs",
-  "Walt Disney World Resorts"
-];
-const dlrParks = [
-  "Disneyland Park",
-  "Disney California Adventure",
-  "Downtown Disney District",
-  "Disneyland Resorts",
-  "Seasonal Events and Festivals",
-  "Bonus"
-];
-
-      const wdwFilters = Object.fromEntries(wdwParks.map(p => [p, localStorage.getItem(`include_${p}`) !== "false"]));
-      const dlrFilters = Object.fromEntries(dlrParks.map(p => [p, localStorage.getItem(`include_${p}`) !== "false"]));
-      const dclFilter = localStorage.getItem("include_Disney Cruise Line") !== "false";
-
-      const filtered = data.filter(task => {
-        if (task.Experience === "Walt Disney World") return wdwFilters[task.Park];
-        if (task.Experience === "Disneyland") return dlrFilters[task.Park];
-        if (task.Experience === "Disney Cruise Line") return dclFilter;
-        return false;
-      });
-
-      const wdw = filtered.filter(t => t.Experience === "Walt Disney World");
-      const dl = filtered.filter(t => t.Experience === "Disneyland");
-      const dcl = filtered.filter(t => t.Experience === "Disney Cruise Line");
-
-      let totalComplete = 0, wdwComplete = 0, dlComplete = 0, dclComplete = 0;
-
-      filtered.forEach(task => {
-        const taskId = task.id || `${task.Park}-${task.Area}-${task.Task}`;
-        if (localStorage.getItem(taskId) === "complete") {
-          totalComplete++;
-          if (task.Experience === "Walt Disney World") wdwComplete++;
-          if (task.Experience === "Disneyland") dlComplete++;
-          if (task.Experience === "Disney Cruise Line") dclComplete++;
-        }
-      });
-
-      const totalPercent = totalComplete / filtered.length || 0;
-      const wdwPercent = wdwComplete / wdw.length || 0;
-      const dlPercent = dlComplete / dl.length || 0;
-      const dclPercent = dclComplete / dcl.length || 0;
-
-      document.getElementById("ring-total").style.strokeDashoffset = 722.6 * (1 - totalPercent);
-      document.getElementById("ring-wdw").style.strokeDashoffset = 565.5 * (1 - wdwPercent);
-      document.getElementById("ring-dl").style.strokeDashoffset = 376.9 * (1 - dlPercent);
-      document.getElementById("ring-dcl").style.strokeDashoffset = 219.9 * (1 - dclPercent);
-
-      document.getElementById("percent-total").innerHTML = `<i class="fas fa-bullseye"></i> Total: ${(totalPercent * 100).toFixed(1)}% — ${totalComplete}/${filtered.length}`;
-      document.getElementById("percent-wdw").innerHTML = `<i class="fas fa-landmark-dome"></i> WDW: ${(wdwPercent * 100).toFixed(1)}% — ${wdwComplete}/${wdw.length}`;
-      document.getElementById("percent-dl").innerHTML = `<i class="fas fa-bridge"></i> DLR: ${(dlPercent * 100).toFixed(1)}% — ${dlComplete}/${dl.length}`;
-      document.getElementById("percent-dcl").innerHTML = `<i class="fas fa-anchor"></i> DCL: ${(dclPercent * 100).toFixed(1)}% — ${dclComplete}/${dcl.length}`;
-    });
-}
-
-    function showLandingPage() {
-      document.getElementById("authSection").style.display = "none";
-      document.getElementById("landingPage").style.display = "block";
-      updateGlobalProgress();
-
-      const rings = document.getElementById("progress-rings");
-      rings.classList.remove("pulse-once");
-      void rings.offsetWidth;
-      rings.classList.add("pulse-once");
-    }
-
-    if (localStorage.getItem("dark_mode") === "true") {
-      document.body.classList.add("dark");
-    }
-  </script>
-
-  <!-- 🔌 Firebase Auth -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+  import {
+    getFirestore,
+    getDoc,
+    getDocs,
+    doc,
+    collection
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
-      authDomain: "the-enchanted-checklist.firebaseapp.com",
-      projectId: "the-enchanted-checklist",
-      storageBucket: "the-enchanted-checklist.appspot.com",
-      messagingSenderId: "971177969419",
-      appId: "1:971177969419:web:3a48e119cb866f6551840e"
-    };
+  // 🔥 Initialize Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
+    authDomain: "the-enchanted-checklist.firebaseapp.com",
+    projectId: "the-enchanted-checklist",
+    storageBucket: "the-enchanted-checklist.appspot.com",
+    messagingSenderId: "971177969419",
+    appId: "1:971177969419:web:3a48e119cb866f6551840e"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    window.login = async function () {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (err) {
-        alert("Login failed: " + err.message);
-      }
-    };
+  // 🧭 Navigation functions
+  window.loadExperiences = function () {
+    window.location.href = "checklist.html";
+  };
 
-    window.register = async function () {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-      } catch (err) {
-        alert("Registration failed: " + err.message);
-      }
-    };
+  window.openFavorites = function () {
+    window.location.href = "favorites.html";
+  };
 
-    window.logout = async function () {
-      try {
-        await signOut(auth);
-        location.reload();
-      } catch (err) {
-        alert("Logout failed: " + err.message);
-      }
-    };
+  window.openPreferences = function () {
+    window.location.href = "preferences.html";
+  };
 
-    onAuthStateChanged(auth, user => {
-      document.body.style.display = "block";
-      if (user) {
-        showLandingPage();
-      } else {
-        document.getElementById("authSection").style.display = "block";
+  window.logout = async function () {
+    try {
+      await signOut(auth);
+      window.location.href = "login.html";
+    } catch (err) {
+      alert("Logout failed: " + err.message);
+    }
+  };
+
+  async function updateGlobalProgress() {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const uid = user.uid;
+
+    const [checklistRes, progressSnap, prefsSnap] = await Promise.all([
+      fetch("checklist.json").then(res => res.json()),
+      getDocs(collection(db, `users/${uid}/progress`)),
+      getDoc(doc(db, `users/${uid}/preferences/default`))
+    ]);
+
+    const progressMap = {};
+    progressSnap.forEach(doc => {
+      progressMap[doc.id] = doc.data().complete === true;
+    });
+
+    const prefs = prefsSnap.exists() ? prefsSnap.data() : {};
+    const wdwParks = ["Magic Kingdom", "EPCOT", "Animal Kingdom", "Hollywood Studios", "Park Hopper Plus", "Disney Springs", "Walt Disney World Resorts"];
+    const dlrParks = ["Disneyland Park", "Disney California Adventure", "Downtown Disney District", "Disneyland Resorts", "Seasonal Events and Festivals", "Bonus"];
+
+    const wdwFilters = Object.fromEntries(wdwParks.map(p => [p, prefs[`include_${p}`] !== false]));
+    const dlrFilters = Object.fromEntries(dlrParks.map(p => [p, prefs[`include_${p}`] !== false]));
+    const dclFilter = prefs["include_Disney Cruise Line"] !== false;
+
+    const filtered = checklistRes.filter(task => {
+      if (task.Experience === "Walt Disney World") return wdwFilters[task.Park];
+      if (task.Experience === "Disneyland") return dlrFilters[task.Park];
+      if (task.Experience === "Disney Cruise Line") return dclFilter;
+      return false;
+    });
+
+    const wdw = filtered.filter(t => t.Experience === "Walt Disney World");
+    const dl = filtered.filter(t => t.Experience === "Disneyland");
+    const dcl = filtered.filter(t => t.Experience === "Disney Cruise Line");
+
+    let totalComplete = 0, wdwComplete = 0, dlComplete = 0, dclComplete = 0;
+
+    filtered.forEach(task => {
+      const taskId = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+      if (progressMap[taskId]) {
+        totalComplete++;
+        if (task.Experience === "Walt Disney World") wdwComplete++;
+        if (task.Experience === "Disneyland") dlComplete++;
+        if (task.Experience === "Disney Cruise Line") dclComplete++;
       }
     });
-	
-	function goHome() {
-  window.location.href = "index.html";
-}
-  </script>
-  
+
+    const totalPercent = totalComplete / filtered.length || 0;
+    const wdwPercent = wdwComplete / wdw.length || 0;
+    const dlPercent = dlComplete / dl.length || 0;
+    const dclPercent = dclComplete / dcl.length || 0;
+
+    document.getElementById("ring-total").style.strokeDashoffset = 722.6 * (1 - totalPercent);
+    document.getElementById("ring-wdw").style.strokeDashoffset = 565.5 * (1 - wdwPercent);
+    document.getElementById("ring-dl").style.strokeDashoffset = 376.9 * (1 - dlPercent);
+    document.getElementById("ring-dcl").style.strokeDashoffset = 219.9 * (1 - dclPercent);
+
+    document.getElementById("percent-total").innerHTML = `<i class="fas fa-bullseye"></i> Total: ${(totalPercent * 100).toFixed(1)}% — ${totalComplete}/${filtered.length}`;
+    document.getElementById("percent-wdw").innerHTML = `<i class="fas fa-landmark-dome"></i> WDW: ${(wdwPercent * 100).toFixed(1)}% — ${wdwComplete}/${wdw.length}`;
+    document.getElementById("percent-dl").innerHTML = `<i class="fas fa-bridge"></i> DLR: ${(dlPercent * 100).toFixed(1)}% — ${dlComplete}/${dl.length}`;
+    document.getElementById("percent-dcl").innerHTML = `<i class="fas fa-anchor"></i> DCL: ${(dclPercent * 100).toFixed(1)}% — ${dclComplete}/${dcl.length}`;
+  }
+
+function showLandingPage() {
+  document.getElementById("authSection").style.display = "none";
+  document.getElementById("landingPage").style.display = "block";
+
+    updateGlobalProgress();
+
+    const rings = document.getElementById("progress-rings-container"); // or "progress-rings"
+  if (rings) {
+    rings.classList.remove("pulse-once");
+    void rings.offsetWidth;
+    rings.classList.add("pulse-once");
+    }
+  }
+
+  // 🔐 Auth logic
+  onAuthStateChanged(auth, async user => {
+    if (user) {
+      // Optional: Load dark mode
+      const prefsSnap = await getDoc(doc(db, `users/${user.uid}/preferences/default`));
+      const prefs = prefsSnap.exists() ? prefsSnap.data() : {};
+      if (prefs.dark_mode === true) {
+        document.body.classList.add("dark");
+      }
+
+      document.body.style.display = "block";
+      document.getElementById("mainContent").style.display = "block";
+      showLandingPage();
+    } else {
+      window.location.href = "login.html";
+    }
+  });
+</script>
 </body>
 </html>
