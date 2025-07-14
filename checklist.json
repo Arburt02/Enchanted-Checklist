@@ -38,7 +38,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Magic Kingdom",
-    "Area": "Adventureland",
+    "Area": "Frontierland",
     "Pavilion": null,
     "Task": "Golden Oak Outpost",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/golden-oak-outpost/",
@@ -47,7 +47,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Magic Kingdom",
-    "Area": "Adventureland",
+    "Area": "Frontierland",
     "Pavilion": null,
     "Task": "Pecos Bill Tall Tale Inn and Cafe",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/pecos-bill-tall-tale-inn-and-cafe/",
@@ -110,7 +110,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Magic Kingdom",
-    "Area": "Adventureland",
+    "Area": "Frontierland",
     "Pavilion": null,
     "Task": "Westward Ho",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/westward-ho/",
@@ -177,7 +177,7 @@
     "Pavilion": null,
     "Task": "Get Pixie Dusted",
     "URL": "https://plandisney.disney.go.com/question/charge-pixie-dusted-magic-kingdom-599591/",
-    "Subcategory": "Flutter over to Pixie Hollow for a magical fairy dusting that'll leave you sparkling like Tinker Bell herself!"
+    "Subcategory": "Flutter over to Sir Mickey's for a magical fairy dusting that'll leave you sparkling like Tinker Bell herself!"
   },
   {
     "Experience": "Walt Disney World",
@@ -438,16 +438,16 @@
     "Pavilion": null,
     "Task": "The Friar's Nook",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/friars-nook/",
-    "Subcategory": "Take a dreamy boat ride through charming animatronic cultures all singing that unforgettable tune."
+    "Subcategory": "This cozy little hideaway in Fantasyland serves up comforting, crave-worthy bites—like loaded tots that hit just right between rides."
   },
   {
     "Experience": "Walt Disney World",
     "Park": "Magic Kingdom",
     "Area": "Fantasyland",
     "Pavilion": null,
-    "Task": "\"It's a Small World\"",
+    "Task": "It's a Small World",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/its-a-small-world/",
-    "Subcategory": "Splash, spray, and soak your squad, this circus-themed water play zone is perfect for Florida's heat."
+    "Subcategory": "Take a dreamy boat ride through charming animatronic cultures all singing that unforgettable tune."
   },
   {
     "Experience": "Walt Disney World",
@@ -456,7 +456,7 @@
     "Pavilion": null,
     "Task": "Casey Jr. Splash 'N' Soak Station",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/casey-jr-splash-n-soak-station/",
-    "Subcategory": "Soar above Storybook Circus on your own flying elephant, classic, colorful, and a must-do for littles."
+    "Subcategory": "Splash, spray, and soak your squad, this circus-themed water play zone is perfect for Florida's heat."
   },
   {
     "Experience": "Walt Disney World",
@@ -465,7 +465,7 @@
     "Pavilion": null,
     "Task": "Dumbo the Flying Elephant",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/dumbo-the-flying-elephant/",
-    "Subcategory": "Spin yourself silly in a pastel teacup, fun, dizzying, and a photo-op favorite."
+    "Subcategory": "Soar above Storybook Circus on your own flying elephant, classic, colorful, and a must-do for littles."
   },
   {
     "Experience": "Walt Disney World",
@@ -474,7 +474,7 @@
     "Pavilion": null,
     "Task": "Mad Tea Party",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/mad-tea-party/",
-    "Subcategory": "Fly over London and into Neverland on this dark ride adventure, iconic and forever magical."
+    "Subcategory": "Spin yourself silly in a pastel teacup, fun, dizzying, and a photo-op favorite."
   },
   {
     "Experience": "Walt Disney World",
@@ -483,7 +483,7 @@
     "Pavilion": null,
     "Task": "Peter Pan's Flight",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/peter-pan-flight/",
-    "Subcategory": "Take a whimsical spin on Cinderella's carousel, elegant horses, regal vibes, and classic music."
+    "Subcategory": "Fly over London and into Neverland on this dark ride adventure, iconic and forever magical."
   },
   {
     "Experience": "Walt Disney World",
@@ -492,7 +492,7 @@
     "Pavilion": null,
     "Task": "Prince Charming Regal Carrousel",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/prince-charming-regal-carrousel/",
-    "Subcategory": "Zip through the mine with the Seven Dwarfs, part coaster, part storytelling dark ride, all crowd favorite."
+    "Subcategory": "Take a whimsical spin on Cinderella's carousel, elegant horses, regal vibes, and classic music."
   },
   {
     "Experience": "Walt Disney World",
@@ -501,7 +501,7 @@
     "Pavilion": null,
     "Task": "Seven Dwarves Mine Train",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/seven-dwarfs-mine-train/",
-    "Subcategory": "Blast off on a mini coaster with Goofy at the helm, perfect for first-time thrill seekers."
+    "Subcategory": "Zip through the mine with the Seven Dwarfs, part coaster, part storytelling dark ride, all crowd favorite."
   },
   {
     "Experience": "Walt Disney World",
@@ -510,7 +510,7 @@
     "Pavilion": null,
     "Task": "The Barnstormer",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/barnstormer-starring-great-goofini/",
-    "Subcategory": "Bounce with Tigger and explore the Hundred Acre Wood in this family-friendly journey through Pooh's pages."
+    "Subcategory": "Blast off on a mini coaster with Goofy at the helm, perfect for first-time thrill seekers."
   },
   {
     "Experience": "Walt Disney World",
@@ -519,7 +519,7 @@
     "Pavilion": null,
     "Task": "The Many Adventures of Winnie the Pooh",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/many-adventures-of-winnie-the-pooh/",
-    "Subcategory": "Dive under the sea with Ariel and friends, colorful animatronics and catchy songs in cool, underwater comfort."
+    "Subcategory": "Bounce with Tigger and explore the Hundred Acre Wood in this family-friendly journey through Pooh's pages."
   },
   {
     "Experience": "Walt Disney World",
@@ -528,7 +528,7 @@
     "Pavilion": null,
     "Task": "Under the Sea - Journey of the Little Mermaid",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/under-the-sea-journey-of-the-little-mermaid/",
-    "Subcategory": "Ride the rails around Magic Kingdom with stops in Frontierland, Fantasyland, and Main Street, classic charm and great for resting tired feet."
+    "Subcategory": "Dive under the sea with Ariel and friends, colorful animatronics and catchy songs in cool, underwater comfort."
   },
   {
     "Experience": "Walt Disney World",
@@ -537,7 +537,7 @@
     "Pavilion": null,
     "Task": "Walt Disney World Railroad",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/walt-disney-world-railroad-fantasyland/",
-    "Subcategory": "Sip whimsical drinks and snack on treats at this Alice-in-Wonderland-inspired cottage cafe."
+    "Subcategory": "Ride the rails around Magic Kingdom with stops in Frontierland, Fantasyland, and Main Street, classic charm and great for resting tired feet."
   },
   {
     "Experience": "Walt Disney World",
@@ -546,7 +546,7 @@
     "Pavilion": null,
     "Task": "Cheshire Cafe",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/cheshire-cafe/",
-    "Subcategory": "Snack like a true Gaston, cinnamon rolls, cold brews, and manly theming inside a cozy village tavern."
+    "Subcategory": "Sip whimsical drinks and snack on treats at this Alice-in-Wonderland-inspired cottage cafe."
   },
   {
     "Experience": "Walt Disney World",
@@ -555,7 +555,7 @@
     "Pavilion": null,
     "Task": "Gaston's Tavern",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/gastons-tavern/",
-    "Subcategory": "Fresh fruit snacks and frozen drinks served near Ariel's Grotto, grab-and-go with a seaside vibe."
+    "Subcategory": "Snack like a true Gaston, cinnamon rolls, cold brews, and manly theming inside a cozy village tavern."
   },
   {
     "Experience": "Walt Disney World",
@@ -564,7 +564,7 @@
     "Pavilion": null,
     "Task": "Prince Eric's Village Market",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/prince-eric-village-market/",
-    "Subcategory": "Cool off with soft-serve cones, sundaes, or the occasional themed dessert near Fantasyland's heart."
+    "Subcategory": "Fresh fruit snacks and frozen drinks served near Ariel's Grotto, grab-and-go with a seaside vibe."
   },
   {
     "Experience": "Walt Disney World",
@@ -573,7 +573,7 @@
     "Pavilion": null,
     "Task": "Storybook Treats",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/storybook-treats/",
-    "Subcategory": "Feast inside Beast's enchanted castle, French cuisine, immersive rooms, and a chance to spot the master himself."
+    "Subcategory": "Cool off with soft-serve cones, sundaes, or the occasional themed dessert near Fantasyland's heart."
   },
   {
     "Experience": "Walt Disney World",
@@ -582,7 +582,7 @@
     "Pavilion": null,
     "Task": "Be Our Guest",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/be-our-guest-restaurant/",
-    "Subcategory": "Join the bears for a rootin'-tootin' country music revue, so kitschy, it's become a cult classic."
+    "Subcategory": "Feast inside Beast's enchanted castle, French cuisine, immersive rooms, and a chance to spot the master himself."
   },
   {
     "Experience": "Walt Disney World",
@@ -591,7 +591,7 @@
     "Pavilion": null,
     "Task": "Country Bear Musical Jamboree",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/country-bear-jamboree/",
-    "Subcategory": "Race through the wildest ride in the wilderness, sharp turns, geysers, and gold-mining thrills."
+    "Subcategory": "Join the bears for a rootin'-tootin' country music revue, so kitschy, it's become a cult classic."
   },
   {
     "Experience": "Walt Disney World",
@@ -600,7 +600,7 @@
     "Pavilion": null,
     "Task": "Big Thunder Mountain Railroad",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/big-thunder-mountain-railroad/",
-    "Subcategory": "Take the plunge with Tiana and friends on this music-filled, bayou adventure full of splashy surprises."
+    "Subcategory": "Race through the wildest ride in the wilderness, sharp turns, geysers, and gold-mining thrills."
   },
   {
     "Experience": "Walt Disney World",
@@ -609,7 +609,7 @@
     "Pavilion": null,
     "Task": "Tiana's Bayou Adventure",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/tianas-bayou-adventure/",
-    "Subcategory": "Explore caves, bridges, and hidden corners on this river island playground, great for curious kids and peaceful breaks."
+    "Subcategory": "Take the plunge with Tiana and friends on this music-filled, bayou adventure full of splashy surprises."
   },
   {
     "Experience": "Walt Disney World",
@@ -753,7 +753,7 @@
     "Pavilion": null,
     "Task": "Walt Disney World Railroad",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/walt-disney-world-railroad/",
-    "Subcategory": "A scenic dessert party with castle views and sweet treats before fireworks light up the sky."
+    "Subcategory": "Step aboard a nostalgic steam-powered journey that circles the magic—starting right on Main Street with views that never get old."
   },
   {
     "Experience": "Walt Disney World",
@@ -762,7 +762,7 @@
     "Pavilion": null,
     "Task": "Magic Kingdom Fireworks Dessert Party",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/fireworks-dessert-after-party/",
-    "Subcategory": "Fudge, caramel apples, and sweet-smelling air, this candy shop is peak Disney nostalgia."
+    "Subcategory": "A scenic dessert party with castle views and sweet treats before fireworks light up the sky."
   },
   {
     "Experience": "Walt Disney World",
@@ -771,7 +771,7 @@
     "Pavilion": null,
     "Task": "Main Street Confectionary",
     "URL": "https://disneyworld.disney.go.com/shops/magic-kingdom/main-street-confectionery/",
-    "Subcategory": "Cones, sundaes, and scoops with a view, this is where ice cream meets castle magic."
+    "Subcategory": "Fudge, caramel apples, and sweet-smelling air, this candy shop is peak Disney nostalgia."
   },
   {
     "Experience": "Walt Disney World",
@@ -780,7 +780,7 @@
     "Pavilion": null,
     "Task": "Plaza Ice Cream Parlor",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/plaza-ice-cream-parlor/",
-    "Subcategory": "Dine with Winnie the Pooh and friends in a garden-themed buffet, wholesome, warm, and endlessly cute."
+    "Subcategory": "Cones, sundaes, and scoops with a view, this is where ice cream meets castle magic."
   },
   {
     "Experience": "Walt Disney World",
@@ -789,7 +789,7 @@
     "Pavilion": null,
     "Task": "The Crystal Palace",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/crystal-palace/",
-    "Subcategory": "Casual dining in a Victorian setting, club sandwiches, burgers, and Main Street charm."
+    "Subcategory": "Dine with Winnie the Pooh and friends in a garden-themed buffet, wholesome, warm, and endlessly cute."
   },
   {
     "Experience": "Walt Disney World",
@@ -798,7 +798,7 @@
     "Pavilion": null,
     "Task": "The Plaza Restaurant",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/plaza-restaurant/",
-    "Subcategory": "A cozy, often overlooked table service restaurant serving up hearty American meals in Liberty Square."
+    "Subcategory": "Casual dining in a Victorian setting, club sandwiches, burgers, and Main Street charm."
   },
   {
     "Experience": "Walt Disney World",
@@ -807,7 +807,7 @@
     "Pavilion": null,
     "Task": "Tony's Town Square Restaurant",
     "URL": "https://disneyworld.disney.go.com/dining/magic-kingdom/tonys-town-square-restaurant/",
-    "Subcategory": "Pirate-themed dance and character encounters during party nights, catch them for a swashbuckling surprise."
+    "Subcategory": "A cozy, often overlooked table service restaurant serving up hearty American meals in Liberty Square."
   },
   {
     "Experience": "Walt Disney World",
@@ -816,7 +816,7 @@
     "Pavilion": null,
     "Task": "Rusty Cutlass",
     "URL": "https://disneyworld.disney.go.com/events-tours/magic-kingdom/mickeys-not-so-scary-halloween-party/#drawer-card-moonlight",
-    "Subcategory": "Fireworks with a Halloween twist, spooky music, castle projections, and Jack Skellington flair."
+    "Subcategory": "Pirate-themed dance and character encounters during party nights, catch them for a swashbuckling surprise."
   },
   {
     "Experience": "Walt Disney World",
@@ -1057,7 +1057,7 @@
     "Park": "Magic Kingdom",
     "Area": "Mainstreet, U.S.A.",
     "Pavilion": null,
-    "Task": "Disney Festival of Fantasy",
+    "Task": "Disney Festival of Fantasy Parade",
     "URL": "https://disneyworld.disney.go.com/entertainment/magic-kingdom/festival-fantasy-parade/",
     "Subcategory": "Colorful floats, shimmering dancers, and dozens of characters roll down Main Street in this iconic day parade."
   },
@@ -1138,7 +1138,7 @@
     "Park": "Magic Kingdom",
     "Area": "Tomorrowland",
     "Pavilion": null,
-    "Task": "Tron Lightcycle / Run",
+    "Task": "Tron Lightcycle Run",
     "URL": "https://disneyworld.disney.go.com/attractions/magic-kingdom/tron-lightcycle-run/",
     "Subcategory": "Hop on a lightcycle and launch into the Grid, neon speed and futuristic thrills in Disney's newest coaster."
   },
