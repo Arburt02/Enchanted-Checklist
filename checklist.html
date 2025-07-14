@@ -183,6 +183,12 @@
 				opacity: 0;
 			}
 		}
+		
+		body.dark em {
+  color: #ddd;
+  font-style: italic;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.1);
+}
 
 		body.dark {
 			background: #121212;
@@ -506,14 +512,30 @@ function renderExperiences() {
     checkbox.checked = isComplete;
 
     checkbox.addEventListener('change', async () => {
-      const taskRef = doc(db, `users/${uid}/progress`, taskId);
-      if (checkbox.checked) {
-        await setDoc(taskRef, { complete: true });
-      } else {
-        await deleteDoc(taskRef);
-      }
-      renderTasks(tasks, label); // refresh for progress bar update
-    });
+  const taskRef = doc(db, `users/${uid}/progress`, taskId);
+  if (checkbox.checked) {
+    await setDoc(taskRef, { complete: true });
+    card.style.opacity = 0.6;
+    title.style.textDecoration = 'line-through';
+    title.style.color = '#555';
+  } else {
+    await deleteDoc(taskRef);
+    card.style.opacity = 1;
+    title.style.textDecoration = 'none';
+    title.style.color = 'white';
+  }
+
+  await updateSectionProgress(); // Just refresh the bar
+  const percent = parseInt(progressBar.style.width) || 0;
+  progressBar.classList.remove("shimmer-gold");
+  if (percent > 50) {
+    void progressBar.offsetWidth;
+    progressBar.classList.add("shimmer-gold");
+  }
+  if (percent >= 100) {
+    launchFireworks();
+  }
+});
 
     const title = document.createElement('strong');
     title.textContent = task.Task;
