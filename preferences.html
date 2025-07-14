@@ -96,7 +96,7 @@ onAuthStateChanged(auth, async user => {
   }
 });
 
-function renderPreferences() {
+window.renderPreferences = function renderPreferences() {
   const container = document.getElementById("preferencesPage");
 
   container.innerHTML = `
@@ -126,7 +126,7 @@ function renderPreferences() {
     const uid = auth.currentUser.uid;
     await setDoc(doc(db, "users", uid, "preferences", "default"), prefs, { merge: true });
   };
-}
+};
 
 window.openCustomizeChecklist = async function () {
   const container = document.getElementById("preferencesPage");
@@ -192,9 +192,10 @@ window.openCustomizeChecklist = async function () {
   });
 };
 
-function goHome() {
+		window.goHome = function () {
   window.location.href = "index.html";
-}
+};
+
 </script>
 </body>
 </html>

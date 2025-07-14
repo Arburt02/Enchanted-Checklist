@@ -135,31 +135,47 @@ background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
   </div>
 
 <script type="module">
-  // ✅ Firebase imports
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-  import {
-    getFirestore, getDoc, doc, getDocs, collection, setDoc, deleteDoc
-  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import {
+  getFirestore, getDoc, doc, getDocs, collection, setDoc, deleteDoc
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-  // ✅ Initialize Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
-    authDomain: "the-enchanted-checklist.firebaseapp.com",
-    projectId: "the-enchanted-checklist",
-    storageBucket: "the-enchanted-checklist.appspot.com",
-    messagingSenderId: "971177969419",
-    appId: "1:971177969419:web:3a48e119cb866f6551840e"
-  };
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+const firebaseConfig = {
+  apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
+  authDomain: "the-enchanted-checklist.firebaseapp.com",
+  projectId: "the-enchanted-checklist",
+  storageBucket: "the-enchanted-checklist.appspot.com",
+  messagingSenderId: "971177969419",
+  appId: "1:971177969419:web:3a48e119cb866f6551840e"
+};
 
-  // ✅ App State
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// 🌐 Expose globals
+window.getDocs = getDocs;
+window.collection = collection;
+window.doc = doc;
+window.setDoc = setDoc;
+window.deleteDoc = deleteDoc;
+window.goHome = () => window.location.href = "index.html";
+window.logout = async () => {
+  try {
+    await signOut(auth);
+    window.location.href = "login.html";
+  } catch (err) {
+    alert("Logout failed: " + err.message);
+  }
+};
+
+async function init() {
   const checklistDiv = document.getElementById("checklist");
   const pageTitle = document.getElementById("page-title");
   const taskCount = document.getElementById("task-count");
   const backButton = document.getElementById("back-button");
+
   let navStack = [];
   let fullData = [];
   let prefs = {};
@@ -167,75 +183,77 @@ background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
   let progressMap = {};
   let currentTasks = [];
 
-  // ✅ Auth & Main Logic
-  onAuthStateChanged(auth, async user => {
-    if (!user) return window.location.href = "login.html";
-    const uid = user.uid;
-
-    try {
-      // Load preferences
-      const prefsSnap = await getDoc(doc(db, `users/${uid}/preferences/default`));
-      prefs = prefsSnap.exists() ? prefsSnap.data() : {};
-      if (prefs.dark_mode) document.body.classList.add("dark");
-
-      // Load saved tasks
-      const savedSnap = await getDocs(collection(db, `users/${uid}/saved`));
-      const savedIds = savedSnap.docs.map(doc => doc.id);
-      savedMap = Object.fromEntries(savedIds.map(id => [id, true]));
-
-      // Load checklist
-      const res = await fetch("checklist.json");
-      if (!res.ok) throw new Error("Failed to load checklist.json");
-      fullData = await res.json();
-
-      // Filter preferences
-      const wdwFilters = getFilters([
-        "Magic Kingdom", "EPCOT", "Animal Kingdom", "Hollywood Studios",
-        "Park Hopper Plus", "Disney Springs", "Walt Disney World Resorts"
-      ]);
-      const dlrFilters = getFilters([
-        "Disneyland Park", "Disney California Adventure", "Downtown Disney District",
-        "Disneyland Resorts", "Seasonal Events and Festivals", "Bonus"
-      ]);
-      const dclFilter = prefs["include_Disney Cruise Line"] !== false;
-
-      const savedTasks = fullData.filter(task => {
-        const id = task.id || `${task.Park}-${task.Area}-${task.Task}`;
-        if (!savedMap[id]) return false;
-
-        if (task.Experience === "Walt Disney World") return wdwFilters[task.Park];
-        if (task.Experience === "Disneyland") return dlrFilters[task.Park];
-        if (task.Experience === "Disney Cruise Line") return dclFilter;
-
-        return false;
-      });
-
-      if (savedTasks.length === 0) {
-        checklistDiv.innerHTML = `
-          <p style="font-size: 1.1rem; padding: 1rem;">
-            <i class="fas fa-magic" style="margin-right: 0.5rem;"></i>
-            Looks like your favorites list is empty!
-          </p>
-          <p style="font-size: 1.05rem; padding: 0 1rem;">
-            Tap <strong>Your Experiences</strong> to start exploring and save some magical must-dos!
-          </p>
-        `;
-        pageTitle.innerHTML = `<i class="fas fa-heart" style="margin-right: 0.5rem;"></i>My Saved Tasks`;
-        taskCount.textContent = "0 saved tasks";
-        return;
+  const userReady = new Promise(resolve => {
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        resolve(user);
       }
-
-      renderExperiences(savedTasks);
-      document.body.style.display = "block";
-      document.getElementById("mainContent").style.display = "block";
-
-    } catch (err) {
-      console.error("Error:", err);
-      checklistDiv.innerHTML = `<p style="color:red; padding:1rem;">Failed to load data. Please try again.</p>`;
-    }
+    });
   });
 
-  // ✅ Helpers
+  const user = await userReady;
+  const uid = user.uid;
+
+  try {
+    const [prefsSnap, savedSnap, checklistRes] = await Promise.all([
+      getDoc(doc(db, `users/${uid}/preferences/default`)),
+      getDocs(collection(db, `users/${uid}/saved`)),
+      fetch("checklist.json").then(res => res.json())
+    ]);
+
+    prefs = prefsSnap.exists() ? prefsSnap.data() : {};
+    if (prefs.dark_mode) document.body.classList.add("dark");
+
+    const savedIds = savedSnap.docs.map(doc => doc.id);
+    savedMap = Object.fromEntries(savedIds.map(id => [id, true]));
+
+    fullData = checklistRes;
+
+    const wdwFilters = getFilters([
+      "Magic Kingdom", "EPCOT", "Animal Kingdom", "Hollywood Studios",
+      "Park Hopper Plus", "Disney Springs", "Walt Disney World Resorts"
+    ]);
+    const dlrFilters = getFilters([
+      "Disneyland Park", "Disney California Adventure", "Downtown Disney District",
+      "Disneyland Resorts", "Seasonal Events and Festivals", "Bonus"
+    ]);
+    const dclFilter = prefs["include_Disney Cruise Line"] !== false;
+
+    const savedTasks = fullData.filter(task => {
+      const id = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+      if (!savedMap[id]) return false;
+      if (task.Experience === "Walt Disney World") return wdwFilters[task.Park];
+      if (task.Experience === "Disneyland") return dlrFilters[task.Park];
+      if (task.Experience === "Disney Cruise Line") return dclFilter;
+      return false;
+    });
+
+    if (savedTasks.length === 0) {
+      checklistDiv.innerHTML = `
+        <p style="font-size: 1.1rem; padding: 1rem;">
+          <i class="fas fa-magic" style="margin-right: 0.5rem;"></i>
+          Looks like your favorites list is empty!
+        </p>
+        <p style="font-size: 1.05rem; padding: 0 1rem;">
+          Tap <strong>Your Experiences</strong> to start exploring and save some magical must-dos!
+        </p>
+      `;
+      pageTitle.innerHTML = `<i class="fas fa-heart" style="margin-right: 0.5rem;"></i>My Saved Tasks`;
+      taskCount.textContent = "0 saved tasks";
+    } else {
+      renderExperiences(savedTasks);
+    }
+
+    document.body.style.display = "block";
+    document.getElementById("mainContent").style.display = "block";
+
+  } catch (err) {
+    console.error("🔥 Error loading favorites:", err);
+    checklistDiv.innerHTML = `<p style="color:red; padding:1rem;">Failed to load favorites. Try again later.</p>`;
+  }
+
   function getFilters(parks) {
     return Object.fromEntries(parks.map(p => [p, prefs[`include_${p}`] !== false]));
   }
@@ -252,15 +270,9 @@ background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
 
     backButton.style.display = "none";
     navStack = [];
+    currentTasks = savedTasks;
 
-	currentTasks = savedTasks;
-
-if (savedTasks.length === 0) {
-  checklistDiv.innerHTML = "<p style='text-align:center;'>You haven't saved any tasks yet.</p>";
-  return;
-}
- 
-const experiences = [...new Set(savedTasks.map(t => t.Experience))];
+    const experiences = [...new Set(savedTasks.map(t => t.Experience))];
     experiences.forEach(exp => {
       const div = document.createElement('div');
       div.textContent = exp;
@@ -281,7 +293,10 @@ const experiences = [...new Set(savedTasks.map(t => t.Experience))];
     pageTitle.textContent = experienceName;
     taskCount.textContent = `${data.length} tasks`;
     backButton.style.display = "inline-block";
-    backButton.onclick = goBack;
+    backButton.onclick = () => {
+      const last = navStack.pop();
+      if (last) last();
+    };
 
     const parks = [...new Set(data.map(t => t.Park))];
     parks.forEach(park => {
@@ -298,11 +313,7 @@ const experiences = [...new Set(savedTasks.map(t => t.Experience))];
   }
 
   async function renderTasks(tasks, label) {
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const uid = user.uid;
-    const taskSnap = await getDocs(collection(db, `users/${uid}/progress`));
+    const taskSnap = await getDocs(collection(db, `users/${user.uid}/progress`));
     progressMap = {};
     taskSnap.forEach(doc => {
       progressMap[doc.id] = doc.data().complete === true;
@@ -312,7 +323,10 @@ const experiences = [...new Set(savedTasks.map(t => t.Experience))];
     pageTitle.textContent = label;
     taskCount.textContent = `${tasks.length} tasks`;
     backButton.style.display = "inline-block";
-    backButton.onclick = goBack;
+    backButton.onclick = () => {
+      const last = navStack.pop();
+      if (last) last();
+    };
     currentTasks = tasks;
 
     tasks.forEach(task => {
@@ -330,19 +344,12 @@ const experiences = [...new Set(savedTasks.map(t => t.Experience))];
       checkbox.type = 'checkbox';
       checkbox.className = 'task-checkbox';
       checkbox.setAttribute('data-task-id', taskId);
-      if (isComplete) {
-        checkbox.checked = true;
-        card.style.opacity = 0.6;
-      }
+      checkbox.checked = isComplete;
 
       const title = document.createElement('strong');
       title.textContent = task.Task;
       title.style.wordBreak = 'break-word';
       title.style.fontSize = '1rem';
-      if (isComplete) {
-        title.style.textDecoration = 'line-through';
-        title.style.color = '#555';
-      }
 
       const summaryDiv = document.createElement('div');
       summaryDiv.style.display = 'none';
@@ -373,7 +380,7 @@ const experiences = [...new Set(savedTasks.map(t => t.Experience))];
       saveIcon.title = "Remove from Saved Tasks";
       saveIcon.onclick = async e => {
         e.stopPropagation();
-        const ref = doc(db, `users/${uid}/saved/${taskId}`);
+        const ref = doc(db, `users/${user.uid}/saved/${taskId}`);
         if (isSaved) {
           await deleteDoc(ref);
           card.remove();
@@ -390,61 +397,47 @@ const experiences = [...new Set(savedTasks.map(t => t.Experience))];
       card.appendChild(row);
       card.appendChild(summaryDiv);
       checklistDiv.appendChild(card);
+    }); // ✅ closes tasks.forEach
+
+    // ✅ Interactivity inside renderTasks
+    checklistDiv.addEventListener('change', async e => {
+      if (e.target.matches('.task-checkbox')) {
+        const user = auth.currentUser;
+        if (!user) return;
+        const taskId = e.target.getAttribute('data-task-id');
+        const ref = doc(db, `users/${user.uid}/progress/${taskId}`);
+        const card = e.target.closest('.task-card');
+        const title = card.querySelector('strong');
+
+        if (e.target.checked) {
+          await setDoc(ref, { complete: true });
+          card.style.opacity = 0.6;
+          title.style.textDecoration = 'line-through';
+          title.style.color = '#555';
+        } else {
+          await deleteDoc(ref);
+          card.style.opacity = 1;
+          title.style.textDecoration = 'none';
+          title.style.color = 'white';
+        }
+      }
     });
-  }
 
-
-  // ✅ Interactivity
-  checklistDiv.addEventListener('change', async e => {
-    if (e.target.matches('.task-checkbox')) {
-      const user = auth.currentUser;
-      if (!user) return;
-      const taskId = e.target.getAttribute('data-task-id');
-      const ref = doc(db, `users/${user.uid}/progress/${taskId}`);
-      const card = e.target.closest('.task-card');
-      const title = card.querySelector('strong');
-
-      if (e.target.checked) {
-        await setDoc(ref, { complete: true });
-        card.style.opacity = 0.6;
-        title.style.textDecoration = 'line-through';
-        title.style.color = '#555';
-      } else {
-        await deleteDoc(ref);
-        card.style.opacity = 1;
-        title.style.textDecoration = 'none';
-        title.style.color = 'white';
+    checklistDiv.addEventListener('click', e => {
+      if (e.target.matches('.explore-link')) {
+        e.preventDefault();
+        const url = e.target.getAttribute('data-url');
+        if (url && confirm("Open this task in a new tab?")) {
+          window.open(url, '_blank');
+        }
       }
-    }
-  });
+    });
 
-  checklistDiv.addEventListener('click', e => {
-    if (e.target.matches('.explore-link')) {
-      e.preventDefault();
-      const url = e.target.getAttribute('data-url');
-      if (url && confirm("Open this task in a new tab?")) {
-        window.open(url, '_blank');
-      }
-    }
-  });
+}	// ✅ closes renderTasks
+}
 
-  function goBack() {
-    const last = navStack.pop();
-    if (last) last();
-  }
+  init(); // ✅ runs the app }
 
-  window.goHome = function () {
-    window.location.href = "index.html";
-  };
-
-  window.logout = async function () {
-    try {
-      await signOut(auth);
-      window.location.href = "login.html";
-    } catch (err) {
-      alert("Logout failed: " + err.message);
-    }
-  };
 </script>
 </body>
 </html>

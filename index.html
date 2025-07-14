@@ -310,7 +310,8 @@
   }
 
 function showLandingPage() {
-  document.getElementById("authSection").style.display = "none";
+  const authSection = document.getElementById("authSection");
+if (authSection) authSection.style.display = "none";
   document.getElementById("landingPage").style.display = "block";
 
     updateGlobalProgress();

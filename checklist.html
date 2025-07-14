@@ -242,7 +242,15 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-  import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+  import {
+  getFirestore,
+  getDoc,
+  getDocs,
+  setDoc,
+  deleteDoc,
+  doc,
+  collection
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
@@ -663,73 +671,12 @@ checklistDiv.addEventListener('change', async e => {
   }
 });
 
-		function goHome() {
-			window.location.href = "index.html";
-		}
+		window.goHome = function () {
+  window.location.href = "index.html";
+};
+		
 	</script>
 	
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-  import {
-    getAuth,
-    onAuthStateChanged,
-    signOut
-  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-  import {
-    getFirestore,
-    collection,
-    doc,
-    getDocs,
-    getDoc,
-    setDoc,
-    deleteDoc
-  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
-    authDomain: "the-enchanted-checklist.firebaseapp.com",
-    projectId: "the-enchanted-checklist",
-    storageBucket: "the-enchanted-checklist.appspot.com",
-    messagingSenderId: "971177969419",
-    appId: "1:971177969419:web:3a48e119cb866f6551840e"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  onAuthStateChanged(auth, async user => {
-    if (user) {
-      // 🔄 Optional: apply Firestore dark mode preference
-      const prefsSnap = await getDoc(doc(db, `users/${user.uid}/preferences/default`));
-      const prefs = prefsSnap.exists() ? prefsSnap.data() : {};
-      if (prefs.dark_mode === true) {
-        document.body.classList.add("dark");
-      }
-
-      // ✅ Show the app
-      document.body.style.display = "block";
-      const content = document.getElementById("mainContent");
-      if (content) content.style.display = "block";
-    } else {
-      window.location.href = "login.html";
-    }
-  });
-
-  window.logout = async function () {
-    try {
-      await signOut(auth);
-      window.location.href = "login.html";
-    } catch (err) {
-      alert("Logout failed: " + err.message);
-    }
-  };
-
-  // Expose db and auth globally if needed elsewhere
-  window.db = db;
-  window.auth = auth;
-</script>
-
 </body>
 
 </html>
