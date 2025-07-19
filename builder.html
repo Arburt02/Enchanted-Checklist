@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trip Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    padding: 2rem;
+    min-height: 100vh;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  body.dark {
+    background: #121212;
+    color: white;
+  }
+
+  body.dark .day-block,
+  body.dark select,
+  body.dark input,
+  body.dark button {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+  }
+
+  .main-container {
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1zrem;
+  }
+
+  #header {
+    position: sticky;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 0.75rem 1rem;
+    z-index: 10;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  #page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    text-align: center;
+    color: white;
+  }
+
+  .explore-button {
+    background-color: #ffffff;
+    color: #2f77a7;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 0.5rem;
+    width: auto;
+  }
+
+  .explore-button i {
+    margin-right: 0.3rem;
+  }
+
+  select, button, input {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+  }
+
+  button {
+    background-color: #ffffff;
+    color: #2f77a7;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .day-block {
+    background: rgba(255,255,255,0.25);
+    padding: 1rem;
+    border-radius: 12px;
+    margin-top: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  .task-select {
+    margin-top: 0.5rem;
+  }
+
+  .added-task {
+    background: rgba(255,255,255,0.2);
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    margin: 0.25rem 0;
+  }
+</style>
+</head>
+<body>
+	<div class="main-container">
+ <div id="header">
+  <button id="back-button" class="explore-button" onclick="window.location.href='planner.html'" aria-label="Go back">
+    <i class="fas fa-arrow-left"></i> Back
+  </button>
+  <h2 id="page-title">Build Your Trip</h2>
+</div>
+
+    <label for="tripLength">How many park days?</label>
+    <select id="tripLength">
+      <option value="">Select...</option>
+      <option value="1">1 Day</option>
+      <option value="2">2 Days</option>
+      <option value="3">3 Days</option>
+      <option value="4">4 Days</option>
+      <option value="5">5 Days</option>
+      <option value="6">6 Days</option>
+      <option value="7">7 Days</option>
+    </select>
+
+    <button onclick="generateDayBlocks()">Build It</button>
+
+    <div id="tripContainer"></div>
+  </div>
+</div>
+  
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs,
+    setDoc,
+    getDoc,
+    doc
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
+    authDomain: "the-enchanted-checklist.firebaseapp.com",
+    projectId: "the-enchanted-checklist",
+    storageBucket: "the-enchanted-checklist.appspot.com",
+    messagingSenderId: "971177969419",
+    appId: "1:971177969419:web:3a48e119cb866f6551840e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let checklist = [];
+  let savedTasks = [];
+  const tripContainer = document.getElementById("tripContainer");
+
+  function getTripIdFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("trip");
+  }
+
+  onAuthStateChanged(auth, async user => {
+    if (!user) return window.location.href = "login.html";
+
+    const [checklistRes, savedSnap] = await Promise.all([
+      fetch("checklist.json").then(res => res.json()),
+      getDocs(collection(db, `users/${user.uid}/saved`))
+    ]);
+	
+	const prefsSnap = await getDoc(doc(db, `users/${user.uid}/preferences/default`));
+if (prefsSnap.exists()) {
+  const prefs = prefsSnap.data();
+  if (prefs.dark_mode === true) {
+    document.body.classList.add("dark");
+  }
+}
+
+    checklist = checklistRes;
+    const savedMap = {};
+    savedSnap.forEach(doc => savedMap[doc.id] = true);
+
+    savedTasks = checklist.filter(task => {
+      const id = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+      return savedMap[id];
+    });
+
+    const tripId = getTripIdFromURL();
+    if (tripId) {
+      try {
+        const docRef = doc(db, `users/${user.uid}/trips`, tripId);
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+          alert("Trip not found.");
+          return;
+        }
+        renderTripFromData(docSnap.data());
+      } catch (err) {
+        console.error("Error loading trip:", err);
+        alert("There was a problem loading your trip.");
+      }
+    }
+  });
+  
+window.generateDayBlocks = function () {
+  const count = parseInt(document.getElementById("tripLength").value || "0");
+  if (!count || count < 1 || count > 7) return;
+
+  tripContainer.innerHTML = "";
+
+  for (let i = 0; i < count; i++) {
+    const block = document.createElement("div");
+    block.className = "day-block";
+    block.innerHTML = `
+      <h3>Day ${i + 1}</h3>
+      <label for="day${i}-park">Select a Park:</label>
+      <select id="day${i}-park">
+        <option value="">Select a park</option>
+        ${[...new Set(checklist.map(t => t.Park))]
+          .sort()
+          .map(p => `<option value="${p}">${p}</option>`).join("")}
+      </select>
+      <div class="task-select" id="day${i}-taskselect"></div>
+      <div id="day${i}-tasklist"></div>
+    `;
+    tripContainer.appendChild(block);
+
+    const parkDropdown = block.querySelector(`#day${i}-park`);
+    parkDropdown.addEventListener("change", () => {
+      const selectedPark = parkDropdown.value;
+      const taskDiv = block.querySelector(`#day${i}-taskselect`);
+      const taskList = block.querySelector(`#day${i}-tasklist`);
+      taskDiv.innerHTML = "";
+      taskList.innerHTML = "";
+
+      const tasks = savedTasks.filter(t => t.Park === selectedPark);
+      if (tasks.length === 0) {
+        taskDiv.innerHTML = "<p style='margin-top: 0.5rem;'>No saved tasks for this park.</p>";
+        return;
+      }
+
+      const select = document.createElement("select");
+      select.innerHTML = `<option value="">Add a task...</option>` + tasks.map(t => `<option>${t.Task}</option>`).join("");
+      select.addEventListener("change", () => {
+        const val = select.value;
+        if (val) {
+          const item = document.createElement("div");
+          item.className = "added-task";
+          item.textContent = "• " + val;
+          taskList.appendChild(item);
+          select.selectedIndex = 0;
+        }
+      });
+      taskDiv.appendChild(select);
+    });
+  }
+
+  // ✅ Add Save Button AFTER all blocks
+  let existingButton = document.getElementById("saveTripButton");
+  if (!existingButton) {
+    const saveBtn = document.createElement("button");
+    saveBtn.id = "saveTripButton";
+    saveBtn.innerHTML = "💾 Save This Trip";
+    saveBtn.style.marginTop = "2rem";
+
+    saveBtn.onclick = async () => {
+      const user = auth.currentUser;
+      if (!user) return alert("You must be logged in to save.");
+
+      const tripName = prompt("What would you like to name this trip?");
+      if (!tripName) return alert("Trip not saved without a name.");
+
+      const tripId = tripName.toLowerCase().replace(/\s+/g, "-");
+
+      const tripDays = [];
+      const dayBlocks = document.querySelectorAll(".day-block");
+
+      for (let i = 0; i < dayBlocks.length; i++) {
+        const parkSelect = dayBlocks[i].querySelector(`#day${i}-park`);
+        const selectedPark = parkSelect.value || "No Park Selected";
+
+        const taskDivs = dayBlocks[i].querySelectorAll(`#day${i}-tasklist .added-task`);
+        const tasks = Array.from(taskDivs).map(div => div.textContent.replace(/^•\s/, ""));
+
+        tripDays.push({
+          park: selectedPark,
+          tasks: tasks
+        });
+      }
+
+      const data = {
+        name: tripName,
+        created: new Date().toISOString(),
+        days: tripDays
+      };
+
+      try {
+        await setDoc(doc(db, `users/${user.uid}/trips`, tripId), data);
+        alert("🎉 Trip saved! View it in your planner.");
+        window.location.href = "planner.html";
+      } catch (error) {
+        console.error("Error saving trip:", error);
+        alert("Something went wrong. Please try again.");
+      }
+    };
+
+    // Append the save button after all day blocks
+    tripContainer.appendChild(saveBtn);
+  }
+};
+
+ function renderTripFromData(data) {
+  const tripLength = data.days.length;
+  tripContainer.innerHTML = "";
+
+  data.days.forEach((day, i) => {
+    const block = document.createElement("div");
+    block.className = "day-block";
+    block.innerHTML = `
+      <h3>Day ${i + 1}</h3>
+      <label for="day${i}-park">Select a Park:</label>
+      <select id="day${i}-park">
+        <option value="">Select a park</option>
+        ${[...new Set(checklist.map(t => t.Park))]
+          .sort()
+          .map(p => `<option value="${p}">${p}</option>`).join("")}
+      </select>
+      <div class="task-select" id="day${i}-taskselect"></div>
+      <div id="day${i}-tasklist"></div>
+    `;
+    tripContainer.appendChild(block);
+
+    const parkDropdown = block.querySelector(`#day${i}-park`);
+    parkDropdown.value = day.park;
+
+    const taskDiv = block.querySelector(`#day${i}-taskselect`);
+    const taskList = block.querySelector(`#day${i}-tasklist`);
+    const tasks = savedTasks.filter(t => t.Park === day.park);
+
+    if (tasks.length > 0) {
+      const select = document.createElement("select");
+      select.innerHTML = `<option value="">Add a task...</option>` + tasks.map(t => `<option>${t.Task}</option>`).join("");
+      select.addEventListener("change", () => {
+        const val = select.value;
+        if (val) {
+          const item = document.createElement("div");
+          item.className = "added-task";
+          item.textContent = "• " + val;
+          taskList.appendChild(item);
+          select.selectedIndex = 0;
+        }
+      });
+      taskDiv.appendChild(select);
+    }
+
+    day.tasks.forEach(task => {
+      const div = document.createElement("div");
+      div.className = "added-task";
+      div.textContent = "• " + task;
+      taskList.appendChild(div);
+    });
+
+    parkDropdown.addEventListener("change", () => {
+      const selectedPark = parkDropdown.value;
+      taskDiv.innerHTML = "";
+      taskList.innerHTML = "";
+
+      const filteredTasks = savedTasks.filter(t => t.Park === selectedPark);
+      if (filteredTasks.length === 0) {
+        taskDiv.innerHTML = "<p style='margin-top: 0.5rem;'>No saved tasks for this park.</p>";
+        return;
+      }
+
+      const select = document.createElement("select");
+      select.innerHTML = `<option value="">Add a task...</option>` + filteredTasks.map(t => `<option>${t.Task}</option>`).join("");
+      select.addEventListener("change", () => {
+        const val = select.value;
+        if (val) {
+          const item = document.createElement("div");
+          item.className = "added-task";
+          item.textContent = "• " + val;
+          taskList.appendChild(item);
+          select.selectedIndex = 0;
+        }
+      });
+      taskDiv.appendChild(select);
+    });
+  });
+
+  // ✅ Add Save Button at the very bottom
+  let existingButton = document.getElementById("saveTripButton");
+  if (!existingButton) {
+    const saveBtn = document.createElement("button");
+    saveBtn.id = "saveTripButton";
+    saveBtn.innerHTML = "💾 Save This Trip";
+    saveBtn.style.marginTop = "2rem";
+
+    saveBtn.onclick = async () => {
+      const user = auth.currentUser;
+      if (!user) return alert("You must be logged in to save.");
+
+      const tripName = data.name || "My Trip";
+      const tripId = tripName.toLowerCase().replace(/\s+/g, "-");
+
+      const tripDays = [];
+      const dayBlocks = document.querySelectorAll(".day-block");
+
+      for (let i = 0; i < dayBlocks.length; i++) {
+        const parkSelect = dayBlocks[i].querySelector(`#day${i}-park`);
+        const selectedPark = parkSelect.value || "No Park Selected";
+
+        const taskDivs = dayBlocks[i].querySelectorAll(`#day${i}-tasklist .added-task`);
+        const tasks = Array.from(taskDivs).map(div => div.textContent.replace(/^•\s/, ""));
+
+        tripDays.push({
+          park: selectedPark,
+          tasks: tasks
+        });
+      }
+
+      const newData = {
+        name: tripName,
+        updated: new Date().toISOString(),
+        days: tripDays
+      };
+
+      try {
+        await setDoc(doc(db, `users/${user.uid}/trips`, tripId), newData);
+        alert("🎉 Trip updated!");
+        window.location.href = "planner.html";
+      } catch (error) {
+        console.error("Error saving trip:", error);
+        alert("Something went wrong. Please try again.");
+      }
+    };
+
+    tripContainer.appendChild(saveBtn);
+  }
+}
+</script>
+</body>
+</html>

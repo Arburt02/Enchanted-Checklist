@@ -99,26 +99,29 @@ onAuthStateChanged(auth, async user => {
 window.renderPreferences = function renderPreferences() {
   const container = document.getElementById("preferencesPage");
 
-  container.innerHTML = `
-    <div class="sticky-header">
-      <button onclick="goHome()"><i class="fas fa-house" style="margin-right:0.5rem;"></i>Home</button>
-      <h2 style="margin:0.5rem 0;">Preferences</h2>
-    </div>
-    <div class="section-header">Checklist Customization</div>
-    <div class="preference-card" onclick="openCustomizeChecklist()">
-      <i class="fas fa-folder-open" style="margin-right: 0.5rem;"></i>
-      Customize My Checklist
-    </div>
-    <div class="section-header">App Settings</div>
-    <div class="preference-card">
-      <i class="fas fa-moon" style="margin-right: 0.5rem;"></i>
-      <span style="flex-grow: 1;">Dark Mode</span>
-      <input type="checkbox" id="darkModeToggle" ${prefs.dark_mode ? "checked" : ""} />
-    </div>
-    <div class="preference-card" style="opacity: 0.5;">
-      <span><i class="fas fa-lock" style="margin-right:0.5rem;"></i>Change Password (coming soon)</span>
-    </div>
-  `;
+container.innerHTML = `
+  <div class="sticky-header">
+    <button onclick="goHome()"><i class="fas fa-house" style="margin-right:0.5rem;"></i>Home</button>
+    <h2 style="margin:0.5rem 0;">Preferences</h2>
+  </div>
+
+  <div class="section-header">Checklist Customization</div>
+  <div class="preference-card" onclick="openCustomizeChecklist()">
+    <i class="fas fa-folder-open" style="margin-right: 0.5rem;"></i>
+    Customize My Checklist
+  </div>
+
+  <div class="section-header">App Settings</div>
+ <div class="preference-card" style="justify-content: flex-start;">
+  <input type="checkbox" id="darkModeToggle" ${prefs.dark_mode ? "checked" : ""} style="margin-right: 0.75rem;" />
+  <div style="flex-grow: 1; text-align: right;">Dark Mode</div>
+</div>
+
+  <div class="preference-card" onclick="window.location.href='account.html'">
+    <i class="fas fa-user-cog" style="margin-right: 0.5rem;"></i>
+    Account Management
+  </div>
+`;
 
   document.getElementById("darkModeToggle").onchange = async e => {
     prefs.dark_mode = e.target.checked;
@@ -193,7 +196,7 @@ window.openCustomizeChecklist = async function () {
 };
 
 		window.goHome = function () {
-  window.location.href = "index.html";
+  window.location.href = "home.html";
 };
 
 </script>

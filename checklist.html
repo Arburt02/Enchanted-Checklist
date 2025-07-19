@@ -18,7 +18,6 @@
 			text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 			/* 👈 soft black shadow */
 		}
-
 		/* 📱 Responsive container for all content */
 		.main-container {
 			width: 90%;
@@ -619,9 +618,10 @@ function renderExperiences() {
 		}
 
 		function goBack() {
-			const last = navStack.pop();
-			if (last) last();
-		}
+  const last = navStack.pop();
+  if (last) last();
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+ }
 
 		checklistDiv.addEventListener('click', e => {
 			if (e.target.matches('.explore-link')) {
@@ -694,7 +694,7 @@ checklistDiv.addEventListener('change', async e => {
 });
 
 		window.goHome = function () {
-  window.location.href = "index.html";
+  window.location.href = "home.html";
 };
 		
 	</script>

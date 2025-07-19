@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Account Management</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: white;
+      background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
+      background-attachment: fixed;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .main-container {
+      width: 90%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    #header {
+      position: sticky;
+      top: 0;
+      background-color: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 1rem;
+      z-index: 10;
+    }
+	
+
+    h2 {
+      margin: 0.5rem 0 1rem 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .section-header {
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .preference-card {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .preference-card input[type="text"],
+    .preference-card input[type="email"],
+    .preference-card input[type="password"] {
+      width: 100%;
+      padding: 0.6rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+/* Navigation Buttons (small and aligned) */
+.nav-button {
+  background: white;
+  color: #2f77a7;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+/* Action Buttons (larger and full-width inside cards) */
+.action-button {
+  background: white;
+  color: #2f77a7;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+    .coming-soon {
+      opacity: 0.5;
+      font-style: italic;
+      font-weight: normal;
+      font-size: 0.95rem;
+      margin-top: 0.25rem;
+    }
+
+    .danger-btn {
+      background-color: darkred;
+      color: white;
+    }
+
+    body.dark {
+      background: #121212;
+    }
+
+    body.dark .preference-card {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body style="display: none;">
+  <div class="main-container" id="mainContent" style="display: none;">
+
+<!-- Header -->
+<div id="header">
+<button id="back-button" class="nav-button" aria-label="Go back">
+				<i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i> Back
+			</button>
+			<button id="home-button" class="nav-button" onclick="goHome()"><i class="fas fa-house" style="margin-right: 0.5rem;"></i> Home</button>
+  <h2>Account Management</h2>
+</div>	
+
+    <!-- Change Email -->
+    <div class="section-header">Change Email</div>
+    <div class="preference-card">
+      <input type="email" id="newEmail" placeholder="New Email" />
+      <button class="action-button" onclick="changeEmail()">Update Email</button>
+    </div>
+
+    <!-- Change Password -->
+    <div class="section-header">Change Password</div>
+    <div class="preference-card">
+      <input type="password" id="currentPassword" placeholder="Current Password" />
+      <input type="password" id="newPassword" placeholder="New Password" />
+      <input type="password" id="confirmPassword" placeholder="Confirm New Password" />
+      <button class="action-button" onclick="changePassword()">Update Password</button>
+    </div>
+
+    <!-- Two-Factor Auth -->
+    <div class="section-header">Two-Factor Authentication</div>
+    <div class="preference-card">
+      <div class="coming-soon">
+        Feature coming soon. We'll let you secure your account with phone or email verification.
+      </div>
+    </div>
+
+    <!-- Billing -->
+    <div class="section-header">Billing</div>
+    <div class="preference-card">
+      
+<button class="action-button" onclick="openBillingPortal()">Update Payment Method</button>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="section-header">Danger Zone</div>
+    <div class="preference-card">
+      <button class="action-button danger-btn" onclick="deleteAccount()">Delete My Account</button>
+    </div>
+
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  updateEmail,
+  updatePassword,
+  deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
+      authDomain: "the-enchanted-checklist.firebaseapp.com",
+      projectId: "the-enchanted-checklist",
+      storageBucket: "the-enchanted-checklist.appspot.com",
+      messagingSenderId: "971177969419",
+      appId: "1:971177969419:web:3a48e119cb866f6551840e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+onAuthStateChanged(auth, user => {
+  if (!user) {
+    window.location.href = "login.html";
+  } else {
+    document.body.style.display = "block";
+    document.getElementById("mainContent").style.display = "block";
+  }
+});
+
+    window.changeEmail = async function () {
+      const user = auth.currentUser;
+      const newEmail = document.getElementById("newEmail").value.trim();
+      if (!newEmail) return alert("Please enter a new email.");
+      try {
+        await updateEmail(user, newEmail);
+        alert("Email updated!");
+      } catch (err) {
+        alert("Failed to update email: " + err.message);
+      }
+    };
+
+window.changePassword = async function () {
+  const user = auth.currentUser;
+  const currentPass = document.getElementById("currentPassword").value.trim();
+  const newPass = document.getElementById("newPassword").value.trim();
+  const confirmPass = document.getElementById("confirmPassword").value.trim();
+
+  if (!currentPass || !newPass || !confirmPass) {
+    alert("Please fill out all password fields.");
+    return;
+  }
+
+  if (newPass !== confirmPass) {
+    alert("New passwords do not match.");
+    return;
+  }
+
+  try {
+    const credential = EmailAuthProvider.credential(user.email, currentPass);
+    await reauthenticateWithCredential(user, credential);
+    await updatePassword(user, newPass);
+    alert("Password updated successfully!");
+  } catch (err) {
+    alert("Failed to update password: " + err.message);
+  }
+};
+
+    window.openBillingPortal = function () {
+      // Replace this URL after Stripe backend is deployed
+      window.location.href = "https://buy.stripe.com/bJeaEZaUS0Fe9l9aNAefC00";
+    };
+
+    window.deleteAccount = async function () {
+      if (confirm("Are you sure you want to delete your account? This cannot be undone.")) {
+        try {
+          await deleteUser(auth.currentUser);
+          alert("Account deleted.");
+          window.location.href = "login.html";
+        } catch (err) {
+          alert("Error deleting account: " + err.message);
+        }
+      }
+    };
+
+    window.goHome = function () {
+      window.location.href = "home.html";
+    };
+  </script>
+</body>
+</html>

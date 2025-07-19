@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Packing List</title>
+  	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
+      margin: 0;
+      padding: 2rem;
+      min-height: 100vh;
+      text-align: center;
+      color: white;
+	  padding: 2rem;
+			min-height: 100vh;
+			text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+	
+	button {
+  background-color: white;
+  color: #2f77a7;
+  font-weight: bold;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  width: auto;
+  max-width: 300px;
+  margin: 0.5rem auto;
+}
+
+    .main-container {
+      max-width: 500px;
+      margin: 0 auto;
+	  text-align: center;
+    }
+
+    input[type="text"], button {
+      font-size: 1rem;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: none;
+      margin: 0.5rem 0;
+      width: 100%;
+    }
+
+    .task-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.75rem;
+    }
+
+    .task-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1;
+    }
+
+    .task-label {
+      flex: 1;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .task-checkbox {
+      transform: scale(1.2);
+    }
+
+    .delete-icon {
+      color: white;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+	  <!-- Back Button -->
+<!-- Back Button -->
+<button onclick="goBack()" style="margin-bottom: 1rem;">
+  <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i> Back
+</button>
+    <div style="background: rgba(255, 255, 255, 0.15); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
+  <h2 style="margin: 0.5rem 0 0.25rem 0;">Packing List</h2>
+</div>
+    <input type="text" id="newItemInput" placeholder="Add an item..." />
+ <!-- Add Item Button -->
+<button onclick="addPackingItem()">
+  <i class="fas fa-suitcase-rolling" style="margin-right: 0.5rem;"></i> Add Item
+</button>
+    <div id="packingList"></div>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
+  authDomain: "the-enchanted-checklist.firebaseapp.com",
+  projectId: "the-enchanted-checklist",
+  storageBucket: "the-enchanted-checklist.appspot.com",
+  messagingSenderId: "971177969419",
+  appId: "1:971177969419:web:3a48e119cb866f6551840e"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let userDocRef;
+let packingItems = [];
+
+onAuthStateChanged(auth, async user => {
+  if (!user) return window.location.href = "login.html";
+
+  userDocRef = doc(db, "users", user.uid);
+  const snap = await getDoc(userDocRef);
+  packingItems = snap.exists() && snap.data().packingList ? snap.data().packingList : [];
+
+  renderPackingItems();
+});
+
+// ✅ THESE FUNCTIONS SHOULD BE OUTSIDE THE onAuthStateChanged BLOCK
+
+function addPackingItem() {
+  const input = document.getElementById("newItemInput");
+  const value = input.value.trim();
+  if (!value) return;
+  const taskId = Date.now().toString();
+  packingItems.push({ id: taskId, item: value, checked: false });
+  input.value = "";
+  saveToFirestore();
+  renderPackingItems();
+}
+
+function toggleItem(taskId) {
+  const item = packingItems.find(i => i.id === taskId);
+  if (item) item.checked = !item.checked;
+  saveToFirestore();
+  renderPackingItems();
+}
+
+function deleteItem(taskId) {
+  packingItems = packingItems.filter(i => i.id !== taskId);
+  saveToFirestore();
+  renderPackingItems();
+}
+
+function renderPackingItems() {
+  const container = document.getElementById("packingList");
+  container.innerHTML = "";
+
+  packingItems.forEach(task => {
+    const row = document.createElement("div");
+    row.className = "task-row";
+
+    const left = document.createElement("div");
+    left.className = "task-left";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "task-checkbox";
+    checkbox.setAttribute("data-task-id", task.id);
+    checkbox.checked = task.checked;
+    checkbox.addEventListener("change", () => toggleItem(task.id));
+
+    const label = document.createElement("div");
+    label.className = "task-label";
+    label.textContent = task.item;
+
+    const deleteIcon = document.createElement("span");
+    deleteIcon.className = "delete-icon";
+    deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>';
+    deleteIcon.addEventListener("click", () => deleteItem(task.id));
+
+    left.appendChild(checkbox);
+    left.appendChild(label);
+    row.appendChild(left);
+    row.appendChild(deleteIcon);
+    container.appendChild(row);
+  });
+}
+
+window.addPackingItem = addPackingItem;
+window.goBack = function () {
+  window.location.href = "planner.html";
+};
+
+document.getElementById("newItemInput").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault(); // prevent form submission or newline
+    addPackingItem();
+  }
+});
+
+// ✅ THIS SHOULD ALSO BE OUTSIDE
+async function saveToFirestore() {
+  await setDoc(userDocRef, { packingList: packingItems }, { merge: true });
+}
+  </script>
+</body>
+</html>

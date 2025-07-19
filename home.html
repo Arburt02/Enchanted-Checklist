@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>The Enchanted Checklist</title>
+  <style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    padding: 2rem;
+    min-height: 100vh;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  body.dark {
+    background: #121212;
+    color: white;
+  }
+
+  .main-container {
+    width: 95%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  input, button {
+    margin: 0.5rem 0;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+
+  input {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  button {
+    background-color: white;
+    color: #2f77a7;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  /* 📊 Progress Rings Container */
+#progress-rings-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  max-width: 700px;
+  margin: 2rem auto;
+}
+
+#progress-rings-container svg {
+  width: 280px;
+  height: 280px;
+}
+
+
+  #progress-rings circle {
+    filter: url(#glow);
+    transition: stroke-dashoffset 1.5s ease-out;
+  }
+
+  /* 📝 Ring Labels Positioned Right of SVG */
+.ring-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+  text-align: left;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.ring-labels div {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+@keyframes pulseGlow {
+  0%   { filter: drop-shadow(0 0 4px rgba(255,255,255,0.3)); }
+  50%  { filter: drop-shadow(0 0 10px rgba(255,255,255,0.7)); }
+  100% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.3)); }
+}
+
+.pulse-once {
+  animation: pulseGlow 1.2s ease-out;
+}
+
+circle.animated-ring {
+  transition: stroke-dashoffset 1.2s ease-out;
+}
+
+</style>
+</head>
+
+<body style="display: none;">
+  <div class="main-container" id="mainContent" style="display: none;">
+    <h1>
+      <i class="fas fa-wand-magic-sparkles" style="margin-right: 0.5rem;"></i>
+      The Enchanted Checklist
+    </h1>
+
+    <!-- 🏠 Landing -->
+    <div id="landingPage" style="display: none; text-align: center;">
+      <h2>Your Ultimate Guide to Completing Disney!</h2>
+      <p>
+        Whether you're visiting the parks for the 1st time or the 50th, there's always something magical left to discover.
+        Use this guide to track progress across all that Disney has to offer.
+      </p>
+	  
+	  <!-- ⏳ Trip Countdown (hidden by default) -->
+<div id="tripCountdown" style="display: none; font-size: 1.1rem; margin-top: 1.5rem;">
+  <i class="fas fa-calendar-day"></i>
+  <span id="tripCountdownText"></span>
+</div>
+
+      <!-- 📊 RINGS FIRST -->
+      <div id="progress-rings-container" style="margin-top: 2rem;">
+  <svg viewBox="0 0 280 280">
+    <defs>
+      <filter id="glow">
+        <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#000000" flood-opacity="0.25" />
+      </filter>
+    </defs>
+
+    <!-- Background Rings (static, no animation) -->
+    <circle cx="140" cy="140" r="115" stroke="#deb6ee" stroke-width="10" fill="none" opacity="0.2" />
+    <circle cx="140" cy="140" r="90" stroke="#dc81ff" stroke-width="10" fill="none" opacity="0.2" />
+    <circle cx="140" cy="140" r="60" stroke="#c075e4" stroke-width="10" fill="none" opacity="0.2" />
+    <circle cx="140" cy="140" r="35" stroke="#89cff0" stroke-width="10" fill="none" opacity="0.2" />
+
+    <!-- Foreground Rings (animated with stroke + glow) -->
+    <circle id="ring-total" class="animated-ring" cx="140" cy="140" r="115" stroke="#deb6ee" stroke-width="10" fill="none"
+      stroke-linecap="round" transform="rotate(-90 140 140)" stroke-dasharray="722.6" stroke-dashoffset="722.6"
+      filter="url(#glow)" />
+
+    <circle id="ring-wdw" class="animated-ring" cx="140" cy="140" r="90" stroke="#dc81ff" stroke-width="10" fill="none"
+      stroke-linecap="round" transform="rotate(-90 140 140)" stroke-dasharray="565.5" stroke-dashoffset="565.5"
+      filter="url(#glow)" />
+
+    <circle id="ring-dl" class="animated-ring" cx="140" cy="140" r="60" stroke="#c075e4" stroke-width="10" fill="none"
+      stroke-linecap="round" transform="rotate(-90 140 140)" stroke-dasharray="376.9" stroke-dashoffset="376.9"
+      filter="url(#glow)" />
+
+    <circle id="ring-dcl" class="animated-ring" cx="140" cy="140" r="35" stroke="#89cff0" stroke-width="10" fill="none"
+      stroke-linecap="round" transform="rotate(-90 140 140)" stroke-dasharray="219.9" stroke-dashoffset="219.9"
+      filter="url(#glow)" />
+  </svg>
+
+        <div class="ring-labels">
+          <div id="percent-total"><i class="fas fa-bullseye"></i> Total: --%</div>
+          <div id="percent-wdw"><i class="fas fa-landmark-dome"></i> WDW: --%</div>
+          <div id="percent-dl"><i class="fas fa-bridge"></i> DLR: --%</div>
+          <div id="percent-dcl"><i class="fas fa-anchor"></i> DCL: --%</div>
+        </div>
+      </div>
+
+      <!-- 🔘 ACTION BUTTONS -->
+      <div style="margin-top: 2rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+        <button onclick="loadExperiences()">
+          <i class="fas fa-map-marked-alt" style="margin-right: 0.5rem;"></i>
+          Your Experiences
+        </button>
+		<button onclick="openFavorites()">
+          <i class="fas fa-heart" style="margin-right: 0.5rem;"></i>
+          Favorites
+        </button>
+		<button onclick="window.location.href='planner.html'">
+          <i class="fas fa-calendar-check" style="margin-right: 0.5rem;"></i>
+          My Trip Planner
+        </button>
+        <button onclick="window.location.href='contact.html'">
+  <i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>
+  Contact Us
+</button>
+        <button onclick="window.location.href='preferences.html'">
+          <i class="fas fa-cog" style="margin-right: 0.5rem;"></i>
+          Preferences
+        </button>
+		
+		<button onclick="logout()">
+          <i class="fas fa-door-open" style="margin-right: 0.5rem;"></i>
+          Logout
+        </button>
+
+        <!-- 🎥 HOW TO VIDEO -->
+        <div id="how-to-video" style="margin-top: 2rem; text-align: center;">
+          <h3 style="margin-bottom: 0.5rem;">🎥 How to Use This App</h3>
+          <p style="font-size: 0.95rem; margin-bottom: 1rem;">
+            Watch this quick walkthrough to get started using The Enchanted Checklist!
+          </p>
+          <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
+            <iframe
+              src="https://youtu.be/k1Uwe5fObYM?si=9P8gWC7TkfSbAELD"
+              title="How to Use The Enchanted Checklist"
+              frameborder="0"
+              allowfullscreen
+              style="position: absolute; top:0; left:0; width:100%; height:100%; border-radius: 12px;">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 🔧 App logic -->
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+  import {
+    getFirestore,
+    getDoc,
+    getDocs,
+    doc,
+    collection
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+  // 🔥 Initialize Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
+    authDomain: "the-enchanted-checklist.firebaseapp.com",
+    projectId: "the-enchanted-checklist",
+    storageBucket: "the-enchanted-checklist.appspot.com",
+    messagingSenderId: "971177969419",
+    appId: "1:971177969419:web:3a48e119cb866f6551840e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // 🧭 Navigation functions
+  window.loadExperiences = function () {
+    window.location.href = "checklist.html";
+  };
+
+  window.openFavorites = function () {
+    window.location.href = "favorites.html";
+  };
+
+  window.openPreferences = function () {
+    window.location.href = "preferences.html";
+  };
+
+  window.logout = async function () {
+    try {
+      await signOut(auth);
+      window.location.href = "index.html";
+    } catch (err) {
+      alert("Logout failed: " + err.message);
+    }
+  };
+  
+  function triggerPulseAnimation(ringId) {
+  const ring = document.getElementById(ringId);
+  if (!ring) return;
+
+  ring.classList.remove("pulse-once");
+  void ring.offsetWidth; // Forces reflow
+  ring.classList.add("pulse-once");
+}
+
+  async function updateGlobalProgress() {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const uid = user.uid;
+
+    const [checklistRes, progressSnap, prefsSnap] = await Promise.all([
+      fetch("checklist.json").then(res => res.json()),
+      getDocs(collection(db, `users/${uid}/progress`)),
+      getDoc(doc(db, `users/${uid}/preferences/default`))
+    ]);
+
+    const progressMap = {};
+    progressSnap.forEach(doc => {
+      progressMap[doc.id] = doc.data().complete === true;
+    });
+
+    const prefs = prefsSnap.exists() ? prefsSnap.data() : {};
+    const wdwParks = ["Magic Kingdom", "EPCOT", "Animal Kingdom", "Hollywood Studios", "Park Hopper Plus", "Disney Springs", "Walt Disney World Resorts"];
+    const dlrParks = ["Disneyland Park", "Disney California Adventure", "Downtown Disney District", "Disneyland Resorts", "Seasonal Events and Festivals", "Bonus"];
+
+    const wdwFilters = Object.fromEntries(wdwParks.map(p => [p, prefs[`include_${p}`] !== false]));
+    const dlrFilters = Object.fromEntries(dlrParks.map(p => [p, prefs[`include_${p}`] !== false]));
+    const dclFilter = prefs["include_Disney Cruise Line"] !== false;
+
+    const filtered = checklistRes.filter(task => {
+      if (task.Experience === "Walt Disney World") return wdwFilters[task.Park];
+      if (task.Experience === "Disneyland") return dlrFilters[task.Park];
+      if (task.Experience === "Disney Cruise Line") return dclFilter;
+      return false;
+    });
+
+    const wdw = filtered.filter(t => t.Experience === "Walt Disney World");
+    const dl = filtered.filter(t => t.Experience === "Disneyland");
+    const dcl = filtered.filter(t => t.Experience === "Disney Cruise Line");
+
+    let totalComplete = 0, wdwComplete = 0, dlComplete = 0, dclComplete = 0;
+
+    filtered.forEach(task => {
+      const taskId = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+      if (progressMap[taskId]) {
+        totalComplete++;
+        if (task.Experience === "Walt Disney World") wdwComplete++;
+        if (task.Experience === "Disneyland") dlComplete++;
+        if (task.Experience === "Disney Cruise Line") dclComplete++;
+      }
+    });
+
+    const totalPercent = totalComplete / filtered.length || 0;
+    const wdwPercent = wdwComplete / wdw.length || 0;
+    const dlPercent = dlComplete / dl.length || 0;
+    const dclPercent = dclComplete / dcl.length || 0;
+
+    document.getElementById("ring-total").style.strokeDashoffset = 722.6 * (1 - totalPercent);
+	triggerPulseAnimation("ring-total");
+    document.getElementById("ring-wdw").style.strokeDashoffset = 565.5 * (1 - wdwPercent);
+	triggerPulseAnimation("ring-wdw");
+    document.getElementById("ring-dl").style.strokeDashoffset = 376.9 * (1 - dlPercent);
+	triggerPulseAnimation("ring-dl");
+    document.getElementById("ring-dcl").style.strokeDashoffset = 219.9 * (1 - dclPercent);
+	triggerPulseAnimation("ring-dcl");
+
+    document.getElementById("percent-total").innerHTML = `<i class="fas fa-bullseye"></i> Total: ${(totalPercent * 100).toFixed(1)}% — ${totalComplete}/${filtered.length}`;
+    document.getElementById("percent-wdw").innerHTML = `<i class="fas fa-landmark-dome"></i> WDW: ${(wdwPercent * 100).toFixed(1)}% — ${wdwComplete}/${wdw.length}`;
+    document.getElementById("percent-dl").innerHTML = `<i class="fas fa-bridge"></i> DLR: ${(dlPercent * 100).toFixed(1)}% — ${dlComplete}/${dl.length}`;
+    document.getElementById("percent-dcl").innerHTML = `<i class="fas fa-anchor"></i> DCL: ${(dclPercent * 100).toFixed(1)}% — ${dclComplete}/${dcl.length}`;
+  }
+
+function showLandingPage() {
+  const authSection = document.getElementById("authSection");
+if (authSection) authSection.style.display = "none";
+  document.getElementById("landingPage").style.display = "block";
+
+    updateGlobalProgress();
+
+    const rings = document.getElementById("progress-rings-container"); // or "progress-rings"
+  if (rings) {
+    rings.classList.remove("pulse-once");
+    void rings.offsetWidth;
+    rings.classList.add("pulse-once");
+    }
+  }
+
+  // 🔐 Auth logic
+  onAuthStateChanged(auth, async user => {
+  if (user) {
+    // Optional: Load dark mode
+    const prefsSnap = await getDoc(doc(db, `users/${user.uid}/preferences/default`));
+    const prefs = prefsSnap.exists() ? prefsSnap.data() : {};
+    if (prefs.dark_mode === true) {
+      document.body.classList.add("dark");
+    }
+
+    document.body.style.display = "block";
+    document.getElementById("mainContent").style.display = "block";
+    showLandingPage();
+
+    // ✅ Countdown logic
+    const tripDateStr = prefs.tripStartDate;
+    const tripCountdown = document.getElementById("tripCountdown");
+    const tripCountdownText = document.getElementById("tripCountdownText");
+
+    if (tripDateStr) {
+      const today = new Date();
+      const tripDate = new Date(tripDateStr);
+      const diffTime = tripDate - today;
+      const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      let message = "";
+      if (daysLeft > 0) {
+        message = `${daysLeft} day(s) until your next Disney adventure!`;
+      } else if (daysLeft === 0) {
+        message = `<i class="fas fa-star" style="margin-right: 0.4rem;"></i>Today is your trip day!`;
+      } else {
+        message = `<i class="fas fa-suitcase-rolling" style="margin-right: 0.4rem;"></i>Your selected trip date has passed.`;
+      }
+
+      tripCountdownText.innerHTML = message;
+      tripCountdown.style.display = "block";
+    }
+
+  } else {
+    window.location.href = "index.html";
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact Me</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
+      background-attachment: fixed;
+      color: white;
+      padding: 2rem;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+      min-height: 100vh;
+    }
+
+    .main-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    #header {
+      position: sticky;
+      top: 0;
+      background-color: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 1rem;
+      z-index: 10;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      font-size: 1.75rem;
+      text-align: center;
+    }
+
+    form {
+      margin-top: 2rem;
+      padding: 1rem 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    textarea,
+    input[type="email"] {
+      width: 100%;
+      border-radius: 8px;
+      border: none;
+      padding: 0.75rem;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .explore-button {
+      background-color: #ffffff;
+      color: #2f77a7;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      border: none;
+      cursor: pointer;
+    }
+
+    .confirmation {
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #fffdd0;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main-container">
+    <div id="header">
+      <button class="explore-button" onclick="window.location.href='home.html'">
+        <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i> Back
+      </button>
+      <h3 style="margin: 0;">Contact Me</h3>
+    </div>
+
+    <h2><i class="fas fa-envelope-open-text" style="margin-right: 0.5rem;"></i>Send Feedback</h2>
+
+    <form action="https://formspree.io/f/xanbnvwq" method="POST">
+      <label for="email">Your email (optional):</label>
+      <input type="email" name="email" id="email" placeholder="you@example.com" />
+
+      <label for="message">Your message:</label>
+      <textarea name="message" id="message" rows="6" placeholder="Your feedback, ideas, suggestions, or bugs..."></textarea>
+
+      <button type="submit" class="explore-button">
+        <i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i> Send Message
+      </button>
+    </form>
+  </div>
+</body>
+</html>
