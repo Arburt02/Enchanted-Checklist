@@ -62,6 +62,7 @@ body {
     <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-top: 1rem;">
       <button id="loginBtn" onclick="login()">Login</button>
       <button id="registerBtn" onclick="register()">Register</button>
+	  <button id="resetPasswordBtn" type="button">Forgot Password?</button>
       <!-- <button onclick="window.location.href='create.html'">Create Account</button> -->
     </div>
 
@@ -90,7 +91,8 @@ body {
       getAuth,
       signInWithEmailAndPassword,
       createUserWithEmailAndPassword,
-      onAuthStateChanged
+      onAuthStateChanged,
+	  sendPasswordResetEmail
     } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -143,8 +145,26 @@ body {
     onAuthStateChanged(auth, user => {
       if (user) {
         window.location.href = "home.html";
+		
+		
       }
     });
+	
+	document.getElementById("resetPasswordBtn").addEventListener("click", async () => {
+  const email = document.getElementById("email").value;
+  if (!email) {
+    alert("Please enter your email address above before requesting a reset.");
+    return;
+  }
+
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert("📧 Password reset email sent! Check your inbox.");
+  } catch (error) {
+    console.error("Error sending password reset email:", error);
+    alert("❌ Could not send reset email. Check the address or try again later.");
+  }
+});
   </script>
 </body>
 </html>
