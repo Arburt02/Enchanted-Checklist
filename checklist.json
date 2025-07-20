@@ -1190,8 +1190,8 @@
   {
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
-    "Area": "World Showcase",
-    "Pavilion": "Plaza Pavilion",
+    "Area": "World Celebration",
+    "Pavilion": null,
     "Task": "Meet Asha near World Showcase Plaza",
     "URL": "https://disneyworld.disney.go.com/entertainment/epcot/character-meet-asha/",
     "Subcategory": "Say hi to Asha near World Showcase Plaza, new to the lineup and ready to share her Wish-worthy energy."
@@ -1428,7 +1428,7 @@
     "Pavilion": "Morocco Pavilion",
     "Task": "Gallery of Arts and History",
     "URL": "https://disneyworld.disney.go.com/attractions/epcot/gallery-arts-and-history/",
-    "Subcategory": "A quiet space in the American Pavilion showcasing rotating art exhibitions and cultural themes."
+    "Subcategory": "Step into Morocco’s Gallery of Arts and History to explore intricate artifacts and timeless traditions from across North Africa."
   },
   {
     "Experience": "Walt Disney World",
@@ -1739,7 +1739,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
-    "Area": "Bonus",
+    "Area": "World Nature",
     "Pavilion": null,
     "Task": "Manatees",
     "URL": "https://disneyworld.disney.go.com/attractions/epcot/disney-animals-manatees/",
@@ -1748,7 +1748,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
-    "Area": "Bonus",
+    "Area": "World Nature",
     "Pavilion": null,
     "Task": "Reef Fish",
     "URL": "https://disneyworld.disney.go.com/attractions/animal-kingdom/disney-animals-reef-fish/",
@@ -1757,7 +1757,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
-    "Area": "Bonus",
+    "Area": "World Nature",
     "Pavilion": null,
     "Task": "Sea Base",
     "URL": "https://disneyworld.disney.go.com/attractions/epcot/sea-base/",
@@ -1766,7 +1766,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
-    "Area": "Bonus",
+    "Area": "World Nature",
     "Pavilion": null,
     "Task": "Sea Turtles",
     "URL": "https://disneyworld.disney.go.com/attractions/epcot/disney-animals-sea-turtles/",
@@ -1775,7 +1775,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
-    "Area": "Bonus",
+    "Area": "World Nature",
     "Pavilion": null,
     "Task": "Sharks and Rays",
     "URL": "https://disneyworld.disney.go.com/attractions/epcot/disney-animals-sharks-and-rays/",
@@ -1834,15 +1834,6 @@
     "Task": "Refreshment Station",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/test-track-cool-wash/",
     "Subcategory": "Cool off with icy mist or grab a quick drink at this breezy hydration stop."
-  },
-  {
-    "Experience": "Walt Disney World",
-    "Park": "EPCOT",
-    "Area": "World Nature",
-    "Pavilion": null,
-    "Task": "Coral Reef",
-    "URL": "https://disneyworld.disney.go.com/dining/epcot/coral-reef-restaurant/",
-    "Subcategory": "Enjoy seafood with panoramic views of a giant aquarium, yes, you can eat while watching fish swim by."
   },
   {
     "Experience": "Walt Disney World",
@@ -1995,7 +1986,7 @@
     "Pavilion": "Japan Pavilion",
     "Task": "Kabuki Cafe",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/kabuki-cafe/",
-    "Subcategory": "Order sushi or udon at this tucked-away gem in the Japan pavilion, peaceful and tasty."
+    "Subcategory": "Cool down with a colorful kakigori—shaved ice drenched in fruity syrup and topped with sweet milk—at this beloved Japan pavilion kiosk that serves refreshments and snacks."
   },
   {
     "Experience": "Walt Disney World",
@@ -2094,7 +2085,7 @@
     "Pavilion": "France Pavilion",
     "Task": "Les Halles Boulangerie Patisserie",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/les-halles-boulangerie-patisserie/",
-    "Subcategory": "French wine flights with World Showcase views, need we say more?"
+    "Subcategory": "Indulge in flaky croissants, buttery pastries, and decadent sandwiches at this gem tucked away in the France pavilion—it’s the perfect spot for a quick bite that feels straight out of Paris."
   },
   {
     "Experience": "Walt Disney World",
@@ -2103,7 +2094,7 @@
     "Pavilion": "France Pavilion",
     "Task": "Les Vins des Chefs de France",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/les-vins-des-chefs-de-france/",
-    "Subcategory": "Quick, casual Chinese comfort food, grab an egg roll and go."
+    "Subcategory": "French wine flights with World Showcase views, need we say more?"
   },
   {
     "Experience": "Walt Disney World",
@@ -2112,7 +2103,7 @@
     "Pavilion": "China Pavilion",
     "Task": "Lotus Blossom Cafe",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/lotus-blossom-cafe/",
-    "Subcategory": "Elegant French cuisine in a fine dining setting, dress up for this one and make it memorable."
+    "Subcategory": "Quick, casual Chinese comfort food, grab an egg roll and go."
   },
   {
     "Experience": "Walt Disney World",
@@ -2121,7 +2112,7 @@
     "Pavilion": "France Pavilion",
     "Task": "Monsier Paul Restaurant",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/monsieur-paul/",
-    "Subcategory": "Lo mein, dumplings, and dim sum-style service, this spot makes China pavilion dining easy."
+    "Subcategory": "Elegant French cuisine in a fine dining setting, dress up for this one and make it memorable."
   },
   {
     "Experience": "Walt Disney World",
@@ -2130,7 +2121,7 @@
     "Pavilion": "China Pavilion",
     "Task": "Nine Dragons",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/nine-dragons-restaurant/",
-    "Subcategory": "Stop for a cold brew and soak in that Viking energy near Frozen Ever After."
+    "Subcategory": "Lo mein, dumplings, and dim sum-style service, this spot makes China pavilion dining easy."
   },
   {
     "Experience": "Walt Disney World",
@@ -2139,7 +2130,7 @@
     "Pavilion": "Norway Pavilion",
     "Task": "Norway Beer Cart",
     "URL": "https://www.disneyfoodblog.com/norway-beer-stand/",
-    "Subcategory": "Colorful frozen drinks, themed slushies, and sweet treats, Instagram-ready and kid-approved."
+    "Subcategory": "Stop for a cold brew and soak in that Viking energy near Frozen Ever After."
   },
   {
     "Experience": "Walt Disney World",
@@ -2148,7 +2139,7 @@
     "Pavilion": "Morocco Pavilion",
     "Task": "Oasis Sips and Sweets",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/oasis-sweets-sips/",
-    "Subcategory": "Crispy Roman-style pizza served by the slice, great for families or a quick carb fix."
+    "Subcategory": "Colorful frozen drinks, themed slushies, and sweet treats, Instagram-ready and kid-approved."
   },
   {
     "Experience": "Walt Disney World",
@@ -2157,7 +2148,7 @@
     "Pavilion": "Italy Pavilion",
     "Task": "Pizza al Taglio",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/pizza-taglio/",
-    "Subcategory": "BBQ done right, brisket, mac & cheese, and patriotic vibes in a smokehouse setting."
+    "Subcategory": "Crispy Roman-style pizza served by the slice, great for families or a quick carb fix."
   },
   {
     "Experience": "Walt Disney World",
@@ -2166,7 +2157,7 @@
     "Pavilion": "America Pavilion",
     "Task": "Regal Eagle Smokehouse",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/regal-eagle-smokehouse/",
-    "Subcategory": "Grab a pint and pub snacks in this cozy corner of the UK pavilion."
+    "Subcategory": "BBQ done right, brisket, mac & cheese, and patriotic vibes in a smokehouse setting."
   },
   {
     "Experience": "Walt Disney World",
@@ -2175,7 +2166,7 @@
     "Pavilion": "United Kingdom Pavilion",
     "Task": "Rose and Crown Pub",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/rose-and-crown-pub/",
-    "Subcategory": "Sit-down version of the Rose & Crown experience, classic British eats with lakefront seating."
+    "Subcategory": "Grab a pint and pub snacks in this cozy corner of the UK pavilion."
   },
   {
     "Experience": "Walt Disney World",
@@ -2184,7 +2175,7 @@
     "Pavilion": "United Kingdom Pavilion",
     "Task": "Rose and Crown Pub and Dining Room",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/rose-and-crown-dining-room/",
-    "Subcategory": "Book a dinner with fireworks views in either Morocco or the UK, romantic and worth it."
+    "Subcategory": "Sit-down version of the Rose & Crown experience, classic British eats with lakefront seating."
   },
   {
     "Experience": "Walt Disney World",
@@ -2193,7 +2184,7 @@
     "Pavilion": "United Kingdom Pavilion",
     "Task": "Fireworks Dining Package (UK or Morocco)",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/rose-and-crown-fireworks-dinner-package/",
-    "Subcategory": "Mexican flavors and a window-side view of the water ride, relax with a margarita in hand."
+    "Subcategory": "Book a dinner with fireworks views in either Morocco or the UK, romantic and worth it."
   },
   {
     "Experience": "Walt Disney World",
@@ -2202,7 +2193,7 @@
     "Pavilion": "Mexico Pavilion",
     "Task": "San Angel Inn Restuarante",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/san-angel-inn-restaurante/",
-    "Subcategory": "A modern sushi bar with omakase-style options and chilled sake flights."
+    "Subcategory": "Mexican flavors and a window-side view of the water ride, relax with a margarita in hand."
   },
   {
     "Experience": "Walt Disney World",
@@ -2211,7 +2202,7 @@
     "Pavilion": "Japan Pavilion",
     "Task": "Shiki-Sai: Sushi Izakaya",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/shiki-sai-izakaya-and-sushi/",
-    "Subcategory": "Oktoberfest snacks and seasonal beer? This German booth always brings the cheer."
+    "Subcategory": "A modern sushi bar with omakase-style options and chilled sake flights."
   },
   {
     "Experience": "Walt Disney World",
@@ -2220,7 +2211,7 @@
     "Pavilion": "Germany Pavilion",
     "Task": "Sommerfest",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/sommerfest/",
-    "Subcategory": "Middle Eastern spices and fresh grilled plates, perfect if you want something flavorful but light."
+    "Subcategory": "Oktoberfest snacks and seasonal beer? This German booth always brings the cheer."
   },
   {
     "Experience": "Walt Disney World",
@@ -2229,7 +2220,7 @@
     "Pavilion": "Morocco Pavilion",
     "Task": "Spice Road Table",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/spice-road-table/",
-    "Subcategory": "A luxurious omakase journey in an intimate Japanese setting, pricey but unforgettable."
+    "Subcategory": "Middle Eastern spices and fresh grilled plates, perfect if you want something flavorful but light."
   },
   {
     "Experience": "Walt Disney World",
@@ -2238,7 +2229,7 @@
     "Pavilion": "Japan Pavilion",
     "Task": "Takumi-Tei",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/takumi-tei-restaurant/",
-    "Subcategory": "Fresh-baked flatbreads, shawarma, and Moroccan mint tea, it's EPCOT's hidden gem."
+    "Subcategory": "A luxurious omakase journey in an intimate Japanese setting, pricey but unforgettable."
   },
   {
     "Experience": "Walt Disney World",
@@ -2247,7 +2238,7 @@
     "Pavilion": "Morocco Pavilion",
     "Task": "Tangierine Cafe",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/tangierine-cafe/",
-    "Subcategory": "Watch chefs cook right in front of you, hibachi, onion volcanoes, and deliciousness await."
+    "Subcategory": "Fresh-baked flatbreads, shawarma, and Moroccan mint tea, it's EPCOT's hidden gem."
   },
   {
     "Experience": "Walt Disney World",
@@ -2256,7 +2247,7 @@
     "Pavilion": "Japan Pavilion",
     "Task": "Teppen Edo",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/teppan-edo/",
-    "Subcategory": "Wine and small plates in an Italian cellar-style lounge, romantic and cozy."
+    "Subcategory": "Watch chefs cook right in front of you, hibachi, onion volcanoes, and deliciousness await."
   },
   {
     "Experience": "Walt Disney World",
@@ -2265,7 +2256,7 @@
     "Pavilion": "Italy Pavilion",
     "Task": "Tutto Gusto",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/tutto-gusto-wine-cellar/",
-    "Subcategory": "Classic Italian dishes in a refined setting, pasta lovers, this is your EPCOT staple."
+    "Subcategory": "Wine and small plates in an Italian cellar-style lounge, romantic and cozy."
   },
   {
     "Experience": "Walt Disney World",
@@ -2274,7 +2265,7 @@
     "Pavilion": "Italy Pavilion",
     "Task": "Tutto Italia Ristorante",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/tutto-italia-ristorante/",
-    "Subcategory": "Naples-style pizza fired in a wood oven, perfect for groups or carb-loading between rides."
+    "Subcategory": "Classic Italian dishes in a refined setting, pasta lovers, this is your EPCOT staple."
   },
   {
     "Experience": "Walt Disney World",
@@ -2283,7 +2274,7 @@
     "Pavilion": "Italy Pavilion",
     "Task": "Via Napoli Ristorante e Pizzeria",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/via-napoli/",
-    "Subcategory": "Another round, anyone? This cart serves chilled brews from across the UK."
+    "Subcategory": "Naples-style pizza fired in a wood oven, perfect for groups or carb-loading between rides."
   },
   {
     "Experience": "Walt Disney World",
@@ -2292,7 +2283,7 @@
     "Pavilion": "United Kingdom Pavilion",
     "Task": "UK Beer Cart",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/uk-beer-cart/",
-    "Subcategory": "Fish and chips that rival any seaside pub, don't skip the tartar sauce!"
+    "Subcategory": "Another round, anyone? This cart serves chilled brews from across the UK."
   },
   {
     "Experience": "Walt Disney World",
@@ -2301,7 +2292,7 @@
     "Pavilion": "United Kingdom Pavilion",
     "Task": "Yorkshire County Fish Shop",
     "URL": "https://disneyworld.disney.go.com/dining/epcot/yorkshire-county-fish-shop/",
-    "Subcategory": "Free concerts from real chart-toppers, line up early if you want the best view."
+    "Subcategory": "Fish and chips that rival any seaside pub, don't skip the tartar sauce!"
   },
   {
     "Experience": "Walt Disney World",
@@ -2324,8 +2315,8 @@
   {
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
-    "Area": "World Showcase",
-    "Pavilion": "Global Marketplace",
+    "Area": "International Food and Wine Festival",
+    "Pavilion": null,
     "Task": "Global Marketplace #1 (Ex: The Fry Basket)",
     "URL": "https://www.disneyfoodblog.com/the-fry-basket-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Crispy, golden, and perfectly seasoned, this booth is a French fry fever dream."
@@ -2333,8 +2324,8 @@
   {
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
-    "Area": "World Showcase",
-    "Pavilion": "Global Marketplace",
+    "Area": "International Food and Wine Festival",
+    "Pavilion": null,
     "Task": "Global Marketplace #2 (Ex: Flavors from Fire)",
     "URL": "https://www.disneyfoodblog.com/flavors-from-fire-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Smoky, spicy, and sizzling hot, this booth brings the boldest bites of the fest."
@@ -2342,8 +2333,8 @@
   {
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
-    "Area": "World Showcase",
-    "Pavilion": "Global Marketplace",
+    "Area": "International Food and Wine Festival",
+    "Pavilion": null,
     "Task": "Global Marketplace #3 (Ex: Bramblewood Bites)",
     "URL": "https://www.disneyfoodblog.com/bramblewood-bites-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Think floral meets foodie, berry-forward treats that are as pretty as they are tasty."
@@ -2351,8 +2342,8 @@
   {
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
-    "Area": "World Showcase",
-    "Pavilion": "Global Marketplace",
+    "Area": "International Food and Wine Festival",
+    "Pavilion": null,
     "Task": "Global Marketplace #4 (Ex: Earth Eats)",
     "URL": "https://www.disneyfoodblog.com/earth-eats-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Plant-based doesn't mean boring, Earth Eats is where green meets gourmet."
@@ -2360,8 +2351,8 @@
   {
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
-    "Area": "World Showcase",
-    "Pavilion": "Global Marketplace",
+    "Area": "International Food and Wine Festival",
+    "Pavilion": null,
     "Task": "Global Marketplace #5 (Ex: Brew-Wing Lab)",
     "URL": "https://www.disneyfoodblog.com/brew-wing-lab-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Craft beer and wings in one spot? Game day vibes without missing a ride."
@@ -2369,8 +2360,8 @@
   {
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
-    "Area": "World Showcase",
-    "Pavilion": "Global Marketplace",
+    "Area": "International Food and Wine Festival",
+    "Pavilion": null,
     "Task": "Global Marketplace #6 (Ex: Costal Eats)",
     "URL": "https://www.disneyfoodblog.com/coastal-eats-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Shrimp, scallops, and seafood done right, perfect for a breezy World Showcase stroll."
@@ -2379,8 +2370,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "America Pavilion",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "America Booth",
     "URL": "https://www.disneyfoodblog.com/flavors-of-america-2025-epcot-food-and-wine-festival/",
     "Subcategory": "All-American eats with a chef-y twist, mac & cheese never looked so good."
   },
@@ -2388,8 +2379,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "Australia Booth",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "Australia Booth",
     "URL": "https://www.disneyfoodblog.com/australia-2025-epcot-food-and-wine-festival-2/",
     "Subcategory": "Lamb, shrimp, and wine pairings, this down-under booth is an annual fave."
   },
@@ -2397,8 +2388,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "Belgium Booth",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "Belgium Booth",
     "URL": "https://www.disneyfoodblog.com/belgium-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Waffles, beer, and chocolate? A sweet and savory power trio you can't skip."
   },
@@ -2406,8 +2397,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "Brazil Booth",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "Brazil Booth",
     "URL": "https://www.disneyfoodblog.com/brazil-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Tropical flavors and cheesy bread that's low-key legendary, don't walk, run."
   },
@@ -2415,8 +2406,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "Canada Pavilion",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "Canada Booth",
     "URL": "https://www.disneyfoodblog.com/canada-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Maple everything and that famous cheddar soup, cozy comfort food done right."
   },
@@ -2424,8 +2415,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "China Pavilion",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "China Booth",
     "URL": "https://www.disneyfoodblog.com/china-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Offers crowd-favorite bites like Pan-Fried Chicken Dumplings and Spicy Mala Chicken, plus drinks like the BaiJoe Punch with Chinese Bai Jiu spirit."
   },
@@ -2433,8 +2424,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "France Pavilion",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "France Booth",
     "URL": "https://www.disneyfoodblog.com/france-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Elegant flavors that transport you to Paris, this booth always brings the romance."
   },
@@ -2442,8 +2433,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "Germany Pavilion",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "Germany Booth",
     "URL": "https://www.disneyfoodblog.com/germany-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Brats, pretzels, and beer steins, Oktoberfest energy in the middle of EPCOT."
   },
@@ -2451,8 +2442,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "Greece Booth",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "Greece Booth",
     "URL": "https://www.disneyfoodblog.com/greece-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Spanakopita, lamb gyro, and baklava, classic flavors that never miss."
   },
@@ -2460,8 +2451,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "Hawai'i Booth",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "Hawai'i Booth",
     "URL": "https://www.disneyfoodblog.com/hawaii-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Island bites with big flavor, Kalua pork sliders and tropical treats await."
   },
@@ -2469,8 +2460,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "Italy Pavilion",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "Italy Booth",
     "URL": "https://www.disneyfoodblog.com/italy-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Decadent pasta and Italian desserts, your carbs will thank you."
   },
@@ -2478,8 +2469,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "India Booth",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "India Booth",
     "URL": "https://www.disneyfoodblog.com/india-2025-epcot-international-food-and-wine-festival/",
     "Subcategory": "Bold spices, savory curries, and mango lassi, this booth is flavor-packed and vegan-friendly."
   },
@@ -2487,8 +2478,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "Japan Pavilion",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "Japan Booth",
     "URL": "https://www.disneyfoodblog.com/japan-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Features traditional Japanese flavors with a festival twist, try the Fire Taiko Roll (spicy tuna and salmon sushi roll) or Yuzu Cheesecake for a citrusy dessert finish"
   },
@@ -2496,8 +2487,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "Medina Booth",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "Medina Booth",
     "URL": "https://www.disneyfoodblog.com/tangierine-cafe-flavors-of-the-medina-2025-epcot-food-and-wine-festival/",
     "Subcategory": "A hidden gem packed with smoky spices, grilled meats, and unexpected pairings."
   },
@@ -2505,8 +2496,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "Spain Booth",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "Spain Booth",
     "URL": "https://www.disneyfoodblog.com/spain-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Charcuterie, seafood, and sangria, sip and snack your way through the day."
   },
@@ -2514,8 +2505,8 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "The Alps Booth",
-    "Task": "International Food and Wine Festival Booth",
+    "Pavilion": null,
+    "Task": "The Alps Booth",
     "URL": "https://www.disneyfoodblog.com/the-alps-2025-epcot-food-and-wine-festival/",
     "Subcategory": "Hearty alpine cheese and warm comfort food, perfect for cooler nights at EPCOT."
   },
@@ -2523,7 +2514,7 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "World Showcase Plaza",
+    "Pavilion": null,
     "Task": "Emile's Fromage Montage (2024)",
     "URL": "https://disneyworld.disney.go.com/events-tours/epcot/emiles-fromage-montage/",
     "Subcategory": "Eat five cheesy dishes, get a bonus treat, this is the scavenger hunt of our dreams."
@@ -2532,7 +2523,7 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "World Showcase Plaza",
+    "Pavilion": null,
     "Task": "Pluto's Pumpkin Pursuit (2024)",
     "URL": "https://disneyworld.disney.go.com/events-tours/epcot/plutos-pumpkin-pursuit/",
     "Subcategory": "A fall-themed hide-and-seek around the park, fun for all ages, especially with a prize at the end!"
@@ -2541,7 +2532,7 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "World Showcase Plaza",
+    "Pavilion": null,
     "Task": "Purchase 1 Festival Logo Collection Item",
     "URL": "https://www.disneyfoodblog.com/2025/07/02/first-look-at-this-years-epcot-food-wine-festival-merchandise/",
     "Subcategory": "Participate in Remy's Ratatouille Hide and Squeak scavenger hunt around EPCOT."
@@ -2550,7 +2541,7 @@
     "Experience": "Walt Disney World",
     "Park": "EPCOT",
     "Area": "International Food and Wine Festival",
-    "Pavilion": "World Showcase Plaza",
+    "Pavilion": null,
     "Task": "Remy's Ratatouille Hide and Squeak (2024)",
     "URL": "https://disneyworld.disney.go.com/events-tours/epcot/remys-ratatouille-hide-and-squeak/",
     "Subcategory": "Watch a live Garden Rocks concert during the EPCOT Flower & Garden Festival."
@@ -3314,15 +3305,6 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Hollywood Studios",
-    "Area": "Grand Avenue",
-    "Pavilion": null,
-    "Task": "PizzeRizzo",
-    "URL": "https://disneyworld.disney.go.com/dining/hollywood-studios/pizzerizzo/",
-    "Subcategory": "Pizza, jokes, and Muppet mayhem, this cheesy joint is fun for the whole fam."
-  },
-  {
-    "Experience": "Walt Disney World",
-    "Park": "Hollywood Studios",
     "Area": "Star Wars: Galaxy's Edge",
     "Pavilion": null,
     "Task": "Ronto Roasters",
@@ -3404,7 +3386,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Hollywood Studios",
-    "Area": "Pixar plaza",
+    "Area": "Pixar Plaza",
     "Pavilion": null,
     "Task": "Market",
     "URL": "https://disneyworld.disney.go.com/dining/hollywood-studios/market/",
@@ -3472,6 +3454,42 @@
     "Task": "Ride the Monorail",
     "URL": "https://disneyworld.disney.go.com/guest-services/monorail-transportation/",
     "Subcategory": "The iconic Disney World Monorail taking you on a loop between Magic Kingdom and 3 Walt Disney World Resorts."
+  },
+  {
+    "Experience": "Walt Disney World",
+    "Park": "Walt Disney World Resorts",
+    "Area": "Bonus",
+    "Pavilion": null,
+    "Task": "Friendship Boats",
+    "URL": "https://disneyworld.disney.go.com/guest-services/water-transportation/",
+    "Subcategory": "Cruise across the waterways of Walt Disney World with scenic, breezy boat rides connecting resorts and parks."
+  },
+  {
+    "Experience": "Walt Disney World",
+    "Park": "Walt Disney World Resorts",
+    "Area": "Bonus",
+    "Pavilion": null,
+    "Task": "Ride the Skyliner",
+    "URL": "https://disneyworld.disney.go.com/skyliner/",
+    "Subcategory": "Soar through the sky in colorful gondolas offering stunning views and a smooth ride between resorts and parks."
+  },
+  {
+    "Experience": "Walt Disney World",
+    "Park": "Walt Disney World Resorts",
+    "Area": "Bonus",
+    "Pavilion": null,
+    "Task": "Ride a Resort Bus",
+    "URL": "https://disneyworld.disney.go.com/guest-services/bus-transportation/",
+    "Subcategory": "Hop aboard Disney’s classic buses for an easy and air-conditioned ride to wherever the magic calls."
+  },
+    {
+    "Experience": "Walt Disney World",
+    "Park": "Walt Disney World Resorts",
+    "Area": "Bonus",
+    "Pavilion": null,
+    "Task": "Take a Minnie Van",
+    "URL": "https://disneyworld.disney.go.com/minnie-van/",
+    "Subcategory": "Arrive in style with a Minnie Van—Disney’s whimsical, polka-dotted ride service that’s as cute as it is convenient"
   },
   {
     "Experience": "Walt Disney World",
@@ -3733,16 +3751,7 @@
     "Task": "Discovery Island Trails",
     "URL": "https://disneyworld.disney.go.com/attractions/animal-kingdom/discovery-island-trails/",
     "Subcategory": "Wander through shaded trails featuring unique plants, birds, and occasional animal sightings."
-  },
-  {
-    "Experience": "Walt Disney World",
-    "Park": "Animal Kingdom",
-    "Area": "Discovery Island",
-    "Pavilion": null,
-    "Task": "Disney Animals",
-    "URL": "https://disneyworld.disney.go.com/attractions/animal-kingdom/disney-animals/",
-    "Subcategory": "Explore information on the many animals featured throughout Animal Kingdom."
-  },
+},
   {
     "Experience": "Walt Disney World",
     "Park": "Animal Kingdom",
@@ -3841,15 +3850,6 @@
     "Task": "Invertebrates - Disney Animals",
     "URL": "https://disneyworld.disney.go.com/attractions/animal-kingdom/disney-animals-invertebrates/",
     "Subcategory": "Get a close look at fascinating invertebrates like spiders and insects in this quiet exhibit."
-  },
-  {
-    "Experience": "Walt Disney World",
-    "Park": "Animal Kingdom",
-    "Area": "Discovery Island",
-    "Pavilion": null,
-    "Task": "It's Tough to be a Bug!",
-    "URL": "https://disneyworld.disney.go.com/attractions/animal-kingdom/its-tough-to-be-a-bug/",
-    "Subcategory": "Enjoy a 3D theater show filled with humor and fun facts about insects and bugs."
   },
   {
     "Experience": "Walt Disney World",
@@ -4358,7 +4358,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Animal Kingdom",
-    "Area": "Discovery Island",
+    "Area": "Bonus",
     "Pavilion": null,
     "Task": "Awakenings",
     "URL": "https://disneyparks.disney.go.com/au/disneyworld/entertainment/tree-of-life-nighttime-awakenings/",
@@ -4367,7 +4367,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Animal Kingdom",
-    "Area": "Africa",
+    "Area": "Bonus",
     "Pavilion": null,
     "Task": "Caring for Giants",
     "URL": "https://disneyworld.disney.go.com/events-tours/animal-kingdom/caring-for-giants/",
@@ -4376,7 +4376,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Animal Kingdom",
-    "Area": "Discovery Island",
+    "Area": "Bonus",
     "Pavilion": null,
     "Task": "Disney After Hours at Animal Kingdom",
     "URL": "https://disneyworld.disney.go.com/events-tours/after-hours/",
@@ -4385,7 +4385,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Animal Kingdom",
-    "Area": "Discovery Island",
+    "Area": "Bonus",
     "Pavilion": null,
     "Task": "Earth Day Celebration",
     "URL": "https://disneyworld.disney.go.com/events-tours/animal-kingdom/earth-day-celebration/",
@@ -4394,7 +4394,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Animal Kingdom",
-    "Area": "Africa",
+    "Area": "Bonus",
     "Pavilion": null,
     "Task": "Savor the Savannah",
     "URL": "https://disneyworld.disney.go.com/events-tours/animal-kingdom/savor-savanna/",
@@ -4403,7 +4403,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Animal Kingdom",
-    "Area": "Africa",
+    "Area": "Bonus",
     "Pavilion": null,
     "Task": "Up Close with Rhinos",
     "URL": "https://disneyworld.disney.go.com/events-tours/animal-kingdom/up-close-with-rhinos/",
@@ -4412,7 +4412,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Animal Kingdom",
-    "Area": "Africa",
+    "Area": "Bonus",
     "Pavilion": null,
     "Task": "Wild Africa Trek",
     "URL": "https://disneyworld.disney.go.com/events-tours/animal-kingdom/wild-africa-trek/",
@@ -4430,7 +4430,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Animal Kingdom",
-    "Area": "Varies",
+    "Area": "Bonus",
     "Pavilion": null,
     "Task": "Picture of DiVine",
     "URL": "https://disney.fandom.com/wiki/DiVine",
@@ -4439,7 +4439,7 @@
   {
     "Experience": "Walt Disney World",
     "Park": "Animal Kingdom",
-    "Area": "Varies",
+    "Area": "Bonus",
     "Pavilion": null,
     "Task": "Picture of Kevin",
     "URL": "https://www.wdwmagic.com/attractions/character-meet-and-greets-at-disneys-animal-kingdom/news/03feb2022-kevin-from-disney-pixars-up!-returns-to-disneys-animal-kingdom.htm",
@@ -8432,6 +8432,123 @@
     "URL": "https://disneyland.disney.go.com/shops/disney-california-adventure/trolley-treats/",
     "Subcategory": "Vintage-style candy and baked goods in a colorful shop with old-school windows and irresistible aromas."
   },
+{
+  "Experience": "Disneyland",
+  "Park": "Disney California Adventure",
+  "Area": "Food and Wine Festival",
+  "Pavilion": null,
+  "Task": "Food Booth #1 (e.g. Cluck A Doodle Moo)",
+  "URL": "https://www.disneyfoodblog.com/2025/02/23/disney-california-adventure-food-wine-festival-booths-with-menus-and-prices-arrive-early/",
+  "Subcategory": "Sink your teeth into bold BBQ bites and crispy wings that pack serious flavor."
+},
+{
+  "Experience": "Disneyland",
+  "Park": "Disney California Adventure",
+  "Area": "Food and Wine Festival",
+  "Pavilion": null,
+  "Task": "Food Booth #2 (e.g. California Craft Brews)",
+  "URL": "https://www.disneyfoodblog.com/2025/03/02/review-california-craft-brews-at-the-2025-disney-california-adventure-food-wine-festival/",
+  "Subcategory": "Sample some of California’s most refreshing beers—hoppy, hazy, or bold, it’s all here."
+},
+{
+  "Experience": "Disneyland",
+  "Park": "Disney California Adventure",
+  "Area": "Food and Wine Festival",
+  "Pavilion": null,
+  "Task": "Food Booth #3 (e.g. Golden Dreams)",
+  "URL": "https://www.disneyfoodblog.com/2025/02/28/review-golden-dreams-at-the-2024-disney-california-adventure-food-wine-festival-2/",
+  "Subcategory": "Indulge in golden bites that celebrate California’s dreamiest ingredients and sunny vibes."
+},
+{
+  "Experience": "Disneyland",
+  "Park": "Disney California Adventure",
+  "Area": "Food and Wine Festival",
+  "Pavilion": null,
+  "Task": "Food Booth #4 (e.g. Garlic Kissed)",
+  "URL": "https://www.disneyfoodblog.com/2025/03/02/review-garlic-kissed-at-the-2025-disney-california-adventure-food-wine-festival/",
+  "Subcategory": "Follow your nose to this garlicky paradise of rich, savory comfort foods."
+},
+{
+  "Experience": "Disneyland",
+  "Park": "Disney California Adventure",
+  "Area": "Food and Wine Festival",
+  "Pavilion": null,
+  "Task": "Food Booth #5 (e.g. Mercardo de Antojos)",
+  "URL": "https://www.disneyfoodblog.com/2025-disney-california-adventure-food-and-wine-festival-mercado-de-antojos/",
+  "Subcategory": "Spice things up with vibrant Latin street eats and bold, craveable flavors."
+},
+{
+  "Experience": "Disneyland",
+  "Park": "Disney California Adventure",
+  "Area": "Food and Wine Festival",
+  "Pavilion": null,
+  "Task": "Food Booth #6 (e.g. LA Style)",
+  "URL": "https://www.disneyfoodblog.com/2025/02/28/review-la-style-at-the-2025-disney-california-adventure-food-wine-festival/",
+  "Subcategory": "Taste the trendiest bites from LA’s food scene—fusion, flair, and flavor galore."
+},
+{
+  "Experience": "Disneyland",
+  "Park": "Disney California Adventure",
+  "Area": "Food and Wine Festival",
+  "Pavilion": null,
+  "Task": "Food Booth #7 (e.g. Uncork California)",
+  "URL": "https://www.disneyfoodblog.com/2025/03/01/review-uncork-california-at-the-2025-disney-california-adventure-food-wine-festival/",
+  "Subcategory": "Sip and swirl your way through a curated selection of California’s finest wines."
+},
+{
+  "Experience": "Disneyland",
+  "Park": "Disney California Adventure",
+  "Area": "Food and Wine Festival",
+  "Pavilion": null,
+  "Task": "Food Booth #8 (e.g. Peppers-Cali-Ente)",
+  "URL": "https://www.disneyfoodblog.com/2025/03/01/review-peppers-cali-ente-at-the-2025-disney-california-adventure-food-wine-festival/",
+  "Subcategory": "Bring the heat with fiery, pepper-packed bites that turn up the flavor dial."
+},
+{
+  "Experience": "Disneyland",
+  "Park": "Disney California Adventure",
+  "Area": "Food and Wine Festival",
+  "Pavilion": null,
+  "Task": "Soarin' over California",
+  "URL": "https://www.disneyfoodblog.com/2025/02/23/disney-california-adventure-food-wine-festival-booths-with-menus-and-prices-arrive-early/",
+  "Subcategory": "Glide over golden coastlines and lush vineyards on this fan-favorite flight through California."
+},
+{
+  "Experience": "Disneyland",
+  "Park": "Disney California Adventure",
+  "Area": "Food and Wine Festival",
+  "Pavilion": null,
+  "Task": "Purchase a piece of Festival Merchandise",
+  "URL": "https://www.disneyfoodblog.com/2025/02/23/disney-california-adventure-food-wine-festival-booths-with-menus-and-prices-arrive-early/",
+  "Subcategory": "Grab exclusive festival merch to remember the magic - and the munchies."
+},
+{
+  "Experience": "Disneyland",
+  "Park": "Disney California Adventure",
+  "Area": "Food and Wine Festival",
+  "Pavilion": null,
+  "Task": "Festival Entertainment - Live Music at Palisades Stage",
+  "URL": "https://www.disneyfoodblog.com/2025-disney-california-adventure-food-and-wine-festival/",
+  "Subcategory": "Kick back with live tunes and festival vibes at the Palisades Stage."
+},
+{
+  "Experience": "Disneyland",
+  "Park": "Disney California Adventure",
+  "Area": "Food and Wine Festival",
+  "Pavilion": null,
+  "Task": "Festival Entertainment - Confection Purrfection",
+  "URL": "https://www.disneyfoodblog.com/2025-disney-california-adventure-food-and-wine-festival/",
+  "Subcategory": "Catch this sweet and silly show starring a mischievous cat chef with a sugary agenda."
+},
+{
+  "Experience": "Disneyland",
+  "Park": "Disney California Adventure",
+  "Area": "Food and Wine Festival",
+  "Pavilion": null,
+  "Task": "Festival Entertainment - Live Music at Paradise Gardens Bandstand",
+  "URL": "https://www.disneyfoodblog.com/2025-disney-california-adventure-food-and-wine-festival/",
+  "Subcategory": "Let the music move you at this lively bandstand featuring festive live acts all day long."
+}
   {
     "Experience": "Disneyland",
     "Park": "Downtown Disney District",

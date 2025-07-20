@@ -448,7 +448,9 @@ function renderExperiences() {
 			});
 		}
 
-		async function renderTasks(tasks, label) {
+		async function renderTasks(tasks, label)	{
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+			
   checklistDiv.innerHTML = '';
   pageTitle.textContent = label;
   taskCount.textContent = `${tasks.length} tasks`;
@@ -457,6 +459,7 @@ function renderExperiences() {
   backButton.onclick = goBack;
 
   currentTasks = tasks;
+  tasks.sort((a, b) => a.Task.localeCompare(b.Task));
 
   const uid = getAuth().currentUser?.uid;
   if (!uid) return;
@@ -568,17 +571,33 @@ function renderExperiences() {
       : '<i class="far fa-heart"></i>';
     saveIcon.style.cursor = 'pointer';
 
-    saveIcon.onclick = async e => {
-      e.stopPropagation();
-      const savedRef = doc(db, `users/${uid}/saved`, taskId);
-      if (isSaved) {
-        await deleteDoc(savedRef);
-        saveIcon.innerHTML = '<i class="far fa-heart"></i>';
-      } else {
-        await setDoc(savedRef, { saved: true });
-        saveIcon.innerHTML = '<i class="fas fa-heart" style="color: hotpink;"></i>';
-      }
-    };
+saveIcon.onclick = async e => {
+  e.stopPropagation();
+
+  const wasSaved = saveIcon.innerHTML.includes("fas fa-heart");
+
+  // Optimistically update the icon first
+  saveIcon.innerHTML = wasSaved
+    ? '<i class="far fa-heart"></i>'
+    : '<i class="fas fa-heart" style="color: hotpink;"></i>';
+
+  const savedRef = doc(db, `users/${uid}/saved`, taskId);
+
+  try {
+    if (wasSaved) {
+      await deleteDoc(savedRef);
+    } else {
+      await setDoc(savedRef, { saved: true });
+    }
+  } catch (err) {
+    console.error("❌ Error updating favorite:", err);
+
+    // Roll back UI if Firestore fails
+    saveIcon.innerHTML = wasSaved
+      ? '<i class="fas fa-heart" style="color: hotpink;"></i>'
+      : '<i class="far fa-heart"></i>';
+  }
+};
 
     row.appendChild(checkbox);
     row.appendChild(titleWrapper);
