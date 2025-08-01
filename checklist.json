@@ -7346,7 +7346,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disneyland Park",
-    "Area": "Fantasyland ",
+    "Area": "Fantasyland",
     "Pavilion": null,
     "Task": "Edelweiss Snacks",
     "URL": "https://disneyland.disney.go.com/dining/disneyland/edelweiss-snacks/",
@@ -9271,8 +9271,8 @@
   },
   {
     "Experience": "Disneyland",
-    "Park": "Disneyland Park",
-    "Area": "Bonus",
+    "Park": "Bonus",
+    "Area": null,
     "Pavilion": null,
     "Task": "Disneyland After Dark",
     "URL": "https://disneyland.disney.go.com/events-tours/after-dark/",
@@ -9280,8 +9280,8 @@
   },
   {
     "Experience": "Disneyland",
-    "Park": "Disneyland Park",
-    "Area": "Bonus",
+    "Park": "Bonus",
+    "Area": null,
     "Pavilion": null,
     "Task": "Disneyland Railroad Guided Tour",
     "URL": "https://disneyland.disney.go.com/events-tours/disneyland/disneyland-railroad-guided-tour/",
@@ -9289,8 +9289,8 @@
   },
   {
     "Experience": "Disneyland",
-    "Park": "Disneyland Park",
-    "Area": "Bonus",
+    "Park": "Bonus",
+    "Area": null,
     "Pavilion": null,
     "Task": "Disney's Happiest Haunts Guided Tour",
     "URL": "https://disneyland.disney.go.com/events-tours/disneys-happiest-haunts/",
@@ -9298,8 +9298,8 @@
   },
   {
     "Experience": "Disneyland",
-    "Park": "Disneyland Park",
-    "Area": "Bonus",
+    "Park": "Bonus",
+    "Area": null,
     "Pavilion": null,
     "Task": "Disney Visa Cardmember Star Wars Photo Op",
     "URL": "https://disneyland.disney.go.com/entertainment/disneyland/visa-card-star-wars-character-experience/",
@@ -10100,7 +10100,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disney California Adventure",
-    "Area": "Paradise Garden Park",
+    "Area": "Paradise Gardens Park",
     "Pavilion": null,
     "Task": "Operation: Playtime! - featuring the Green Army Patrol",
     "URL": "https://touringplans.com/disney-california-adventure/attractions/operation-playtime-featuring-green-army-men",
@@ -10109,7 +10109,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disney California Adventure",
-    "Area": "Paradise Garden Park",
+    "Area": "Paradise Gardens Park",
     "Pavilion": null,
     "Task": "Paradise Garden Bandstand",
     "URL": "https://disneyland.disney.go.com/entertainment/disney-california-adventure/paradise-garden-bandstand/",
@@ -10127,7 +10127,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disney California Adventure",
-    "Area": "Paradise Garden Park",
+    "Area": "Paradise Gardens Park",
     "Pavilion": null,
     "Task": "World of Color Happiness!",
     "URL": "https://disneyland.disney.go.com/entertainment/disney-california-adventure/world-of-color-happiness/",
@@ -10163,7 +10163,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disney California Adventure",
-    "Area": "Paradise Garden Park",
+    "Area": "Paradise Gardens Park",
     "Pavilion": null,
     "Task": "Golden Zephyr",
     "URL": "https://disneyland.disney.go.com/attractions/disney-california-adventure/golden-zephyr/",
@@ -10172,7 +10172,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disney California Adventure",
-    "Area": "Paradise Garden Park",
+    "Area": "Paradise Gardens Park",
     "Pavilion": null,
     "Task": "Goofy's Sky School",
     "URL": "https://disneyland.disney.go.com/attractions/disney-california-adventure/goofys-sky-school/",
@@ -10226,7 +10226,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disney California Adventure",
-    "Area": "Paradise Garden Park",
+    "Area": "Paradise Gardens Park",
     "Pavilion": null,
     "Task": "Jumpin' Jellyfish",
     "URL": "https://disneyland.disney.go.com/attractions/disney-california-adventure/jumpin-jellyfish/",
@@ -10235,7 +10235,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disney California Adventure",
-    "Area": "Paradise Garden Park",
+    "Area": "Paradise Gardens Park",
     "Pavilion": null,
     "Task": "The Little Mermaid - Ariel's Undersea Adventure",
     "URL": "https://disneyland.disney.go.com/attractions/disney-california-adventure/little-mermaid-ariels-undersea-adventure/",
@@ -10282,8 +10282,17 @@
     "Park": "Disney California Adventure",
     "Area": "Pixar Pier",
     "Pavilion": null,
-    "Task": "Pixar Pal-A-Round (swinging or non swinging)",
+    "Task": "Pixar Pal-A-Round (Swinging)",
     "URL": "https://disneyland.disney.go.com/attractions/disney-california-adventure/pixar-pal-a-round-swinging/",
+    "Subcategory": "Whether you swing or not, this Pixar Pier Ferris wheel is not your grandma's ride, it's wild, thrilling, and unforgettable."
+  },
+  {
+    "Experience": "Disneyland",
+    "Park": "Disney California Adventure",
+    "Area": "Pixar Pier",
+    "Pavilion": null,
+    "Task": "Pixar Pal-A-Round (Non-swinging)",
+    "URL": "https://disneyland.disney.go.com/attractions/disney-california-adventure/pixar-pal-a-round-non-swinging/",
     "Subcategory": "Whether you swing or not, this Pixar Pier Ferris wheel is not your grandma's ride, it's wild, thrilling, and unforgettable."
   },
   {
@@ -10297,6 +10306,15 @@
   },
   {
     "Experience": "Disneyland",
+    "Park": "Bonus",
+    "Area": null,
+    "Pavilion": null,
+    "Task": "Trade 5 Disney Pins",
+    "URL": "https://disneyland.disney.go.com/faq/parks/pin-trading/",
+    "Subcategory": "Swap stories and collectibles as you trade Disney pins with Cast Members and fellow fans—each one a tiny treasure with magic to spare."
+  },
+  {
+    "Experience": "Disneyland",
     "Park": "Disney California Adventure",
     "Area": "Grizzly Peak",
     "Pavilion": null,
@@ -10307,7 +10325,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disney California Adventure",
-    "Area": "Paradise Garden Park",
+    "Area": "Paradise Gardens Park",
     "Pavilion": null,
     "Task": "Silly Symphony Swings",
     "URL": "https://disneyland.disney.go.com/attractions/disney-california-adventure/silly-symphony-swings/",
@@ -10370,7 +10388,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disney California Adventure",
-    "Area": "Paradise Garden Park",
+    "Area": "Paradise Gardens Park",
     "Pavilion": null,
     "Task": "Cooking with the Jammin' Chefs",
     "URL": "https://disneyland.disney.go.com/entertainment/disney-california-adventure/cookin-with-jammin-chefs/",
@@ -10397,7 +10415,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disney California Adventure",
-    "Area": "Paradise Garden Park",
+    "Area": "Paradise Gardens Park",
     "Pavilion": null,
     "Task": "Hurry Home - A Lunar New Year Celebration",
     "URL": "https://disneyland.disney.go.com/entertainment/disney-california-adventure/lunar-new-year-water-show/",
@@ -10451,7 +10469,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disney California Adventure",
-    "Area": "Paradise Garden Park",
+    "Area": "Paradise Gardens Park",
     "Pavilion": null,
     "Task": "Palisades Stage",
     "URL": "https://disneyland.disney.go.com/entertainment/disney-california-adventure/palisades-stage/",
@@ -10469,7 +10487,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disney California Adventure",
-    "Area": "Paradise Garden Park",
+    "Area": "Paradise Gardens Park",
     "Pavilion": null,
     "Task": "The Storytellers of Plaza de la Familia Celebrate The Musical World of Coco!",
     "URL": "https://disneyland.disney.go.com/entertainment/disney-california-adventure/a-musical-celebration-of-coco/",
@@ -10478,7 +10496,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Disney California Adventure",
-    "Area": "Paradise Garden Park",
+    "Area": "Paradise Gardens Park",
     "Pavilion": null,
     "Task": "World of Color - Season of Light",
     "URL": "https://disneyland.disney.go.com/entertainment/disney-california-adventure/world-of-color-season-of-light/",
@@ -10496,7 +10514,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Bonus",
-    "Area": "Downtown Disney",
+    "Area": null,
     "Pavilion": null,
     "Task": "Find the Last Build-A-Bear in Downtown Disney",
     "URL": "https://www.reddit.com/r/Disneyland/comments/ajki9g/theres_a_hidden_bear_at_the_new_ballast_point_in/",
@@ -10505,7 +10523,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Bonus",
-    "Area": "Disneyland Park",
+    "Area": null,
     "Pavilion": null,
     "Task": "Take a Picture in the Lilly Bell Cart",
     "URL": "http://www.disneylandclub33.com/Lilly%20Belle.htm",
@@ -10514,7 +10532,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Bonus",
-    "Area": "Disneyland California Adventure",
+    "Area": null,
     "Pavilion": null,
     "Task": "Find Figment in Guardians of the Galaxy Mission Breakout",
     "URL": "https://marvelthemeparkuniverse.fandom.com/wiki/Figment",
@@ -10523,7 +10541,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Bonus",
-    "Area": "Disneyland Park",
+    "Area": null,
     "Pavilion": null,
     "Task": "Find the Evil Queen",
     "URL": "https://youtu.be/nRds-K3MWFE?si=lDCaty259MN___g4",
@@ -10532,7 +10550,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Bonus",
-    "Area": "Disneyland Park",
+    "Area": null,
     "Pavilion": null,
     "Task": "Listen to the Disneyland Telegraph",
     "URL": "https://en.wikipedia.org/wiki/Disneyland_Railroad",
@@ -10541,7 +10559,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Bonus",
-    "Area": "Disneyland Park",
+    "Area": null,
     "Pavilion": null,
     "Task": "Find a Disneyland Cat",
     "URL": "https://disneylandcats.com/about/",
@@ -10550,7 +10568,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Bonus",
-    "Area": "Disneyland Park",
+    "Area": null,
     "Pavilion": null,
     "Task": "Find 4 Different Roasty Toastys ",
     "URL": "https://www.reddit.com/r/Disneyland/comments/18qtkfd/popcorn_cart_roastie_toasties/",
@@ -10559,7 +10577,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Bonus",
-    "Area": "Disneyland Park",
+    "Area": null,
     "Pavilion": null,
     "Task": "Shake Hands with a Porch Potato",
     "URL": "https://youtu.be/nrFiJMbgW7U?si=bfrDvvB8HnhhEe07",
@@ -10568,7 +10586,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Bonus",
-    "Area": "Disneyland Park",
+    "Area": null,
     "Pavilion": null,
     "Task": "Find Patrick Begorra's House",
     "URL": "https://disneyparksblog.com/dlr/the-little-man-of-disneyland-and-his-adventureland-home/",
@@ -10577,7 +10595,7 @@
   {
     "Experience": "Disneyland",
     "Park": "Bonus",
-    "Area": "Disneyland Park",
+    "Area": null,
     "Pavilion": null,
     "Task": "Walt's Main Street Story",
     "URL": "https://plandisney.disney.go.com/question/walts-main-street-story-tour-no-longer-available-tour-609286/",
