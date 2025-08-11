@@ -33,7 +33,6 @@
       padding: 2rem 1rem 3rem 1rem;
       box-sizing: border-box;
     }
-
     input, button {
       font-size: 1rem;
       padding: 0.75rem;
@@ -43,24 +42,28 @@
       width: 80%;
       max-width: 300px;
     }
-
     button {
       background: white;
       color: #2f77a7;
       font-weight: bold;
       cursor: pointer;
     }
-
-    h1 {
-      margin-bottom: 1rem;
-    }
-
+    h1 { margin-bottom: 1rem; }
     .container {
       max-width: 500px;
       margin: 0 auto;
       padding: 2rem;
       text-align: center;
       width: 100%;
+    }
+    .helper {
+      font-size: 0.95rem;
+      margin-top: 0.75rem;
+      opacity: 0.9;
+    }
+    .linklike {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.6);
     }
   </style>
 </head>
@@ -69,14 +72,19 @@
   <div class="container">
     <h1>The Enchanted Checklist</h1>
 
-    <!-- Login Section -->
+    <!-- Login -->
     <input type="email" id="email" placeholder="Email" autocomplete="email" />
     <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
 
-    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-top: 1rem;">
-      <button id="loginBtn" onclick="login()">Login</button>
-      <button id="resetPasswordBtn" type="button">Forgot Password?</button>
-      <button onclick="redirectToStripe()">Purchase Access</button>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem; margin-top:1rem;">
+      <button id="loginBtn" onclick="login()">Log in</button>
+      <button id="resetPasswordBtn" type="button" class="linklike">Forgot password?</button>
+
+      <div class="helper">Don’t have an account yet? Click below to get started.</div>
+      <button type="button" onclick="window.location.href='account.html'">Create an account</button>
+
+      <!-- Optional donations link (points to your donations page) -->
+      <button type="button" class="linklike" onclick="window.location.href='donate.html'">Donate</button>
     </div>
 
     <!-- 🎥 Preview Video -->
@@ -91,7 +99,7 @@
           title="How to Use The Enchanted Checklist"
           frameborder="0"
           allowfullscreen
-          style="position: absolute; top:0; left:0; width:100%; height:100%; border-radius: 12px;">
+          style="position:absolute; top:0; left:0; width:100%; height:100%; border-radius:12px;">
         </iframe>
       </div>
     </div>
@@ -118,49 +126,30 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    async function setLoadingState(isLoading) {
+    function setLoadingState(isLoading) {
       document.getElementById("loginBtn").disabled = isLoading;
     }
 
     window.login = async function () {
-      const email = document.getElementById("email").value;
+      const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
       setLoadingState(true);
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        // Redirect handled below
+        // redirect happens in onAuthStateChanged
       } catch (err) {
         alert("Login failed: " + (err.code === 'auth/invalid-credential' ? "Invalid email or password." : err.message));
       }
       setLoadingState(false);
     };
 
-    window.redirectToStripe = async function () {
-      try {
-        const res = await fetch("https://stripe-server-51y0.onrender.com/create-checkout-session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" }
-        });
-        const data = await res.json();
-        window.location.href = data.url;
-      } catch (error) {
-        alert("Failed to redirect to Stripe: " + error.message);
-      }
-    };
-
     onAuthStateChanged(auth, user => {
-      if (user) {
-        window.location.href = "home.html";
-      }
+      if (user) window.location.href = "home.html";
     });
 
     document.getElementById("resetPasswordBtn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value;
-      if (!email) {
-        alert("Please enter your email address above before requesting a reset.");
-        return;
-      }
-
+      const email = document.getElementById("email").value.trim();
+      if (!email) return alert("Please enter your email address above first.");
       try {
         await sendPasswordResetEmail(auth, email);
         alert("📧 Password reset email sent! Check your inbox.");
