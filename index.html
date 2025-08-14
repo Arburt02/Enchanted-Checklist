@@ -65,6 +65,34 @@
       background: transparent;
       border: 1px solid rgba(255,255,255,0.6);
     }
+	
+	/* === Reset Modals === */
+.modal {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45); z-index: 1000;
+  align-items: center; justify-content: center; padding: 1rem;
+}
+.modal.open { display: flex; }
+.modal-card {
+  width: 100%; max-width: 420px; background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-radius: 14px; padding: 1rem 1.25rem; color: white;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+}
+.modal-header { display: flex; justify-content: space-between; align-items: center; }
+.modal-title { font-size: 1.2rem; font-weight: 600; margin: 0.25rem 0 0.75rem 0; }
+.modal-close { background: transparent; border: 0; font-size: 1.25rem; color: white; cursor: pointer; }
+.modal-row { margin: 0.5rem 0; }
+.modal-row small { opacity: 0.9; }
+.fullwidth-btn { width: 100%; }
+.helper-text { font-size: 0.9rem; margin-top: 0.25rem; }
+.match-ok { color: #00ffae; }
+.match-bad { color: #ffb3b3; }
+.border-input {
+  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.15);
+}
+
   </style>
 </head>
 
@@ -79,12 +107,82 @@
     <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem; margin-top:1rem;">
       <button id="loginBtn" onclick="login()">Log in</button>
       <button id="resetPasswordBtn" type="button" class="linklike">Forgot password?</button>
+	  <!-- 🔘 Choose Reset Method -->
+<div id="resetOptionsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="resetOptionsTitle">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title" id="resetOptionsTitle">Reset your password</div>
+      <button class="modal-close" onclick="closeResetOptions()" aria-label="Close">&times;</button>
+    </div>
+
+    <div class="modal-row">
+      <button id="resetViaEmailBtn" class="fullwidth-btn">Reset via Email</button>
+    </div>
+    <div class="modal-row">
+      <button id="resetViaPhoneBtn" class="fullwidth-btn">Reset via Text</button>
+    </div>
+    <div class="helper-text">Choose email to get a link, or text to set a new password here.</div>
+  </div>
+</div>
+
+<!-- 📱 Phone Reset Flow -->
+<div id="phoneResetModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="phoneResetTitle">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title" id="phoneResetTitle">Reset via Text</div>
+      <button class="modal-close" onclick="closePhoneReset()" aria-label="Close">&times;</button>
+    </div>
+
+    <!-- Step 1: Phone -->
+    <div class="modal-row">
+      <input id="resetPhone" class="border-input" type="tel" placeholder="Phone (e.g., +14085551234)" autocomplete="tel">
+      <small>Use E.164 format (starts with +country code).</small>
+    </div>
+    <div class="modal-row">
+      <button id="sendCodeBtn" class="fullwidth-btn">Send Code</button>
+    </div>
+
+    <!-- Step 2: Code -->
+    <div id="codeRow" class="modal-row" style="display:none;">
+      <input id="smsCode" class="border-input" type="text" placeholder="6-digit code">
+    </div>
+
+    <!-- Step 3: New Password -->
+    <div id="passRow" style="display:none;">
+      <div class="modal-row">
+        <input id="newPass" class="border-input" type="password" placeholder="New password (min 6 chars)" autocomplete="new-password">
+      </div>
+      <div class="modal-row">
+        <input id="newPassConfirm" class="border-input" type="password" placeholder="Confirm new password" autocomplete="new-password">
+        <div id="passMatchMsg" class="helper-text"></div>
+      </div>
+    </div>
+
+    <div class="modal-row">
+      <button id="confirmResetBtn" class="fullwidth-btn" style="display:none;" disabled>Update Password</button>
+    </div>
+
+    <!-- Invisible reCAPTCHA mount -->
+    <div id="recaptcha-reset" style="height:1px; overflow:hidden;"></div>
+  </div>
+</div>
 
       <div class="helper">Don’t have an account yet? Click below to get started.</div>
-      <button type="button" onclick="window.location.href='account.html'">Create an account</button>
+      <button type="button" onclick="window.location.href='create.html'">Create an account</button>
 
       <!-- Optional donations link (points to your donations page) -->
-      <button type="button" class="linklike" onclick="window.location.href='donate.html'">Donate</button>
+      <a
+  href="https://ko-fi.com/theenchantedchecklist"
+  target="_blank"
+  rel="noopener"
+  style="
+    display:inline-block; text-align:center;
+    background:#ffffff; color:#2f77a7; font-weight:700;
+    padding:0.75rem 1.25rem; border-radius:10px; width:80%; max-width:300px;
+    text-decoration:none; box-shadow:0 4px 12px rgba(0,0,0,.15)"
+>
+  Support the Project on Ko‑fi
+</a>
     </div>
 
     <!-- 🎥 Preview Video -->
@@ -106,57 +204,200 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      onAuthStateChanged,
-      sendPasswordResetEmail
-    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    sendPasswordResetEmail,
+    RecaptchaVerifier,
+    signInWithPhoneNumber,
+    updatePassword,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
-      authDomain: "the-enchanted-checklist.firebaseapp.com",
-      projectId: "the-enchanted-checklist",
-      storageBucket: "the-enchanted-checklist.appspot.com",
-      messagingSenderId: "971177969419",
-      appId: "1:971177969419:web:3a48e119cb866f6551840e"
-    };
+  // 🔥 Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
+    authDomain: "the-enchanted-checklist.firebaseapp.com",
+    projectId: "the-enchanted-checklist",
+    storageBucket: "the-enchanted-checklist.appspot.com",
+    messagingSenderId: "971177969419",
+    appId: "1:971177969419:web:3a48e119cb866f6551840e"
+  };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  // ⏳ UI helpers
+  function setLoadingState(isLoading) {
+    document.getElementById("loginBtn").disabled = isLoading;
+  }
 
-    function setLoadingState(isLoading) {
-      document.getElementById("loginBtn").disabled = isLoading;
+  // 🔐 Login (kept global for onclick)
+  window.login = async function () {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    setLoadingState(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // redirect occurs in onAuthStateChanged
+    } catch (err) {
+      alert(
+        "Login failed: " +
+          (err.code === "auth/invalid-credential"
+            ? "Invalid email or password."
+            : err.message)
+      );
     }
+    setLoadingState(false);
+  };
 
-    window.login = async function () {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      setLoadingState(true);
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        // redirect happens in onAuthStateChanged
-      } catch (err) {
-        alert("Login failed: " + (err.code === 'auth/invalid-credential' ? "Invalid email or password." : err.message));
+  // 🔁 Auth state → go to home when logged in
+  onAuthStateChanged(auth, user => {
+    if (user) window.location.href = "home.html";
+  });
+
+  // =========================
+  // Password reset: modal logic
+  // =========================
+
+  // Open “choose reset method” modal
+  document.getElementById("resetPasswordBtn").addEventListener("click", () => {
+    openResetOptions();
+  });
+
+  function openResetOptions() {
+    document.getElementById("resetOptionsModal").classList.add("open");
+  }
+  window.closeResetOptions = function () {
+    document.getElementById("resetOptionsModal").classList.remove("open");
+  };
+
+  // --- Email reset
+  document.getElementById("resetViaEmailBtn").addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
+    if (!email) return alert("Please enter your email above first.");
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert("📧 Password reset email sent! Check your inbox.");
+      closeResetOptions();
+    } catch (error) {
+      alert("❌ Could not send reset email. Check the address or try again later.");
+    }
+  });
+
+  // --- Phone (SMS) reset
+  document.getElementById("resetViaPhoneBtn").addEventListener("click", () => {
+    closeResetOptions();
+    openPhoneReset();
+  });
+
+  // Modal open/close
+  function openPhoneReset() {
+    document.getElementById("phoneResetModal").classList.add("open");
+  }
+  window.closePhoneReset = function () {
+    document.getElementById("phoneResetModal").classList.remove("open");
+    // reset UI
+    document.getElementById("codeRow").style.display = "none";
+    document.getElementById("passRow").style.display = "none";
+    document.getElementById("confirmResetBtn").style.display = "none";
+    document.getElementById("confirmResetBtn").disabled = true;
+    document.getElementById("resetPhone").value = "";
+    document.getElementById("smsCode").value = "";
+    document.getElementById("newPass").value = "";
+    document.getElementById("newPassConfirm").value = "";
+    document.getElementById("passMatchMsg").textContent = "";
+    _confirmationResult = null;
+    if (_recaptchaVerifier) { try { _recaptchaVerifier.clear(); } catch (e) {} }
+    _recaptchaVerifier = null;
+  };
+
+  // Refs for SMS flow
+  let _confirmationResult = null;
+  let _recaptchaVerifier = null;
+
+  // 1) Send code
+  document.getElementById("sendCodeBtn").addEventListener("click", async () => {
+    const phone = document.getElementById("resetPhone").value.trim();
+    if (!phone || !phone.startsWith("+")) {
+      return alert("Enter your phone in E.164 format, e.g. +14085551234");
+    }
+    try {
+      if (!_recaptchaVerifier) {
+        _recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-reset", { size: "invisible" });
       }
-      setLoadingState(false);
-    };
+      _confirmationResult = await signInWithPhoneNumber(auth, phone, _recaptchaVerifier);
 
-    onAuthStateChanged(auth, user => {
-      if (user) window.location.href = "home.html";
-    });
+      document.getElementById("codeRow").style.display = "block";
+      document.getElementById("passRow").style.display = "block";
+      document.getElementById("confirmResetBtn").style.display = "block";
 
-    document.getElementById("resetPasswordBtn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value.trim();
-      if (!email) return alert("Please enter your email address above first.");
-      try {
-        await sendPasswordResetEmail(auth, email);
-        alert("📧 Password reset email sent! Check your inbox.");
-      } catch (error) {
-        alert("❌ Could not send reset email. Check the address or try again later.");
-      }
-    });
-  </script>
+      alert("✅ Code sent! Check your messages.");
+    } catch (err) {
+      alert("❌ Could not send code: " + err.message);
+    }
+  });
+
+  // Live password match check
+  const newPassEl = document.getElementById("newPass");
+  const newPassConfirmEl = document.getElementById("newPassConfirm");
+  const passMsgEl = document.getElementById("passMatchMsg");
+  const confirmBtn = document.getElementById("confirmResetBtn");
+
+  function evaluatePasswords() {
+    const a = newPassEl.value;
+    const b = newPassConfirmEl.value;
+    const longEnough = a.length >= 6;
+    const match = a && b && a === b;
+
+    if (!a && !b) {
+      passMsgEl.textContent = "";
+      confirmBtn.disabled = true;
+      return;
+    }
+    if (!longEnough) {
+      passMsgEl.textContent = "Password must be at least 6 characters.";
+      passMsgEl.className = "helper-text match-bad";
+      confirmBtn.disabled = true;
+      return;
+    }
+    if (match) {
+      passMsgEl.textContent = "Passwords match ✓";
+      passMsgEl.className = "helper-text match-ok";
+      confirmBtn.disabled = false;
+    } else {
+      passMsgEl.textContent = "Passwords do not match.";
+      passMsgEl.className = "helper-text match-bad";
+      confirmBtn.disabled = true;
+    }
+  }
+  newPassEl.addEventListener("input", evaluatePasswords);
+  newPassConfirmEl.addEventListener("input", evaluatePasswords);
+
+  // 2) Confirm code + 3) Update password
+  confirmBtn.addEventListener("click", async () => {
+    if (!_confirmationResult) return alert("Please send the code first.");
+    const code = document.getElementById("smsCode").value.trim();
+    if (!code) return alert("Enter the 6-digit code.");
+
+    try {
+      const { user } = await _confirmationResult.confirm(code);
+
+      const newPwd = newPassEl.value;
+      const confirmPwd = newPassConfirmEl.value;
+      if (newPwd.length < 6) return alert("Password must be at least 6 characters.");
+      if (newPwd !== confirmPwd) return alert("Passwords do not match.");
+
+      await updatePassword(user, newPwd);
+      alert("🎉 Password updated! Please log in with your new password.");
+      await signOut(auth);
+      closePhoneReset();
+      window.location.href = "index.html";
+    } catch (err) {
+      alert("❌ Could not verify or update: " + err.message);
+    }
+  });
+</script>
 </body>
 </html>

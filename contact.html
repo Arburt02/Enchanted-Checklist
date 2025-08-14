@@ -4,85 +4,117 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Contact Me</title>
+
+  <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+  <!-- 🌓 Instant theme hint (prevents light→dark flash) -->
+  <script>
+  (function () {
+    try {
+      const cached = localStorage.getItem('ec_dark');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (cached === 'true' || (cached === null && prefersDark)) {
+        document.documentElement.classList.add('dark'); // early hint
+      }
+    } catch (e) {}
+  })();
+  </script>
 
   <style>
+    /* ---------- Base page background ---------- */
     body {
       margin: 0;
       font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
       background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
-      background-attachment: fixed;
       color: white;
       padding: 2rem;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
       min-height: 100vh;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+      overflow-x: hidden;
     }
 
-    .main-container {
-      max-width: 600px;
-      margin: 0 auto;
+    /* Light-mode mural (subtle layer behind content) */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: url('Mural.PNG') no-repeat center top;
+      background-size: contain;
+      opacity: 0.20;
+      pointer-events: none;
+      z-index: 0;
     }
+    body > * { position: relative; z-index: 1; }
+
+    /* ---------- Layout ---------- */
+    .main-container { max-width: 600px; margin: 0 auto; }
 
     #header {
-      position: sticky;
-      top: 0;
-      background-color: rgba(255, 255, 255, 0.15);
+      position: sticky; top: 0;
+      background: rgba(255,255,255,0.15);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      padding: 1rem;
-      z-index: 10;
+      padding: 1rem; z-index: 10;
+      border-bottom: 1px solid rgba(255,255,255,0.30);
       border-radius: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
     }
 
-    h2 {
-      margin-top: 2rem;
-      font-size: 1.75rem;
-      text-align: center;
-    }
+    h2 { margin-top: 2rem; font-size: 1.75rem; text-align: center; }
 
-    form {
-      margin-top: 2rem;
-      padding: 1rem 0;
-    }
+    form { margin-top: 2rem; padding: 1rem 0; }
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-    }
+    label { display:block; margin-bottom: .5rem; font-weight: 600; }
 
-    textarea,
-    input[type="email"] {
+    /* Inputs: keep bright for readability in both themes */
+    input[type="email"], textarea {
       width: 100%;
-      border-radius: 8px;
+      border-radius: 10px;
       border: none;
-      padding: 0.75rem;
+      padding: .75rem .9rem;
       font-family: 'Poppins', sans-serif;
       font-size: 1rem;
       margin-bottom: 1.25rem;
+      background: #ffffff;
+      color: #2f2f2f;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    }
+    textarea { min-height: 160px; }
+
+    /* Unified primary button (white with blue text), matches home/checklist */
+    .btn { display:inline-block; width:auto; border:0; cursor:pointer; text-decoration:none; }
+    .btn-primary {
+      background:#ffffff; color:#2f77a7; font-weight:700;
+      padding:.7rem 1.1rem; border-radius:10px;
+      box-shadow:0 4px 12px rgba(0,0,0,.15);
+    }
+    .btn-primary:active { transform: translateY(1px); }
+
+    .confirmation { margin-top: 1rem; font-size: 1rem; color: #fffdd0; text-align:center; }
+
+    /* ---------- Dark mode ---------- */
+    html.dark body, body.dark { background:#121212; color:white; }
+
+    /* Mural becomes a white silhouette in dark mode (same as other pages) */
+    html.dark body::before, body.dark::before {
+      content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+      -webkit-mask-image: url('Mural.PNG'); mask-image: url('Mural.PNG');
+      -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+      -webkit-mask-position: center top; mask-position: center top;
+      -webkit-mask-size: contain; mask-size: contain;
+      background-color: rgba(255,255,255,0.30);
+      opacity: .3;
+      background-image: none;
     }
 
-    .explore-button {
-      background-color: #ffffff;
-      color: #2f77a7;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-weight: bold;
-      text-decoration: none;
-      display: inline-block;
-      border: none;
-      cursor: pointer;
-    }
-
-    .confirmation {
-      margin-top: 1rem;
-      font-size: 1rem;
-      color: #fffdd0;
-      text-align: center;
+    /* Keep header’s frosted look in dark mode */
+    html.dark #header, body.dark #header {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
   </style>
 </head>
@@ -90,25 +122,59 @@
 <body>
   <div class="main-container">
     <div id="header">
-      <button class="explore-button" onclick="window.location.href='home.html'">
-        <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i> Back
+      <button class="btn btn-primary" onclick="window.location.href='home.html'">
+        <i class="fas fa-arrow-left" style="margin-right:.5rem;"></i> Home
       </button>
-      <h3 style="margin: 0;">Contact Me</h3>
+      <h3 style="margin:0;">Contact Me</h3>
     </div>
 
-    <h2><i class="fas fa-envelope-open-text" style="margin-right: 0.5rem;"></i>Send Feedback</h2>
+    <h2><i class="fas fa-envelope-open-text" style="margin-right:.5rem;"></i>Send Feedback</h2>
 
-    <form action="https://formspree.io/f/xanbnvwq" method="POST">
+    <!-- ✅ Formspree will forward to the email you set in their dashboard (should be theenchantedchecklist@gmail.com) -->
+    <form action="https://formspree.io/f/xqalnryo" method="POST">
+      <input type="hidden" name="_subject" value="Enchanted Checklist — New message" />
       <label for="email">Your email (optional):</label>
-      <input type="email" name="email" id="email" placeholder="you@example.com" />
+      <input type="email" name="email" id="email" placeholder="you@example.com" autocomplete="email"/>
 
       <label for="message">Your message:</label>
-      <textarea name="message" id="message" rows="6" placeholder="Your feedback, ideas, suggestions, or bugs..."></textarea>
+      <textarea name="message" id="message" placeholder="Your feedback, ideas, suggestions, or bugs..."></textarea>
 
-      <button type="submit" class="explore-button">
-        <i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i> Send Message
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-paper-plane" style="margin-right:.5rem;"></i> Send Message
       </button>
     </form>
   </div>
+
+  <!-- 🔐 Auth guard (+ reuse localStorage theme on next pages) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
+      authDomain: "the-enchanted-checklist.firebaseapp.com",
+      projectId: "the-enchanted-checklist",
+      storageBucket: "the-enchanted-checklist.appspot.com",
+      messagingSenderId: "971177969419",
+      appId: "1:971177969419:web:3a48e119cb866f6551840e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { window.location.href = "index.html"; return; }
+
+      // Apply dark mode class from Firestore (and cache for the “no-flash” hint)
+      try {
+        const prefs = await getDoc(doc(db, `users/${user.uid}/preferences/default`));
+        const dark = prefs.exists() && prefs.data().dark_mode === true;
+        document.body.classList.toggle('dark', !!dark);
+        try { localStorage.setItem('ec_dark', dark ? 'true' : 'false'); } catch {}
+      } catch (e) { /* non-blocking */ }
+    });
+  </script>
 </body>
 </html>

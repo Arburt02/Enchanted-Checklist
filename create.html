@@ -6,116 +6,266 @@
   <title>Create Account - The Enchanted Checklist</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-  body {
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-  margin: 0;
-  color: white;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 2rem;
-      text-align: center;
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
+      margin: 0;
+      color: white;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem 1rem 3rem 1rem;
+      box-sizing: border-box;
     }
-
-    h1 {
-      margin-bottom: 1rem;
-    }
-
-    p {
-      margin-bottom: 1.5rem;
-      font-size: 1rem;
-    }
-
-    input, button {
+    .container { max-width: 520px; width: 100%; text-align: center; }
+    h1 { margin-bottom: 0.5rem; }
+    p  { margin: 0.25rem 0 1.25rem 0; }
+    input, button, select {
       font-size: 1rem;
       padding: 0.75rem;
-      margin: 0.5rem 0;
+      margin: 0.5rem auto;
       border: none;
       border-radius: 8px;
       width: 90%;
-      max-width: 300px;
+      max-width: 360px;
+      display: block;
     }
-
     button {
-      background-color: white;
+      background: white;
       color: #2f77a7;
       font-weight: bold;
       cursor: pointer;
     }
-
-    .success-message {
-      color: #00ffae;
-      font-weight: bold;
-      margin-top: 1rem;
+    .note { font-size: 0.9rem; opacity: 0.9; }
+    .banner {
+      display: none;
+      margin: 1rem auto 0;
+      max-width: 520px;
+      padding: 0.9rem 1rem;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.2);
+      color: #073b5d;
+      font-weight: 600;
     }
+    .linklike {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.6);
+    }
+    .row { display:flex; gap:8px; align-items:center; justify-content:center; }
+    small { display:block; margin-top:-0.25rem; opacity:.9; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Create Your Account</h1>
-    <p>Before purchasing access, set your login email and password.</p>
+    <h1>Create your account</h1>
+    <p class="note">Enter your details below. We’ll use your phone later for SMS-based recovery.</p>
 
     <input type="email" id="email" placeholder="Email" autocomplete="email" />
     <input type="password" id="password" placeholder="Password" autocomplete="new-password" />
-    <input type="password" id="confirm" placeholder="Confirm Password" autocomplete="new-password" />
-    <button onclick="register()">Create My Account</button>
+    <input type="password" id="confirm" placeholder="Confirm password" autocomplete="new-password" />
 
-    <div id="successMsg" class="success-message" style="display: none;">
-      ✅ Account created! Redirecting to Stripe...
+    <label for="phone">Phone (optional)</label>
+    <div class="row">
+      <select id="ccSelect" aria-label="Country code">
+        <!-- Pinned -->
+        <option value="1">🇺🇸 +1 United States</option>
+        <option value="1">🇨🇦 +1 Canada</option>
+        <option value="44">🇬🇧 +44 United Kingdom</option>
+        <option value="61">🇦🇺 +61 Australia</option>
+        <option value="64">🇳🇿 +64 New Zealand</option>
+        <option value="65">🇸🇬 +65 Singapore</option>
+        <option value="91">🇮🇳 +91 India</option>
+        <option value="353">🇮🇪 +353 Ireland</option>
+        <option value="358">🇫🇮 +358 Finland</option>
+        <option value="81">🇯🇵 +81 Japan</option>
+      </select>
+      <input id="phone" type="tel" inputmode="tel" placeholder="Phone number" />
     </div>
+    <small>Choose your country then enter your number (no need to type “+”).</small>
+
+    <!-- reCAPTCHA (single unique ID) -->
+    <div id="recaptcha-container"></div>
+
+    <button id="createBtn">Create my account</button>
+    <button class="linklike" onclick="window.location.href='index.html'">Back to login</button>
+
+    <div id="successBanner" class="banner">🎉 Congratulations, you’ve created a new account with The Enchanted Checklist!</div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword
-    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    updateProfile,
+    RecaptchaVerifier,
+    linkWithPhoneNumber
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
-      authDomain: "the-enchanted-checklist.firebaseapp.com",
-      projectId: "the-enchanted-checklist",
-      storageBucket: "the-enchanted-checklist.appspot.com",
-      messagingSenderId: "971177969419",
-      appId: "1:971177969419:web:3a48e119cb866f6551840e"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
+    authDomain: "the-enchanted-checklist.firebaseapp.com",
+    projectId: "the-enchanted-checklist",
+    storageBucket: "the-enchanted-checklist.appspot.com",
+    messagingSenderId: "971177969419",
+    appId: "1:971177969419:web:3a48e119cb866f6551840e"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    window.register = async function () {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const confirm = document.getElementById("confirm").value.trim();
+  // Helpers
+  const $ = sel => document.querySelector(sel);
+  const createBtn = $("#createBtn");
 
-      if (!email || !password) {
-        alert("Please enter email and password.");
-        return;
-      }
+  function digitsOnly(s) { return (s || "").replace(/\D/g, ""); }
 
-      if (password !== confirm) {
-        alert("Passwords do not match.");
-        return;
-      }
+  // Build E.164 from dropdown + number. Returns "" if phone blank; "INVALID" if fails bounds.
+  function buildE164FromUI() {
+    const cc = $("#ccSelect")?.value || "1";
+    const national = digitsOnly($("#phone")?.value || "");
+    if (!national) return ""; // optional
 
+    const total = `${cc}${national}`;
+    // E.164 total length (without +) must be 7..15
+    if (total.length < 7 || total.length > 15) return "INVALID";
+    return `+${total}`;
+  }
+
+  function buildRecaptcha() {
+    // Recreate to avoid stale verifier between attempts
+    if (window._linkRecaptchaVerifier) {
+      try { window._linkRecaptchaVerifier.clear(); } catch {}
+      window._linkRecaptchaVerifier = null;
+    }
+    window._linkRecaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", { size: "invisible" });
+    return window._linkRecaptchaVerifier;
+  }
+
+  async function saveContactDoc(uid, email, phoneE164) {
+    const payload = { email, createdAt: new Date().toISOString() };
+    if (phoneE164) payload.phone = phoneE164;
+    await setDoc(doc(db, `users/${uid}/profile`, "contact"), payload, { merge: true });
+  }
+
+  async function maybeLinkPhone(user, phoneE164) {
+    if (!phoneE164) return true; // no phone provided
+    if (phoneE164 === "INVALID") {
+      alert("That phone number doesn’t look right. Try changing the country or number.");
+      return false;
+    }
+    try {
+      const appVerifier = buildRecaptcha();
+      const confirmation = await linkWithPhoneNumber(user, phoneE164, appVerifier);
+      const code = window.prompt(`Enter the 6-digit code we texted to ${phoneE164}`);
+      if (!code) throw new Error("Verification canceled.");
+      await confirmation.confirm(code);
+      return true;
+    } catch (err) {
+      const c = err.code || "";
+      let msg = "We couldn’t verify that phone number. You can finish signup without it and add a phone later.";
+      if (c.includes("invalid-phone-number")) msg = "That phone number seems invalid for the selected country.";
+      else if (c.includes("credential-already-in-use")) msg = "That phone number is already linked to another account.";
+      else if (c.includes("too-many-requests")) msg = "Too many attempts—please wait a bit and try again.";
+      else if (c.includes("captcha-check-failed")) msg = "reCAPTCHA failed—please try again.";
+      alert(msg);
+      return false;
+    }
+  }
+  
+  // ——— Live password match check ———
+const passwordInput = document.getElementById("password");
+const confirmInput = document.getElementById("confirm");
+
+// Create message element
+const matchMessage = document.createElement("small");
+matchMessage.style.display = "block";
+matchMessage.style.marginTop = "-0.25rem";
+matchMessage.style.marginBottom = "0.5rem";
+matchMessage.style.fontWeight = "600";
+confirmInput.insertAdjacentElement("afterend", matchMessage);
+
+function checkPasswordsMatch() {
+  const pass = passwordInput.value;
+  const conf = confirmInput.value;
+
+  if (!pass && !conf) {
+    matchMessage.textContent = "";
+    confirmInput.style.borderColor = "";
+    passwordInput.style.borderColor = "";
+    return;
+  }
+
+  if (pass === conf) {
+    matchMessage.textContent = "✅ Passwords match";
+    matchMessage.style.color = "#28a745";
+    confirmInput.style.borderColor = "#28a745";
+    passwordInput.style.borderColor = "#28a745";
+  } else {
+    matchMessage.textContent = "❌ Passwords do not match";
+    matchMessage.style.color = "#dc3545";
+    confirmInput.style.borderColor = "#dc3545";
+    passwordInput.style.borderColor = "#dc3545";
+  }
+}
+
+passwordInput.addEventListener("input", checkPasswordsMatch);
+confirmInput.addEventListener("input", checkPasswordsMatch);
+
+  async function handleSubmit() {
+    const email = $("#email").value.trim();
+    const password = $("#password").value;
+    const confirm = $("#confirm").value;
+
+    if (!email || !password) return alert("Please enter an email and password.");
+
+    const phoneE164 = buildE164FromUI();
+    if (phoneE164 === "INVALID") return alert("Please check your phone number and country code.");
+
+    createBtn.disabled = true;
+    createBtn.textContent = "Creating…";
+	
+
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+
+      // Give them a friendly default displayName (best effort)
       try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        document.getElementById("successMsg").style.display = "block";
-        setTimeout(() => {
-          window.location.href = "https://buy.stripe.com/bJeaEZaUS0Fe9l9aNAefC00";
-        }, 1500);
-      } catch (err) {
-        alert("Registration failed: " + err.message);
-      }
-    };
-  </script>
+        const local = email.split("@")[0];
+        await updateProfile(cred.user, { displayName: local });
+      } catch {}
+
+      // Link phone (if provided)
+      const linked = await maybeLinkPhone(cred.user, phoneE164);
+
+      // Store contact doc
+      await saveContactDoc(cred.user.uid, email, linked ? phoneE164 : "");
+
+      // Success banner and redirect
+      $("#successBanner").style.display = "block";
+      setTimeout(() => { window.location.href = "index.html"; }, 4000);
+    } catch (err) {
+      const c = err.code || "";
+      let msg = "Registration failed: " + err.message;
+      if (c.includes("email-already-in-use")) msg = "That email is already in use. Try logging in.";
+      else if (c.includes("weak-password")) msg = "Please choose a stronger password.";
+      else if (c.includes("invalid-email")) msg = "That email doesn’t look valid.";
+      alert(msg);
+    } finally {
+      createBtn.disabled = false;
+      createBtn.textContent = "Create my account";
+    }
+  }
+
+  createBtn.addEventListener("click", handleSubmit);
+  // Enter-to-submit support
+  document.addEventListener("keydown", e => {
+    if (e.key === "Enter") handleSubmit();
+  });
+</script>
 </body>
 </html>

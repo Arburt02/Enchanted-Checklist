@@ -1,746 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	<title>The Enchanted Checklist</title>
-	<style>
-		body {
-			 margin: 0;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-background:
-  linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%),
-  url('Mural.PNG') no-repeat center top;
-  background-size: contain, cover;
-  background-attachment: fixed, fixed;
-  background-repeat: no-repeat, no-repeat;
-  color: white;
-  padding: 2rem;
-  min-height: 100vh;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-  overflow-x: hidden;
-			/* 👈 soft black shadow */
-		}
-		/* 📱 Responsive container for all content */
-		.main-container {
-			width: 90%;
-			max-width: 600px;
-			margin: 0 auto;
-			padding: 1rem;
-		}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Enchanted Checklist</title>
 
-		@media (min-width: 768px) {
-			.main-container {
-				width: 70%;
-			}
-		}
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-		@media (min-width: 1024px) {
-			.main-container {
-				width: 50%;
-			}
-		}
+  <!-- 🌓 Instant theme hint (prevents flash) -->
+  <script>
+  (function () {
+    try {
+      const cached = localStorage.getItem('ec_dark');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (cached === 'true' || (cached === null && prefersDark)) {
+        document.documentElement.classList.add('dark'); // early hint
+      }
+    } catch (e) {}
+  })();
+  </script>
 
-		#header {
-			position: sticky;
-			top: 0;
-			background-color: rgba(255, 255, 255, 0.15);
-			/* soft blur look */
-			backdrop-filter: blur(8px);
-			/* adds the glassy feel */
-			-webkit-backdrop-filter: blur(8px);
-			/* Safari support */
-			padding: 1rem;
-			z-index: 10;
-			border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-		}
+  <style>
+    /* ===== Base page background (no mural here) ===== */
+    body {
+      margin: 0;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
+      color: white;
+      padding: 2rem;
+      min-height: 100vh;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+      overflow-x: hidden;
+    }
 
-		.task-container {
-			padding: 1rem;
-			background: transparent;
-			color: white;
-			min-height: 100vh;
-		}
+    /* Light-mode mural (faded back) */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: url('Mural.PNG') no-repeat center top;
+      background-size: contain;
+      opacity: 0.2; /* tune 0.15–0.3 */
+      pointer-events: none;
+      z-index: 0;
+    }
 
-		.task-card {
-			background: rgba(255, 255, 255, 0.15);
-			border-radius: 12px;
-			padding: 1rem;
-			margin-bottom: 1rem;
-			cursor: pointer;
-			color: white;
-			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-		}
+    /* Ensure page content sits above the mural layer */
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
 
-		.task-card:hover {
-			background-color: rgba(255, 255, 255, 0.2);
-		}
+    /* ===== Layout ===== */
+    .main-container {
+      width: 90%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    @media (min-width: 768px) { .main-container { width: 70%; } }
+    @media (min-width: 1024px){ .main-container { width: 50%; } }
 
-		.fade-in {
-			opacity: 0;
-			animation: fadeIn 0.5s ease forwards;
-		}
+    #header {
+      position: sticky;
+      top: 0;
+      background-color: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 1rem;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
 
-		@keyframes fadeIn {
-			to {
-				opacity: 1;
-			}
-		}
+    .task-container { padding: 1rem; background: transparent; color: white; min-height: 100vh; }
 
-		.clickable {
-			background-color: rgba(255, 255, 255, 0.15);
-			padding: 1rem;
-			border-radius: 8px;
-			margin: 0.5rem 0;
-			font-weight: bold;
-			cursor: pointer;
-		}
+    .task-card {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+	  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+    }
+	
+    .task-card:hover { background-color: rgba(255,255,255,0.2); }
 
-		.clickable {
-			transition: transform 0.2s ease, box-shadow 0.2s ease;
-		}
+    .fade-in { opacity: 0; animation: fadeIn 0.5s ease forwards; }
+    @keyframes fadeIn { to { opacity: 1; } }
 
-		.clickable:hover {
-			transform: scale(1.02);
-			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-		}
+    .clickable {
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+	  	  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+    }
+    .clickable:hover { transform: scale(1.02); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
 
-		.progress-bar-container {
-			background: rgba(255, 255, 255, 0.2);
-			border-radius: 8px;
-			height: 16px;
-			margin: 0.5rem 0;
-			overflow: hidden;
-		}
+    .progress-bar-container {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      height: 16px;
+      margin: 0.5rem 0;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      border-radius: 8px;
+      background: linear-gradient(to right,
+        rgba(255, 255, 255, 0.4),
+        #f7d774, #f1c40f, #b8860b, #f1c40f, #f7d774,
+        rgba(255, 255, 255, 0.4));
+      background-size: 300% 100%;
+      background-repeat: repeat;
+      transition: width 0.3s ease-out;
+    }
+    @keyframes shimmer { 0% { background-position: 0% center; } 100% { background-position: 100% center; } }
+    .shimmer-gold { animation: shimmer 4s ease-in-out infinite alternate; }
 
-		.progress-bar {
-			height: 100%;
-			border-radius: 8px;
-			background: linear-gradient(to right,
-					rgba(255, 255, 255, 0.4),
-					#f7d774,
-					#f1c40f,
-					#b8860b,
-					#f1c40f,
-					#f7d774,
-					rgba(255, 255, 255, 0.4));
-			background-size: 300% 100%;
-			background-repeat: repeat;
-			transition: width 0.3s ease-out;
-		}
+    .explore-button {
+      background-color: #ffffff;
+      color: #2f77a7;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
 
-		@keyframes shimmer {
-			0% {
-				background-position: 0% center;
-			}
+    #fireworks-container {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 9999;
+    }
+    .firework {
+      position: absolute; width: 8px; height: 8px; border-radius: 50%;
+      background: gold; opacity: 0; animation: explode 0.5s ease-out forwards;
+    }
+    @keyframes explode {
+      0% { transform: scale(0.2) translate(0,0); opacity: 1; }
+      100% { transform: scale(1) translate(var(--dx), var(--dy)); opacity: 0; }
+    }
 
-			100% {
-				background-position: 100% center;
-			}
-		}
+    /* ✅ Completed style */
+    .task-card.completed { opacity: 0.85; } /* slight dim, keep readable */
+    .task-card.completed .task-title {
+      text-decoration: line-through;
+      color: #fff;
+      font-style: italic; /* italic when completed */
+    }
 
-		.shimmer-gold {
-			animation: shimmer 4s ease-in-out infinite alternate;
-		}
+    em {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 0.9rem;
+      color: #444;
+      text-shadow: none;
+    }
 
-		.explore-button {
-			background-color: #ffffff;
-			color: #2f77a7;
-			padding: 0.5rem 1rem;
-			border-radius: 8px;
-			font-weight: bold;
-			text-decoration: none;
-			display: inline-block;
-			margin-top: 0.5rem;
-		}
+    /* ===== Dark mode (supports early html.dark hint and body.dark from Firebase) ===== */
+    html.dark body, /* early hint */
+    body.dark {
+      background: #121212;
+      color: white;
+    }
 
-		#fireworks-container {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			pointer-events: none;
-			z-index: 9999;
-		}
+    /* White mask mural in dark mode */
+    html.dark body::before,
+    body.dark::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      -webkit-mask-image: url('Mural.PNG');
+      mask-image: url('Mural.PNG');
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center top;
+      mask-position: center top;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      background-color: rgba(255,255,255,0.3); /* adjust alpha to taste */
+      opacity: 1;
+      background-image: none; /* ensure we don't paint the light mural */
+    }
 
-		.firework {
-			position: absolute;
-			width: 8px;
-			height: 8px;
-			border-radius: 50%;
-			background: gold;
-			opacity: 0;
-			animation: explode 0.5s ease-out forwards;
-		}
+    /* Dark mode variants for cards/accents (optional refinements) */
+body.dark .task-card,
+html.dark body .task-card,
+body.dark .clickable,
+html.dark body .clickable {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.18);}
 
-		@keyframes explode {
-			0% {
-				transform: scale(0.2) translate(0, 0);
-				opacity: 1;
-			}
-
-			100% {
-				transform: scale(1) translate(var(--dx), var(--dy));
-				opacity: 0;
-			}
-		}
-		
-		body.dark em {
-  color: #ddd;
-  font-style: italic;
-  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.1);
-}
-
-		body.dark {
-			background: #121212;
-			color: white;
-		}
-
-		body.dark .task-container {
-			background: #1e1e1e;
-		}
-
-		body.dark .task-card {
-			background: rgba(255, 255, 255, 0.05);
-		}
-
-		body.dark .clickable {
-			background-color: rgba(255, 255, 255, 0.1);
-		}
-
-		body.dark .explore-button {
-			background-color: #333;
-			color: #fff;
-		}
-
-		em {
-			display: block;
-			margin-top: 0.25rem;
-			font-size: 0.9rem;
-			color: #444;
-			text-shadow: none;
-		}
-		
-		  body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('Mural.PNG') no-repeat center top;
-    background-size: contain;
-    opacity: 0.2;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  body > * {
-    position: relative;
-    z-index: 1;
-  }
-  
-	</style>
-
+  </style>
 </head>
 
-<body style="display: none;">
-  <div class="main-container" id="mainContent" style="display: none;">
-		<div id="header">
-			<button id="back-button" class="explore-button" aria-label="Go back">
-				<i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i> Back
-			</button>
-			<button id="home-button" class="explore-button" onclick="goHome()"><i class="fas fa-house" style="margin-right: 0.5rem;"></i> Home</button>
-			<h2 id="page-title" style="margin: 0.5rem 0 0.25rem 0;"></h2>
-			<p id="task-count" style="margin: 0;"></p>
-			<div id="area-progress" style="display:none">
-				<div class="progress-bar-container">
-					<div id="progress-fill" class="progress-bar"></div>
-				</div>
-				<p id="progress-label" style="font-size: 0.9rem;"></p>
-			</div>
-		</div>
+<body style="display:none;">
+  <div class="main-container" id="mainContent" style="display:none;">
+    <div id="header">
+      <button id="back-button" class="explore-button" aria-label="Go back">
+        <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i> Back
+      </button>
+      <button id="home-button" class="explore-button" onclick="goHome()">
+        <i class="fas fa-house" style="margin-right: 0.5rem;"></i> Home
+      </button>
+      <h2 id="page-title" style="margin: 0.5rem 0 0.25rem 0;"></h2>
+      <p id="task-count" style="margin: 0;"></p>
+      <div id="area-progress" style="display:none">
+        <div class="progress-bar-container">
+          <div id="progress-fill" class="progress-bar"></div>
+        </div>
+        <p id="progress-label" style="font-size: 0.9rem;"></p>
+      </div>
+    </div>
 
-		<div id="fireworks-container"></div>
+    <div id="fireworks-container"></div>
+    <div class="task-container" id="checklist"></div>
+  </div>
 
-		<div class="task-container" id="checklist"></div>
-	</div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import {
+      getFirestore,
+      getDoc,
+      getDocs,
+      setDoc,
+      deleteDoc,
+      doc,
+      collection
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-  import {
-  getFirestore,
-  getDoc,
-  getDocs,
-  setDoc,
-  deleteDoc,
-  doc,
-  collection
-} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    // 🔥 Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
+      authDomain: "the-enchanted-checklist.firebaseapp.com",
+      projectId: "the-enchanted-checklist",
+      storageBucket: "the-enchanted-checklist.appspot.com",
+      messagingSenderId: "971177969419",
+      appId: "1:971177969419:web:3a48e119cb866f6551840e"
+    };
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
-    authDomain: "the-enchanted-checklist.firebaseapp.com",
-    projectId: "the-enchanted-checklist",
-    storageBucket: "the-enchanted-checklist.appspot.com",
-    messagingSenderId: "971177969419",
-    appId: "1:971177969419:web:3a48e119cb866f6551840e"
-  };
+    // 🔧 DOM
+    const checklistDiv  = document.getElementById('checklist');
+    const pageTitle     = document.getElementById('page-title');
+    const taskCount     = document.getElementById('task-count');
+    const backButton    = document.getElementById('back-button');
+    const progressBar   = document.getElementById('progress-fill');
+    const progressLabel = document.getElementById('progress-label');
+    const areaProgress  = document.getElementById('area-progress');
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    // 🧠 State
+    let fullData = [];
+    let navStack = [];
+    let currentTasks = [];
+    let preferences = {};
 
-  const checklistDiv = document.getElementById('checklist');
-  const pageTitle = document.getElementById('page-title');
-  const taskCount = document.getElementById('task-count');
-  const backButton = document.getElementById('back-button');
-  const progressBar = document.getElementById('progress-fill');
-  const progressLabel = document.getElementById('progress-label');
-  const areaProgress = document.getElementById('area-progress');
+    // 🔐 Auth guard + theme application (no flash)
+    onAuthStateChanged(auth, async user => {
+      if (!user) { window.location.href = "index.html"; return; }
 
-  let fullData = [];
-  let navStack = [];
-  let currentTasks = [];
-  let preferences = {};
+      try {
+        const [jsonData, prefsSnap] = await Promise.all([
+          fetch("checklist.json").then(res => res.json()),
+          getDoc(doc(db, `users/${user.uid}/preferences/default`))
+        ]);
 
-  onAuthStateChanged(auth, async user => {
-    if (!user) {
-      window.location.href = "login.html";
-      return;
-    }
+        fullData = jsonData;
+        preferences = prefsSnap.exists() ? prefsSnap.data() : {};
 
-    document.body.style.display = "block";
-    const content = document.getElementById("mainContent");
-    if (content) content.style.display = "block";
+        // Apply dark before revealing UI & cache for next load
+        if (preferences.dark_mode === true) {
+          document.body.classList.add("dark");
+          try { localStorage.setItem('ec_dark', 'true'); } catch {}
+        } else {
+          document.body.classList.remove("dark");
+          try { localStorage.setItem('ec_dark', 'false'); } catch {}
+        }
 
-    try {
-      const [jsonData, prefsSnap] = await Promise.all([
-        fetch("checklist.json").then(res => res.json()),
-        getDoc(doc(db, `users/${user.uid}/preferences/default`))
-      ]);
+        // Reveal UI after theme is applied
+        document.body.style.display = "block";
+        const content = document.getElementById("mainContent");
+        if (content) content.style.display = "block";
 
-      fullData = jsonData;
-      preferences = prefsSnap.exists() ? prefsSnap.data() : {};
-
-      // ✅ Dark mode from Firestore
-      if (preferences.dark_mode === true) {
-        document.body.classList.add("dark");
+        renderExperiences();
+      } catch (err) {
+        console.error("❌ Error loading data:", err);
+        checklistDiv.innerHTML = `<p style="color:red; padding:1rem;">Failed to load checklist. Please try again.</p>`;
+        // Still reveal something to the user
+        document.body.style.display = "block";
+        const content = document.getElementById("mainContent");
+        if (content) content.style.display = "block";
       }
+    });
 
-      renderExperiences(); // You'll modify this next to use `preferences`
-    } catch (err) {
-      console.error("❌ Error loading data:", err);
-      checklistDiv.innerHTML = `<p style="color:red; padding:1rem;">Failed to load checklist. Please try again.</p>`;
-    }
-  });
+    // =========================
+    // Rendering helpers
+    // =========================
+    function renderExperiences() {
+      checklistDiv.innerHTML = '';
+      pageTitle.textContent = "Choose Your Destination";
+      backButton.style.display = "none";
+      areaProgress.style.display = "none";
+      navStack = [];
 
-function renderExperiences() {
-  checklistDiv.innerHTML = '';
-  pageTitle.textContent = "Choose Your Destination";
-  backButton.style.display = "none";
-  areaProgress.style.display = "none";
-  navStack = [];
+      const wdwParks = [
+        "Magic Kingdom","EPCOT","Animal Kingdom","Hollywood Studios",
+        "Park Hopper Plus","Disney Springs","Walt Disney World Resorts"
+      ];
+      const dlrParks = [
+        "Disneyland Park","Disney California Adventure",
+        "Downtown Disney District","Disneyland Resorts",
+        "Seasonal Events and Festivals","Bonus"
+      ];
 
-  const wdwParks = [
-    "Magic Kingdom", "EPCOT", "Animal Kingdom", "Hollywood Studios",
-    "Park Hopper Plus", "Disney Springs", "Walt Disney World Resorts"
-  ];
-  const dlrParks = [
-    "Disneyland Park", "Disney California Adventure",
-    "Downtown Disney District", "Disneyland Resorts",
-    "Seasonal Events and Festivals", "Bonus"
-  ];
+      const wdwFilters = Object.fromEntries(wdwParks.map(p => [p, preferences?.[`include_${p}`] !== false]));
+      const dlrFilters = Object.fromEntries(dlrParks.map(p => [p, preferences?.[`include_${p}`] !== false]));
+      const dclFilter  = preferences?.["include_Disney Cruise Line"] !== false;
 
-  const wdwFilters = Object.fromEntries(
-    wdwParks.map(p => [p, preferences?.[`include_${p}`] !== false])
-  );
-  const dlrFilters = Object.fromEntries(
-    dlrParks.map(p => [p, preferences?.[`include_${p}`] !== false])
-  );
-  const dclFilter = preferences?.["include_Disney Cruise Line"] !== false;
+      const filtered = fullData.filter(task => {
+        if (task.Experience === "Walt Disney World") return wdwFilters[task.Park];
+        if (task.Experience === "Disneyland")        return dlrFilters[task.Park];
+        if (task.Experience === "Disney Cruise Line")return dclFilter;
+        return false;
+      });
 
-  const filtered = fullData.filter(task => {
-    if (task.Experience === "Walt Disney World") return wdwFilters[task.Park];
-    if (task.Experience === "Disneyland") return dlrFilters[task.Park];
-    if (task.Experience === "Disney Cruise Line") return dclFilter;
-    return false;
-  });
+      const experiences = [...new Set(filtered.map(t => t.Experience))];
+      experiences.forEach(exp => {
+        const div = document.createElement('div');
+        div.textContent = exp;
+        div.className = 'clickable';
+        div.onclick = () => {
+          navStack.push(renderExperiences);
+          const expFiltered = filtered.filter(t => t.Experience === exp);
+          renderParks(expFiltered, exp);
+        };
+        checklistDiv.appendChild(div);
+      });
 
-  const experiences = [...new Set(filtered.map(t => t.Experience))];
-  experiences.forEach(exp => {
-    const div = document.createElement('div');
-    div.textContent = exp;
-    div.className = 'clickable';
-    div.onclick = () => {
-      navStack.push(renderExperiences);
-      const expFiltered = filtered.filter(t => t.Experience === exp);
-      renderParks(expFiltered, exp);
-    };
-    checklistDiv.appendChild(div);
-  });
-
-  taskCount.textContent = `${filtered.length} tasks`;
-}
-
-		function renderParks(data, experienceName) {
-			checklistDiv.innerHTML = '';
-			pageTitle.textContent = experienceName;
-			taskCount.textContent = `${data.length} tasks`;
-			areaProgress.style.display = "none";
-			backButton.style.display = "inline-block";
-			backButton.onclick = goBack;
-
-			const parks = [...new Set(data.map(t => t.Park))];
-			const skipAreaParks = ["Downtown Disney District", "Disney Springs"];
-
-			parks.forEach(park => {
-				const div = document.createElement('div');
-				div.textContent = park;
-				div.className = 'clickable';
-				div.onclick = () => {
-					const parkData = data.filter(t => t.Park === park);
-					const hasAreas = parkData.some(t => t.Area);
-
-					navStack.push(() => renderParks(data, experienceName));
-
-					if (skipAreaParks.includes(park)) {
-						renderTasks(parkData, `${experienceName} → ${park}`);
-					} else if (hasAreas) {
-						renderAreas(parkData, experienceName, park);
-					} else {
-						renderTasks(parkData, `${experienceName} → ${park}`);
-					}
-				};
-				checklistDiv.appendChild(div);
-			});
-		}
-
-		function renderAreas(data, experienceName, parkName) {
-			checklistDiv.innerHTML = '';
-			pageTitle.textContent = parkName;
-			taskCount.textContent = `${data.length} tasks`;
-			areaProgress.style.display = "none";
-			backButton.style.display = "inline-block";
-			backButton.onclick = goBack;
-
-			const areas = [...new Set(data.map(t => t.Area))];
-			areas.forEach(area => {
-				const areaTasks = data.filter(t => t.Area === area);
-				const div = document.createElement('div');
-				div.innerHTML = `<i class="fas fa-location-dot" style="margin-right: 0.5rem;"></i> ${area}`;
-				div.className = 'clickable';
-				div.onclick = () => {
-					navStack.push(() => renderAreas(data, experienceName, parkName));
-
-					if (
-						experienceName === "Walt Disney World" &&
-						parkName === "EPCOT" &&
-						area === "World Showcase"
-					) {
-						renderPavilions(areaTasks, experienceName, parkName, area);
-					} else {
-						renderTasks(areaTasks, `${parkName} → ${area}`);
-					}
-				};
-				checklistDiv.appendChild(div);
-			});
-		}
-
-		function renderPavilions(data, experienceName, parkName, areaName) {
-			checklistDiv.innerHTML = '';
-			pageTitle.textContent = `${parkName} → ${areaName}`;
-			taskCount.textContent = `${data.length} tasks`;
-			areaProgress.style.display = "none";
-			backButton.style.display = "inline-block";
-			backButton.onclick = goBack;
-
-			const pavilions = [...new Set(data.map(t => t.Pavilion).filter(p => p))];
-			pavilions.forEach(pavilion => {
-				const pavilionTasks = data.filter(t => t.Pavilion === pavilion);
-				const div = document.createElement('div');
-				div.innerHTML = `<i class="fas fa-landmark" style="margin-right: 0.5rem;"></i> ${pavilion}`;
-				div.className = 'clickable';
-				div.onclick = () => {
-					navStack.push(() => renderPavilions(data, experienceName, parkName, areaName));
-					renderTasks(pavilionTasks, `${areaName} → ${pavilion}`);
-				};
-				checklistDiv.appendChild(div);
-			});
-		}
-
-		async function renderTasks(tasks, label)	{
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-			
-  checklistDiv.innerHTML = '';
-  pageTitle.textContent = label;
-  taskCount.textContent = `${tasks.length} tasks`;
-  backButton.style.display = "inline-block";
-  areaProgress.style.display = "block";
-  backButton.onclick = goBack;
-
-  currentTasks = tasks;
-  tasks.sort((a, b) => a.Task.localeCompare(b.Task));
-
-  const uid = getAuth().currentUser?.uid;
-  if (!uid) return;
-
-  const db = getFirestore();
-  const progressSnap = await getDocs(collection(db, `users/${uid}/progress`));
-  const savedSnap = await getDocs(collection(db, `users/${uid}/saved`));
-
-  const progressMap = {};
-  const savedMap = {};
-  progressSnap.forEach(doc => {
-    progressMap[doc.id] = doc.data().complete === true;
-  });
-  savedSnap.forEach(doc => {
-    savedMap[doc.id] = true;
-  });
-
-  const completed = tasks.filter(task => {
-    const id = task.id || `${task.Park}-${task.Area}-${task.Task}`;
-    return progressMap[id];
-  }).length;
-
-  const percent = tasks.length ? Math.round((completed / tasks.length) * 100) : 0;
-  progressBar.style.width = `${percent}%`;
-  progressLabel.textContent = `${completed} / ${tasks.length} tasks (${percent}%)`;
-
-  progressBar.classList.remove("shimmer-gold");
-  if (percent > 50) {
-    void progressBar.offsetWidth;
-    progressBar.classList.add("shimmer-gold");
-  }
-  if (percent >= 100) {
-    launchFireworks();
-  }
-
-  tasks.forEach((task, index) => {
-    const taskId = task.id || `${task.Park}-${task.Area}-${task.Task}`;
-    const isComplete = progressMap[taskId];
-    const isSaved = savedMap[taskId];
-
-    const card = document.createElement('div');
-    card.className = 'task-card fade-in';
-    card.style.animationDelay = `${index * 0.05}s`;
-    card.style.display = 'flex';
-    card.style.flexDirection = 'column';
-    card.style.gap = '0.5rem';
-
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.className = 'task-checkbox';
-    checkbox.setAttribute('data-task-id', taskId);
-    checkbox.checked = isComplete;
-
-    checkbox.addEventListener('change', async () => {
-  const taskRef = doc(db, `users/${uid}/progress`, taskId);
-  if (checkbox.checked) {
-    await setDoc(taskRef, { complete: true });
-    card.style.opacity = 0.6;
-    title.style.textDecoration = 'line-through';
-    title.style.color = '#555';
-  } else {
-    await deleteDoc(taskRef);
-    card.style.opacity = 1;
-    title.style.textDecoration = 'none';
-    title.style.color = 'white';
-  }
-
-  await updateSectionProgress(); // Just refresh the bar
-  const percent = parseInt(progressBar.style.width) || 0;
-  progressBar.classList.remove("shimmer-gold");
-  if (percent > 50) {
-    void progressBar.offsetWidth;
-    progressBar.classList.add("shimmer-gold");
-  }
-  if (percent >= 100) {
-    launchFireworks();
-  }
-});
-
-    const title = document.createElement('strong');
-    title.textContent = task.Task;
-    title.style.wordBreak = 'break-word';
-    title.style.fontSize = '1rem';
-
-    const summaryDiv = document.createElement('div');
-    summaryDiv.style.display = 'none';
-    summaryDiv.innerHTML = `
-      <em>${task.Subcategory || ''}</em><br/>
-      ${task.URL ? `<a href="${task.URL}" class="explore-button explore-link" data-url="${task.URL}">Explore this Task</a>` : ''}
-    `;
-
-    const row = document.createElement('div');
-    row.style.display = 'flex';
-    row.style.alignItems = 'center';
-    row.style.gap = '0.75rem';
-    row.style.flexWrap = 'wrap';
-
-    const titleWrapper = document.createElement('span');
-    titleWrapper.style.cursor = 'pointer';
-    titleWrapper.appendChild(title);
-    titleWrapper.onclick = e => {
-      e.stopPropagation();
-      summaryDiv.style.display = summaryDiv.style.display === 'none' ? 'block' : 'none';
-    };
-
-    const saveIcon = document.createElement('span');
-    saveIcon.innerHTML = isSaved
-      ? '<i class="fas fa-heart" style="color: hotpink;"></i>'
-      : '<i class="far fa-heart"></i>';
-    saveIcon.style.cursor = 'pointer';
-
-saveIcon.onclick = async e => {
-  e.stopPropagation();
-
-  const wasSaved = saveIcon.innerHTML.includes("fas fa-heart");
-
-  // Optimistically update the icon first
-  saveIcon.innerHTML = wasSaved
-    ? '<i class="far fa-heart"></i>'
-    : '<i class="fas fa-heart" style="color: hotpink;"></i>';
-
-  const savedRef = doc(db, `users/${uid}/saved`, taskId);
-
-  try {
-    if (wasSaved) {
-      await deleteDoc(savedRef);
-    } else {
-      await setDoc(savedRef, { saved: true });
-    }
-  } catch (err) {
-    console.error("❌ Error updating favorite:", err);
-
-    // Roll back UI if Firestore fails
-    saveIcon.innerHTML = wasSaved
-      ? '<i class="fas fa-heart" style="color: hotpink;"></i>'
-      : '<i class="far fa-heart"></i>';
-  }
-};
-
-    row.appendChild(checkbox);
-    row.appendChild(titleWrapper);
-    row.appendChild(saveIcon);
-
-    card.appendChild(row);
-    card.appendChild(summaryDiv);
-    checklistDiv.appendChild(card);
-  });
-}
-
-		function getRandomColor() {
-			const colors = ["#FFD700", "#FF69B4", "#87CEFA", "#FFA500", "#00FFCC", "#FF4444", "#B388FF"];
-			return colors[Math.floor(Math.random() * colors.length)];
-		}
-
-		function launchFireworks() {
-			const container = document.getElementById('fireworks-container');
-			let burstCount = 0;
-
-			const burstInterval = setInterval(() => {
-				for (let i = 0; i < 12; i++) {
-					const fw = document.createElement('div');
-					fw.className = 'firework';
-					fw.style.left = `${40 + Math.random() * 20}%`;
-					fw.style.top = `${30 + Math.random() * 20}%`;
-					fw.style.setProperty('--dx', `${(Math.random() - 0.5) * 300}px`);
-					fw.style.setProperty('--dy', `${(Math.random() - 0.5) * 300}px`);
-					fw.style.background = getRandomColor();
-					container.appendChild(fw);
-					setTimeout(() => container.removeChild(fw), 500); // match animation duration
-				}
-
-				burstCount++;
-				if (burstCount >= 10) clearInterval(burstInterval); // stop after 10 bursts
-			}, 500); // one burst every 0.5s
-		}
-
-		function goBack() {
-  const last = navStack.pop();
-  if (last) last();
- window.scrollTo({ top: 0, behavior: 'smooth' });
- }
-
-		checklistDiv.addEventListener('click', e => {
-			if (e.target.matches('.explore-link')) {
-				e.preventDefault();
-				const url = e.target.getAttribute('data-url');
-				if (url && confirm("Open this task in a new tab?")) {
-					window.open(url, '_blank');
-				}
-			}
-		});
-
-async function updateSectionProgress() {
-  const auth = getAuth();
-  const user = auth.currentUser;
-  if (!user) return;
-
-  const db = getFirestore();
-  const uid = user.uid;
-
-  const progressSnap = await getDocs(collection(db, `users/${uid}/progress`));
-  const progressMap = {};
-  progressSnap.forEach(doc => {
-    progressMap[doc.id] = doc.data().complete === true;
-  });
-
-  const completed = currentTasks.filter(task => {
-    const id = task.id || `${task.Park}-${task.Area}-${task.Task}`;
-    return progressMap[id];
-  }).length;
-
-  const percent = currentTasks.length ?
-    Math.round((completed / currentTasks.length) * 100) :
-    0;
-
-  progressBar.style.width = `${percent}%`;
-  progressLabel.textContent = `${completed} / ${currentTasks.length} tasks (${percent}%)`;
-}
-
-checklistDiv.addEventListener('change', async e => {
-  if (e.target.matches('.task-checkbox')) {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const db = getFirestore();
-    const uid = user.uid;
-    const taskId = e.target.getAttribute('data-task-id');
-
-    const taskRef = doc(db, `users/${uid}/progress/${taskId}`);
-
-    if (e.target.checked) {
-      await setDoc(taskRef, { complete: true });
-    } else {
-      await deleteDoc(taskRef);
+      taskCount.textContent = `${filtered.length} tasks`;
     }
 
-    await updateSectionProgress();
+    function renderParks(data, experienceName) {
+      checklistDiv.innerHTML = '';
+      pageTitle.textContent = experienceName;
+      taskCount.textContent = `${data.length} tasks`;
+      areaProgress.style.display = "none";
+      backButton.style.display = "inline-block";
+      backButton.onclick = goBack;
 
-    // 🎉 Shimmer + Fireworks if needed
-    const percent = parseInt(progressBar.style.width) || 0;
-    progressBar.classList.remove("shimmer-gold");
-    if (percent > 50) {
-      void progressBar.offsetWidth;
-      progressBar.classList.add("shimmer-gold");
-    }
-    if (percent >= 100) {
-      launchFireworks();
-    }
-  }
-});
+      const parks = [...new Set(data.map(t => t.Park))];
+      const skipAreaParks = ["Downtown Disney District","Disney Springs"];
 
-		window.goHome = function () {
-  window.location.href = "home.html";
-};
-		
-	</script>
-	
+      parks.forEach(park => {
+        const div = document.createElement('div');
+        div.textContent = park;
+        div.className = 'clickable';
+        div.onclick = () => {
+          const parkData = data.filter(t => t.Park === park);
+          const hasAreas = parkData.some(t => t.Area);
+
+          navStack.push(() => renderParks(data, experienceName));
+
+          if (skipAreaParks.includes(park)) {
+            renderTasks(parkData, `${experienceName} → ${park}`);
+          } else if (hasAreas) {
+            renderAreas(parkData, experienceName, park);
+          } else {
+            renderTasks(parkData, `${experienceName} → ${park}`);
+          }
+        };
+        checklistDiv.appendChild(div);
+      });
+    }
+
+    function renderAreas(data, experienceName, parkName) {
+      checklistDiv.innerHTML = '';
+      pageTitle.textContent = parkName;
+      taskCount.textContent = `${data.length} tasks`;
+      areaProgress.style.display = "none";
+      backButton.style.display = "inline-block";
+      backButton.onclick = goBack;
+
+      const areas = [...new Set(data.map(t => t.Area))];
+      areas.forEach(area => {
+        const areaTasks = data.filter(t => t.Area === area);
+        const div = document.createElement('div');
+        div.innerHTML = `<i class="fas fa-location-dot" style="margin-right: 0.5rem;"></i> ${area}`;
+        div.className = 'clickable';
+        div.onclick = () => {
+          navStack.push(() => renderAreas(data, experienceName, parkName));
+
+          if (experienceName === "Walt Disney World" && parkName === "EPCOT" && area === "World Showcase") {
+            renderPavilions(areaTasks, experienceName, parkName, area);
+          } else {
+            renderTasks(areaTasks, `${parkName} → ${area}`);
+          }
+        };
+        checklistDiv.appendChild(div);
+      });
+    }
+
+    function renderPavilions(data, experienceName, parkName, areaName) {
+      checklistDiv.innerHTML = '';
+      pageTitle.textContent = `${parkName} → ${areaName}`;
+      taskCount.textContent = `${data.length} tasks`;
+      areaProgress.style.display = "none";
+      backButton.style.display = "inline-block";
+      backButton.onclick = goBack;
+
+      const pavilions = [...new Set(data.map(t => t.Pavilion).filter(Boolean))];
+      pavilions.forEach(pavilion => {
+        const pavilionTasks = data.filter(t => t.Pavilion === pavilion);
+        const div = document.createElement('div');
+        div.innerHTML = `<i class="fas fa-landmark" style="margin-right: 0.5rem;"></i> ${pavilion}`;
+        div.className = 'clickable';
+        div.onclick = () => {
+          navStack.push(() => renderPavilions(data, experienceName, parkName, areaName));
+          renderTasks(pavilionTasks, `${areaName} → ${pavilion}`);
+        };
+        checklistDiv.appendChild(div);
+      });
+    }
+
+    async function renderTasks(tasks, label) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      checklistDiv.innerHTML = '';
+      pageTitle.textContent = label;
+      taskCount.textContent = `${tasks.length} tasks`;
+      backButton.style.display = "inline-block";
+      areaProgress.style.display = "block";
+      backButton.onclick = goBack;
+
+      currentTasks = tasks;
+      tasks.sort((a, b) => a.Task.localeCompare(b.Task));
+
+      const uid = auth.currentUser?.uid;
+      if (!uid) return;
+
+      const progressSnap = await getDocs(collection(db, `users/${uid}/progress`));
+      const savedSnap    = await getDocs(collection(db, `users/${uid}/saved`));
+
+      const progressMap = {};
+      const savedMap = {};
+      progressSnap.forEach(d => { progressMap[d.id] = d.data().complete === true; });
+      savedSnap.forEach(d    => { savedMap[d.id]    = true; });
+
+      const completed = tasks.filter(task => {
+        const id = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+        return progressMap[id];
+      }).length;
+
+      const percent = tasks.length ? Math.round((completed / tasks.length) * 100) : 0;
+      progressBar.style.width = `${percent}%`;
+      progressLabel.textContent = `${completed} / ${tasks.length} tasks (${percent}%)`;
+
+      progressBar.classList.remove("shimmer-gold");
+      if (percent > 50) { void progressBar.offsetWidth; progressBar.classList.add("shimmer-gold"); }
+      if (percent >= 100) { launchFireworks(); }
+
+      // Render cards
+      tasks.forEach((task, index) => {
+        const taskId     = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+        const isComplete = progressMap[taskId];
+        const isSaved    = savedMap[taskId];
+
+        // Card
+        const card = document.createElement('div');
+        card.className = 'task-card fade-in';
+        card.style.animationDelay = `${index * 0.05}s`;
+        card.style.display = 'flex';
+        card.style.flexDirection = 'column';
+        card.style.gap = '0.5rem';
+
+        // Row
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.alignItems = 'center';
+        row.style.gap = '0.75rem';
+        row.style.flexWrap = 'wrap';
+
+        // Checkbox
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'task-checkbox';
+        checkbox.setAttribute('data-task-id', taskId);
+        checkbox.checked = isComplete;
+
+        // Title
+        const title = document.createElement('strong');
+        title.className = 'task-title';
+        title.textContent = task.Task;
+        title.style.wordBreak = 'break-word';
+        title.style.fontSize = '1rem';
+
+        // Summary
+        const summaryDiv = document.createElement('div');
+        summaryDiv.style.display = 'none';
+        summaryDiv.innerHTML = `
+          <em>${task.Subcategory || ''}</em><br/>
+          ${task.URL ? `<a href="${task.URL}" class="explore-button explore-link" data-url="${task.URL}">Explore this Task</a>` : ''}
+        `;
+
+        const titleWrapper = document.createElement('span');
+        titleWrapper.style.cursor = 'pointer';
+        titleWrapper.appendChild(title);
+        titleWrapper.onclick = e => {
+          e.stopPropagation();
+          summaryDiv.style.display = summaryDiv.style.display === 'none' ? 'block' : 'none';
+        };
+
+        // Heart
+        const saveIcon = document.createElement('span');
+        saveIcon.innerHTML = isSaved ? '<i class="fas fa-heart" style="color: hotpink;"></i>' : '<i class="far fa-heart"></i>';
+        saveIcon.style.cursor = 'pointer';
+        saveIcon.onclick = async e => {
+          e.stopPropagation();
+          const wasSaved = saveIcon.innerHTML.includes("fas fa-heart");
+          saveIcon.innerHTML = wasSaved ? '<i class="far fa-heart"></i>' : '<i class="fas fa-heart" style="color: hotpink;"></i>';
+
+          const savedRef = doc(db, `users/${uid}/saved`, taskId);
+          try { if (wasSaved) await deleteDoc(savedRef); else await setDoc(savedRef, { saved: true }); }
+          catch (err) { saveIcon.innerHTML = wasSaved ? '<i class="fas fa-heart" style="color: hotpink;"></i>' : '<i class="far fa-heart"></i>'; }
+        };
+
+        // Initial completed state
+        if (isComplete) card.classList.add('completed');
+
+        // Checkbox handler
+        checkbox.addEventListener('change', async () => {
+          const taskRef = doc(db, `users/${uid}/progress`, taskId);
+          if (checkbox.checked) { await setDoc(taskRef, { complete: true }); card.classList.add('completed'); }
+          else { await deleteDoc(taskRef); card.classList.remove('completed'); }
+
+          await updateSectionProgress();
+
+          const percentNow = parseInt(progressBar.style.width) || 0;
+          progressBar.classList.remove("shimmer-gold");
+          if (percentNow > 50) { void progressBar.offsetWidth; progressBar.classList.add("shimmer-gold"); }
+          if (percentNow >= 100) launchFireworks();
+        });
+
+        // Assemble
+        row.appendChild(checkbox);
+        row.appendChild(titleWrapper);
+        row.appendChild(saveIcon);
+        card.appendChild(row);
+        card.appendChild(summaryDiv);
+        checklistDiv.appendChild(card);
+      });
+    } // end renderTasks
+
+    // =========================
+    // Misc helpers
+    // =========================
+    function getRandomColor() {
+      const colors = ["#FFD700","#FF69B4","#87CEFA","#FFA500","#00FFCC","#FF4444","#B388FF"];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    function launchFireworks() {
+      const container = document.getElementById('fireworks-container');
+      let burstCount = 0;
+      const burstInterval = setInterval(() => {
+        for (let i = 0; i < 12; i++) {
+          const fw = document.createElement('div');
+          fw.className = 'firework';
+          fw.style.left = `${40 + Math.random() * 20}%`;
+          fw.style.top  = `${30 + Math.random() * 20}%`;
+          fw.style.setProperty('--dx', `${(Math.random() - 0.5) * 300}px`);
+          fw.style.setProperty('--dy', `${(Math.random() - 0.5) * 300}px`);
+          fw.style.background = getRandomColor();
+          container.appendChild(fw);
+          setTimeout(() => container.removeChild(fw), 500);
+        }
+        burstCount++;
+        if (burstCount >= 10) clearInterval(burstInterval);
+      }, 500);
+    }
+
+    function goBack() {
+      const last = navStack.pop();
+      if (last) last();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function updateSectionProgress() {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const uid = user.uid;
+      const progressSnap = await getDocs(collection(db, `users/${uid}/progress`));
+      const progressMap = {};
+      progressSnap.forEach(d => { progressMap[d.id] = d.data().complete === true; });
+
+      const completed = currentTasks.filter(task => {
+        const id = task.id || `${task.Park}-${task.Area}-${task.Task}`;
+        return progressMap[id];
+      }).length;
+
+      const percent = currentTasks.length ? Math.round((completed / currentTasks.length) * 100) : 0;
+      progressBar.style.width = `${percent}%`;
+      progressLabel.textContent = `${completed} / ${currentTasks.length} tasks (${percent}%)`;
+    }
+
+    // Open external task links
+    checklistDiv.addEventListener('click', e => {
+      if (e.target.matches('.explore-link')) {
+        e.preventDefault();
+        const url = e.target.getAttribute('data-url');
+        if (url && confirm("Open this task in a new tab?")) window.open(url, '_blank');
+      }
+    });
+
+    // Home button
+    window.goHome = function () { window.location.href = "home.html"; };
+  </script>
 </body>
-
 </html>

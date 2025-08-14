@@ -3,216 +3,339 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Packing List</title>
-  	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Plan & Pack</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+
+  <!-- 🌓 Instant theme hint to avoid flash -->
+  <script>
+  (function () {
+    try {
+      const cached = localStorage.getItem('ec_dark');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (cached === 'true' || (cached === null && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    } catch (e) {}
+  })();
+  </script>
+
   <style>
+    /* ===== Base page background + mural ===== */
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
       margin: 0;
-      padding: 2rem;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
       min-height: 100vh;
-      text-align: center;
       color: white;
-	  padding: 2rem;
-			min-height: 100vh;
-			text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+      padding: 1rem;
     }
-	
-	button {
-  background-color: white;
-  color: #2f77a7;
-  font-weight: bold;
-  padding: 0.6rem;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  width: auto;
-  max-width: 300px;
-  margin: 0.5rem auto;
-}
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: url('Mural.PNG') no-repeat center top;
+      background-size: contain;
+      opacity: 0.2;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body > * { position: relative; z-index: 1; }
 
+    /* ===== Layout ===== */
     .main-container {
-      max-width: 500px;
+      max-width: 600px;
       margin: 0 auto;
-	  text-align: center;
+      padding: 1rem;
     }
 
-    input[type="text"], button {
-      font-size: 1rem;
-      padding: 0.6rem;
+    /* Header to match checklist.html */
+    #header {
+      position: sticky;
+      top: 0;
+      background-color: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 0.75rem 1rem;
+      z-index: 10;
+      border-radius: 12px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    #header h3 {
+      margin: 0;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .explore-button {
+      background-color: #ffffff;
+      color: #2f77a7;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    /* Input Row */
+    .input-row {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0 1.25rem 0;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 0.75rem;
       border-radius: 8px;
       border: none;
-      margin: 0.5rem 0;
-      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+    }
+    .add-btn {
+      background-color: white;
+      color: #2f77a7;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .task-row {
+    /* Task Card Styling (matches checklist) */
+    .task-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 0.75rem;
+      margin-bottom: 0.6rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
+    .task-card:hover { background-color: rgba(255,255,255,0.2); }
 
     .task-left {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       flex: 1;
+      min-width: 0; /* enable ellipsis */
     }
-
+    .task-checkbox {
+      transform: scale(1.2);
+      cursor: pointer;
+    }
     .task-label {
-      flex: 1;
-      text-align: left;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      text-align: left;
+      font-weight: 600;
     }
 
-    .task-checkbox {
-      transform: scale(1.2);
+    /* ✅ Completed look: strike + italic (like checklist) */
+    .task-card.completed .task-label {
+      text-decoration: line-through;
+      font-style: italic;
+      color: #fff;
+      opacity: 0.95;
     }
 
     .delete-icon {
       color: white;
       cursor: pointer;
       font-size: 1.1rem;
+      padding-left: .5rem;
+      flex: none;
+    }
+
+    /* ===== Dark mode (reuse site-wide pattern) ===== */
+    html.dark body,
+    body.dark {
+      background: #121212;
+      color: white;
+    }
+    html.dark body::before,
+    body.dark::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      -webkit-mask-image: url('Mural.PNG');
+      mask-image: url('Mural.PNG');
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center top;
+      mask-position: center top;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      background-color: rgba(255,255,255,0.3);
+      opacity: 1;
+      background-image: none;
+    }
+    html.dark body .task-card,
+    body.dark .task-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
     }
   </style>
 </head>
+
 <body>
   <div class="main-container">
-	  <!-- Back Button -->
-<!-- Back Button -->
-<button onclick="goBack()" style="margin-bottom: 1rem;">
-  <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i> Back
-</button>
-    <div style="background: rgba(255, 255, 255, 0.15); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
-  <h2 style="margin: 0.5rem 0 0.25rem 0;">Packing List</h2>
-</div>
-    <input type="text" id="newItemInput" placeholder="Add an item..." />
- <!-- Add Item Button -->
-<button onclick="addPackingItem()">
-  <i class="fas fa-suitcase-rolling" style="margin-right: 0.5rem;"></i> Add Item
-</button>
+    <!-- Header -->
+    <div id="header">
+      <button class="explore-button" onclick="window.location.href='planner.html'">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+
+      <h3>Plan &amp; Pack</h3>
+
+      <button class="explore-button" onclick="window.location.href='home.html'">
+        <i class="fas fa-house"></i> Home
+      </button>
+    </div>
+
+    <!-- Input to add new items -->
+    <div class="input-row">
+      <input type="text" id="newItemInput" placeholder="Add an item..." />
+      <button class="add-btn" onclick="addPackingItem()">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+
+    <!-- List -->
     <div id="packingList"></div>
   </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
-  authDomain: "the-enchanted-checklist.firebaseapp.com",
-  projectId: "the-enchanted-checklist",
-  storageBucket: "the-enchanted-checklist.appspot.com",
-  messagingSenderId: "971177969419",
-  appId: "1:971177969419:web:3a48e119cb866f6551840e"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
+      authDomain: "the-enchanted-checklist.firebaseapp.com",
+      projectId: "the-enchanted-checklist",
+      storageBucket: "the-enchanted-checklist.appspot.com",
+      messagingSenderId: "971177969419",
+      appId: "1:971177969419:web:3a48e119cb866f6551840e"
+    };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
 
-let userDocRef;
-let packingItems = [];
+    let userDocRef;
+    let packingItems = [];
 
-onAuthStateChanged(auth, async user => {
-  if (!user) return window.location.href = "login.html";
+    // Apply cached theme class to body as well (keeps consistency with other pages)
+    try {
+      if (localStorage.getItem('ec_dark') === 'true') document.body.classList.add('dark');
+    } catch {}
 
-  userDocRef = doc(db, "users", user.uid);
-  const snap = await getDoc(userDocRef);
-  packingItems = snap.exists() && snap.data().packingList ? snap.data().packingList : [];
+    onAuthStateChanged(auth, async user => {
+      if (!user) return window.location.href = "index.html";
+      userDocRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userDocRef);
+      packingItems = snap.exists() && snap.data().packingList ? snap.data().packingList : [];
+      renderPackingItems();
+    });
 
-  renderPackingItems();
-});
+    window.addPackingItem = function () {
+      const input = document.getElementById("newItemInput");
+      const value = input.value.trim();
+      if (!value) return;
+      const taskId = Date.now().toString();
+      packingItems.push({ id: taskId, item: value, checked: false });
+      input.value = "";
+      saveToFirestore();
+      renderPackingItems();
+    };
 
-// ✅ THESE FUNCTIONS SHOULD BE OUTSIDE THE onAuthStateChanged BLOCK
+    function toggleItem(taskId) {
+      const item = packingItems.find(i => i.id === taskId);
+      if (item) item.checked = !item.checked;
+      saveToFirestore();
+      renderPackingItems();
+    }
 
-function addPackingItem() {
-  const input = document.getElementById("newItemInput");
-  const value = input.value.trim();
-  if (!value) return;
-  const taskId = Date.now().toString();
-  packingItems.push({ id: taskId, item: value, checked: false });
-  input.value = "";
-  saveToFirestore();
-  renderPackingItems();
-}
+    function deleteItem(taskId) {
+      packingItems = packingItems.filter(i => i.id !== taskId);
+      saveToFirestore();
+      renderPackingItems();
+    }
 
-function toggleItem(taskId) {
-  const item = packingItems.find(i => i.id === taskId);
-  if (item) item.checked = !item.checked;
-  saveToFirestore();
-  renderPackingItems();
-}
+    function renderPackingItems() {
+      const container = document.getElementById("packingList");
+      container.innerHTML = "";
 
-function deleteItem(taskId) {
-  packingItems = packingItems.filter(i => i.id !== taskId);
-  saveToFirestore();
-  renderPackingItems();
-}
+      packingItems.forEach(task => {
+        const card = document.createElement("div");
+        card.className = "task-card";
+        if (task.checked) card.classList.add('completed');
 
-function renderPackingItems() {
-  const container = document.getElementById("packingList");
-  container.innerHTML = "";
+        const left = document.createElement("div");
+        left.className = "task-left";
 
-  packingItems.forEach(task => {
-    const row = document.createElement("div");
-    row.className = "task-row";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "task-checkbox";
+        checkbox.checked = task.checked;
+        checkbox.addEventListener("change", () => {
+          toggleItem(task.id);
+        });
 
-    const left = document.createElement("div");
-    left.className = "task-left";
+        const label = document.createElement("div");
+        label.className = "task-label";
+        label.textContent = task.item;
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.className = "task-checkbox";
-    checkbox.setAttribute("data-task-id", task.id);
-    checkbox.checked = task.checked;
-    checkbox.addEventListener("change", () => toggleItem(task.id));
+        const deleteIcon = document.createElement("span");
+        deleteIcon.className = "delete-icon";
+        deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>';
+        deleteIcon.addEventListener("click", () => deleteItem(task.id));
 
-    const label = document.createElement("div");
-    label.className = "task-label";
-    label.textContent = task.item;
+        left.appendChild(checkbox);
+        left.appendChild(label);
+        card.appendChild(left);
+        card.appendChild(deleteIcon);
 
-    const deleteIcon = document.createElement("span");
-    deleteIcon.className = "delete-icon";
-    deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>';
-    deleteIcon.addEventListener("click", () => deleteItem(task.id));
+        container.appendChild(card);
+      });
 
-    left.appendChild(checkbox);
-    left.appendChild(label);
-    row.appendChild(left);
-    row.appendChild(deleteIcon);
-    container.appendChild(row);
-  });
-}
+      // After DOM paint, attach the class based on checkbox state (keeps UI in sync)
+      container.querySelectorAll('.task-card').forEach((card, i) => {
+        const cb = card.querySelector('.task-checkbox');
+        cb.addEventListener('change', () => {
+          card.classList.toggle('completed', cb.checked);
+        });
+      });
+    }
 
-window.addPackingItem = addPackingItem;
-window.goBack = function () {
-  window.location.href = "planner.html";
-};
+    async function saveToFirestore() {
+      await setDoc(userDocRef, { packingList: packingItems }, { merge: true });
+    }
 
-document.getElementById("newItemInput").addEventListener("keydown", function(event) {
-  if (event.key === "Enter") {
-    event.preventDefault(); // prevent form submission or newline
-    addPackingItem();
-  }
-});
-
-// ✅ THIS SHOULD ALSO BE OUTSIDE
-async function saveToFirestore() {
-  await setDoc(userDocRef, { packingList: packingItems }, { merge: true });
-}
+    // Enter to add item
+    document.getElementById("newItemInput").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") { event.preventDefault(); window.addPackingItem(); }
+    });
   </script>
 </body>
 </html>
