@@ -3,158 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Create Account - The Enchanted Checklist</title>
+  <title>Account Settings</title>
 
   <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- 🌓 Prevent flash on dark users -->
+  <script>
+  (function () {
+    try {
+      const cached = localStorage.getItem('ec_dark');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (cached === 'true' || (cached === null && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    } catch {}
+  })();
+  </script>
 
   <style>
-    /* ===== Base page background + mural (no dark mode on this page) ===== */
-    body {
-      margin: 0;
-      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* ===== Base page background + mural ===== */
+    body{
+      margin:0;
+      font-family:'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
       background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
-      color: white;
-      padding: 2rem 1rem 3rem;
-      min-height: 100vh;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-      overflow-x: hidden;
+      color:white;
+      padding:2rem;
+      min-height:100vh;
+      text-shadow:1px 1px 3px rgba(0,0,0,.3);
+      overflow-x:hidden;
     }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: url('Mural.PNG') no-repeat center top;
-      background-size: contain;
-      opacity: 0.2;
-      pointer-events: none;
-      z-index: 0;
+    body::before{
+      content:""; position:fixed; inset:0;
+      background:url('Mural.PNG') no-repeat center top;
+      background-size:contain; opacity:.2; pointer-events:none; z-index:0;
     }
-    body > * { position: relative; z-index: 1; }
+    body > *{ position:relative; z-index:1; }
 
-    /* ===== Layout ===== */
-    .main-container {
-      width: 90%;
-      max-width: 600px;
-      margin: 0 auto;
+    /* Layout */
+    .main-container{ width:90%; max-width:700px; margin:0 auto; }
+    #header{
+      position:sticky; top:0;
+      background:rgba(255,255,255,.15);
+      backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+      border-radius:12px; padding:1rem; border-bottom:1px solid rgba(255,255,255,.3);
+      display:flex; align-items:center; gap:.75rem; justify-content:space-between;
     }
-    @media (min-width: 768px) { .main-container { width: 70%; } }
-    @media (min-width: 1024px){ .main-container { width: 50%; } }
+    #title{ margin:0; font-size:1.5rem; font-weight:700; text-align:center; flex:1; }
 
-    /* Sticky, frosted header with title merged in */
-    #header {
-      position: sticky;
-      top: 0;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      padding: 1rem;
-      z-index: 10;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 12px;
-    }
-    #header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: .5rem;
-      margin-bottom: .5rem;
-    }
-    #header h1 {
-      margin: .25rem 0 0;
-      font-size: 1.75rem;
-      text-align: center;
-    }
-    #header p.note {
-      margin: .25rem 0 0;
-      text-align: center;
-      opacity: .95;
-      font-weight: 500;
-      font-size: .95rem;
-    }
+	/* --- Account page: compact, form-first layout --- */
 
-    /* Buttons (white w/ blue text, consistent site‑wide) */
-    .btn {
-      background-color: #ffffff;
-      color: #2f77a7;
-      padding: 0.6rem 1rem;
-      border-radius: 8px;
-      font-weight: 700;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      cursor: pointer;
-      gap: .5rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,.15);
-    }
-    .btn:disabled { opacity: .7; cursor: not-allowed; }
+/* Make the sections plain (no glass), and keep content narrow */
+.section{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 1.25rem 0;
+}
 
-    /* Form stack centered (unified widths) */
-    .form-stack {
-      margin: 1rem auto 0;
-      width: 100%;
-      max-width: 360px;     /* 🔒 keeps inputs/buttons consistent */
-    }
-    label { display:block; margin: .75rem 0 .25rem; font-weight: 600; }
-    .field {
-      width: 100%;
-      border: none;
-      border-radius: 8px;
-      padding: .75rem;
-      font-size: 1rem;
-      color: #0b2740;
-    }
-    .row { display:flex; gap:8px; align-items:center; }
-    .row .field { flex: 1; }
-    small.help { display:block; margin-top:.25rem; opacity:.9; }
+/* Center the headings; keep the form controls in a slim column */
+.section h3{ text-align: center; margin: .25rem 0 .75rem; }
 
-    /* Inline banner */
-    .banner {
-      display: none;
-      margin: 1rem auto 0;
-      padding: 0.9rem 1rem;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.2);
-      color: #073b5d;
-      font-weight: 600;
-      text-align: center;
-      width: 100%;
-      max-width: 360px;
+/* Keep each row/field inside a 360px column */
+.section .field{ max-width: 360px; width: 100%; margin: 0 auto; }
+.section .row  { max-width: 360px; margin: 0 auto; gap: 8px; }
+
+/* Buttons match home size but stay within the column */
+.section .btn{ max-width: 260px; width: 100%; margin: .75rem auto 0; }
+
+/* Overview lines also constrained */
+.line{ max-width: 420px; margin: .25rem auto; }
+
+/* Optional: slightly narrower container so the page feels lighter */
+.main-container{ max-width: 640px; }
+
+    .section h3{ margin:.25rem 0 .75rem; }
+    .muted{ color:rgba(255,255,255,.95); }
+
+    /* Inputs */
+    label{ display:block; margin:.5rem 0 .25rem; font-weight:600; }
+    .field{
+      width:100%; border:none; border-radius:8px; padding:.75rem; font-size:1rem; color:#0b2740;
     }
+    small.help{ display:block; margin-top:.25rem; opacity:.9; }
+
+    /* Buttons */
+    .btn{
+      background:#fff; color:#2f77a7; font-weight:700;
+      padding:.6rem 1rem; border:none; border-radius:8px; cursor:pointer;
+      display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+      box-shadow:0 4px 10px rgba(0,0,0,.15); width:100%; max-width:260px;
+    }
+    .btn i{ margin-right:.35rem; }
+    .row{ display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
+
+    /* Current info line */
+    .line{ display:flex; justify-content:space-between; gap:.75rem; align-items:center; }
+
+    /* Dark */
+    body.dark{ background:#121212; }
+    body.dark .section{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); }
+    body.dark .field{ color:#0b2740; }
   </style>
 </head>
-<body>
-  <div class="main-container">
-    <!-- Header (Back + merged title/intro) -->
-    <div id="header">
-      <div id="header-row">
-        <button class="btn" onclick="window.location.href='index.html'">
-          <i class="fas fa-arrow-left"></i> Back
-        </button>
-        <!-- spacer to balance layout visually -->
-        <span style="width:92px;"></span>
-      </div>
-      <h1>Create your account</h1>
-      <p class="note">Enter your details below. We’ll use your phone later for SMS‑based recovery.</p>
+<body style="display:none;">
+  <div class="main-container" id="mainContent" style="display:none;">
+    <!-- Header -->
+    <div id="header" style="justify-content:center; text-align:center;">
+      <button class="btn" onclick="window.location.href='home.html'" style="margin-right:1rem;">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+      <h2 id="title" style="margin:0 auto;">Account Settings</h2>
     </div>
 
-    <!-- Form (no glass wrapper; unified max-width) -->
-    <div class="form-stack">
-      <label for="email">Email</label>
-      <input class="field" type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+    <!-- Profile snapshot -->
+    <div class="section" style="text-align:center;">
+      <h3>Overview</h3>
+      <div class="line" style="display:flex; justify-content:center; gap:1rem;">
+        <span>Email</span><span id="curEmail" class="muted"></span>
+      </div>
+      <div class="line" style="display:flex; justify-content:center; gap:1rem; margin-top:.25rem;">
+        <span>Phone</span><span id="curPhone" class="muted"></span>
+      </div>
+    </div>
 
-      <label for="password">Password</label>
-      <input class="field" type="password" id="password" placeholder="Password" autocomplete="new-password" />
+    <!-- Email -->
+    <div class="section" style="text-align:center;">
+      <h3>Change Email</h3>
+      <p class="muted" style="margin-top:-.25rem;">You’ll need your current password to confirm.</p>
+      <label for="newEmail">New email</label><br>
+      <input id="newEmail" type="email" class="field" placeholder="you@newmail.com" autocomplete="email" style="max-width:300px; margin:auto;" /><br>
+      <label for="emailPass">Current password</label><br>
+      <input id="emailPass" type="password" class="field" placeholder="Current password" autocomplete="current-password" style="max-width:300px; margin:auto;" />
+      <div style="margin-top:.5rem;">
+        <button id="saveEmail" class="btn"><i class="fas fa-envelope"></i> Update Email</button>
+      </div>
+    </div>
 
-      <label for="confirm">Confirm password</label>
-      <input class="field" type="password" id="confirm" placeholder="Confirm password" autocomplete="new-password" />
+    <!-- Password -->
+    <div class="section" style="text-align:center;">
+      <h3>Change Password</h3>
+      <label for="curPass">Current password</label><br>
+      <input id="curPass" type="password" class="field" placeholder="Current password" autocomplete="current-password" style="max-width:300px; margin:auto;" /><br>
+      <label for="newPass">New password</label><br>
+      <input id="newPass" type="password" class="field" placeholder="New password (min 6)" autocomplete="new-password" style="max-width:300px; margin:auto;" /><br>
+      <label for="newPass2">Confirm new password</label><br>
+      <input id="newPass2" type="password" class="field" placeholder="Confirm new password" autocomplete="new-password" style="max-width:300px; margin:auto;" />
+      <div style="margin-top:.5rem;">
+        <button id="savePass" class="btn"><i class="fas fa-key"></i> Update Password</button>
+      </div>
+    </div>
 
-      <label for="phone">Phone (optional)</label>
-      <div class="row">
-        <select id="ccSelect" aria-label="Country code" class="field" style="max-width: 140px;">
+    <!-- Phone -->
+    <div class="section" style="text-align:center;">
+      <h3>Phone Number (SMS sign-in & recovery)</h3>
+      <p class="muted" style="margin-top:-.25rem;">We’ll send a 6-digit code to verify this number.</p>
+      <div style="display:flex; justify-content:center; gap:.5rem; flex-wrap:wrap;">
+        <select id="ccSelect" class="field" style="max-width:160px;">
           <option value="1">🇺🇸 +1 United States</option>
           <option value="1">🇨🇦 +1 Canada</option>
           <option value="44">🇬🇧 +44 United Kingdom</option>
@@ -166,35 +173,34 @@
           <option value="358">🇫🇮 +358 Finland</option>
           <option value="81">🇯🇵 +81 Japan</option>
         </select>
-        <input id="phone" class="field" type="tel" inputmode="tel" placeholder="Phone number" />
+        <input id="phone" class="field" type="tel" inputmode="tel" placeholder="Phone number" style="max-width:200px;" />
       </div>
-      <small class="help">Choose your country then enter your number (no need to type “+”).</small>
-
-      <!-- reCAPTCHA -->
-      <div id="recaptcha-container" style="margin-top: .75rem;"></div>
-
-      <button id="createBtn" class="btn" style="width:100%; margin-top:1rem;">
-        <i class="fas fa-user-plus"></i> Create my account
-      </button>
-
-      <div id="successBanner" class="banner">
-        🎉 Congratulations, you’ve created a new account with The Enchanted Checklist!
+      <div style="margin-top:.5rem;">
+        <button id="linkPhone" class="btn"><i class="fas fa-sms"></i> Verify & Save</button>
       </div>
+      <!-- Invisible reCAPTCHA mount -->
+      <div id="recaptcha-phone" style="height:1px; overflow:hidden;"></div>
     </div>
   </div>
-
-  <!-- Logic (unchanged aside from minor guard text) -->
+</body>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import {
       getAuth,
-      createUserWithEmailAndPassword,
+      onAuthStateChanged,
+      updateEmail,
+      updatePassword,
       updateProfile,
+      EmailAuthProvider,
+      reauthenticateWithCredential,
       RecaptchaVerifier,
-      linkWithPhoneNumber
+      linkWithPhoneNumber,
+      updatePhoneNumber,
+      PhoneAuthProvider
     } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
+    // Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
       authDomain: "the-enchanted-checklist.firebaseapp.com",
@@ -203,147 +209,156 @@
       messagingSenderId: "971177969419",
       appId: "1:971177969419:web:3a48e119cb866f6551840e"
     };
-
-    const app = initializeApp(firebaseConfig);
+    const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
+    const db   = getFirestore(app);
+
+    // DOM
+    const curEmailEl = document.getElementById("curEmail");
+    const curPhoneEl = document.getElementById("curPhone");
+    const newEmail   = document.getElementById("newEmail");
+    const emailPass  = document.getElementById("emailPass");
+    const saveEmail  = document.getElementById("saveEmail");
+
+    const curPass = document.getElementById("curPass");
+    const newPass = document.getElementById("newPass");
+    const newPass2= document.getElementById("newPass2");
+    const savePass= document.getElementById("savePass");
+
+    const ccSelect = document.getElementById("ccSelect");
+    const phoneEl  = document.getElementById("phone");
+    const linkPhoneBtn = document.getElementById("linkPhone");
 
     // Helpers
-    const $ = sel => document.querySelector(sel);
-    const createBtn = $("#createBtn");
-    function digitsOnly(s) { return (s || "").replace(/\D/g, ""); }
-
-    // Build E.164 from dropdown + number. Returns "" if phone blank; "INVALID" if fails bounds.
-    function buildE164FromUI() {
-      const cc = $("#ccSelect")?.value || "1";
-      const national = digitsOnly($("#phone")?.value || "");
-      if (!national) return ""; // optional
+    const digitsOnly = s => (s || "").replace(/\D/g, "");
+    function buildE164() {
+      const cc = ccSelect.value || "1";
+      const national = digitsOnly(phoneEl.value || "");
+      if (!national) return "";
       const total = `${cc}${national}`;
-      if (total.length < 7 || total.length > 15) return "INVALID"; // E.164 width (w/o +)
+      if (total.length < 7 || total.length > 15) return "INVALID";
       return `+${total}`;
     }
-
-    function buildRecaptcha() {
-      if (window._linkRecaptchaVerifier) {
-        try { window._linkRecaptchaVerifier.clear(); } catch {}
-        window._linkRecaptchaVerifier = null;
-      }
-      window._linkRecaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", { size: "invisible" });
-      return window._linkRecaptchaVerifier;
+    async function reauthWithPassword(user, pass) {
+      const cred = EmailAuthProvider.credential(user.email, pass);
+      return reauthenticateWithCredential(user, cred);
     }
-
-    async function saveContactDoc(uid, email, phoneE164) {
-      const payload = { email, createdAt: new Date().toISOString() };
-      if (phoneE164) payload.phone = phoneE164;
+    function mountRecaptcha() {
+      if (window._phoneRecaptcha) { try { window._phoneRecaptcha.clear(); } catch {} }
+      window._phoneRecaptcha = new RecaptchaVerifier(auth, "recaptcha-phone", { size: "invisible" });
+      return window._phoneRecaptcha;
+    }
+    async function saveContact(uid, payload) {
       await setDoc(doc(db, `users/${uid}/profile`, "contact"), payload, { merge: true });
     }
 
-    async function maybeLinkPhone(user, phoneE164) {
-      if (!phoneE164) return true; // no phone provided
-      if (phoneE164 === "INVALID") {
-        alert("That phone number doesn’t look right. Try changing the country or number.");
-        return false;
-      }
-      try {
-        const appVerifier = buildRecaptcha();
-        const confirmation = await linkWithPhoneNumber(user, phoneE164, appVerifier);
-        const code = window.prompt(`Enter the 6-digit code we texted to ${phoneE164}`);
-        if (!code) throw new Error("Verification canceled.");
-        await confirmation.confirm(code);
-        return true;
-      } catch (err) {
-        const c = err.code || "";
-        let msg = "We couldn’t verify that phone number. You can finish signup without it and add a phone later.";
-        if (c.includes("invalid-phone-number")) msg = "That phone number seems invalid for the selected country.";
-        else if (c.includes("credential-already-in-use")) msg = "That phone number is already linked to another account.";
-        else if (c.includes("too-many-requests")) msg = "Too many attempts—please wait a bit and try again.";
-        else if (c.includes("captcha-check-failed")) msg = "reCAPTCHA failed—please try again.";
-        alert(msg);
-        return false;
-      }
-    }
-
-    // Live password match feedback
-    const passwordInput = document.getElementById("password");
-    const confirmInput  = document.getElementById("confirm");
-    const matchMessage  = document.createElement("small");
-    matchMessage.style.display = "block";
-    matchMessage.style.marginTop = "-0.25rem";
-    matchMessage.style.marginBottom = "0.5rem";
-    matchMessage.style.fontWeight = "600";
-    confirmInput.insertAdjacentElement("afterend", matchMessage);
-
-    function checkPasswordsMatch() {
-      const pass = passwordInput.value;
-      const conf = confirmInput.value;
-      if (!pass && !conf) {
-        matchMessage.textContent = "";
-        confirmInput.style.borderColor = "";
-        passwordInput.style.borderColor = "";
-        return;
-      }
-      if (pass === conf) {
-        matchMessage.textContent = "✅ Passwords match";
-        matchMessage.style.color = "#28a745";
-        confirmInput.style.borderColor = "#28a745";
-        passwordInput.style.borderColor = "#28a745";
-      } else {
-        matchMessage.textContent = "❌ Passwords do not match";
-        matchMessage.style.color = "#dc3545";
-        confirmInput.style.borderColor = "#dc3545";
-        passwordInput.style.borderColor = "#dc3545";
-      }
-    }
-    passwordInput.addEventListener("input", checkPasswordsMatch);
-    confirmInput.addEventListener("input", checkPasswordsMatch);
-
-    async function handleSubmit() {
-      const email = $("#email").value.trim();
-      const password = $("#password").value;
-      const confirm  = $("#confirm").value;
-
-      if (!email || !password) return alert("Please enter an email and password.");
-      if (password !== confirm) return alert("Passwords do not match.");
-
-      const phoneE164 = buildE164FromUI();
-      if (phoneE164 === "INVALID") return alert("Please check your phone number and country code.");
-
-      createBtn.disabled = true;
-      createBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating…';
+    // Auth guard + dark mode + current values
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { window.location.href = "index.html"; return; }
 
       try {
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        // prefs for dark
+        const ps = await getDoc(doc(db, `users/${user.uid}/preferences/default`));
+        const prefs = ps.exists() ? ps.data() : {};
+        if (prefs.dark_mode === true) {
+          document.body.classList.add("dark");
+          try { localStorage.setItem('ec_dark','true'); } catch {}
+        } else {
+          document.body.classList.remove("dark");
+          try { localStorage.setItem('ec_dark','false'); } catch {}
+        }
 
-        // Friendly default displayName
-        try {
-          const local = email.split("@")[0];
-          await updateProfile(cred.user, { displayName: local });
-        } catch {}
+        // snapshot
+        curEmailEl.textContent = user.email || "—";
+        curPhoneEl.textContent = user.phoneNumber || "Not set";
 
-        // Link phone (if provided)
-        const linked = await maybeLinkPhone(cred.user, phoneE164);
-
-        // Store contact doc
-        await saveContactDoc(cred.user.uid, email, linked ? phoneE164 : "");
-
-        // Success banner and redirect
-        document.getElementById("successBanner").style.display = "block";
-        setTimeout(() => { window.location.href = "index.html"; }, 4000);
-      } catch (err) {
-        const c = err.code || "";
-        let msg = "Registration failed: " + err.message;
-        if (c.includes("email-already-in-use")) msg = "That email is already in use. Try logging in.";
-        else if (c.includes("weak-password")) msg = "Please choose a stronger password.";
-        else if (c.includes("invalid-email")) msg = "That email doesn’t look valid.";
-        alert(msg);
+        // also show any stored phone/email in contact doc
+        const contact = await getDoc(doc(db, `users/${user.uid}/profile/contact`));
+        if (contact.exists()) {
+          const c = contact.data();
+          if (!user.phoneNumber && c.phone) curPhoneEl.textContent = c.phone;
+          if (!user.email && c.email) curEmailEl.textContent = c.email;
+        }
       } finally {
-        createBtn.disabled = false;
-        createBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create my account';
+        document.body.style.display = "block";
+        document.getElementById("mainContent").style.display = "block";
       }
-    }
+    });
 
-    document.getElementById("createBtn").addEventListener("click", handleSubmit);
-    document.addEventListener("keydown", e => { if (e.key === "Enter") handleSubmit(); });
+    // Email update
+    saveEmail.addEventListener("click", async () => {
+      const user = auth.currentUser; if (!user) return;
+      const email = (newEmail.value || "").trim();
+      const pass  = emailPass.value;
+      if (!email || !pass) { alert("Enter new email and your current password."); return; }
+      try {
+        await reauthWithPassword(user, pass);
+        await updateEmail(user, email);
+        await saveContact(user.uid, { email });
+        curEmailEl.textContent = email;
+        newEmail.value = ""; emailPass.value = "";
+        alert("✅ Email updated.");
+      } catch (e) {
+        alert("❌ Could not update email: " + e.message);
+      }
+    });
+
+    // Password update
+    savePass.addEventListener("click", async () => {
+      const user = auth.currentUser; if (!user) return;
+      const a = curPass.value, b = newPass.value, c = newPass2.value;
+      if (!a || !b || !c) { alert("Fill all password fields."); return; }
+      if (b !== c)       { alert("New passwords do not match."); return; }
+      if (b.length < 6)  { alert("New password must be at least 6 characters."); return; }
+      try {
+        await reauthWithPassword(user, a);
+        await updatePassword(user, b);
+        curPass.value = newPass.value = newPass2.value = "";
+        alert("✅ Password updated.");
+      } catch (e) {
+        alert("❌ Could not update password: " + e.message);
+      }
+    });
+
+    // Phone link / update
+    linkPhoneBtn.addEventListener("click", async () => {
+      const user = auth.currentUser; if (!user) return;
+      const e164 = buildE164();
+      if (!e164) { alert("Enter your phone number."); return; }
+      if (e164 === "INVALID") { alert("That phone number doesn’t look right."); return; }
+
+      try {
+        const appVerifier = mountRecaptcha();
+
+        // If user already has a phone, update it; otherwise link it.
+        if (user.phoneNumber) {
+          // Use verifyPhoneNumber → PhoneAuthProvider.credential → updatePhoneNumber
+          const provider = new PhoneAuthProvider(auth);
+          const verificationId = await provider.verifyPhoneNumber(e164, appVerifier);
+          const code = window.prompt(`Enter the 6-digit code sent to ${e164}`);
+          if (!code) throw new Error("Verification canceled.");
+          const cred = PhoneAuthProvider.credential(verificationId, code);
+          await updatePhoneNumber(user, cred);
+        } else {
+          const confirmation = await linkWithPhoneNumber(user, e164, appVerifier);
+          const code = window.prompt(`Enter the 6-digit code sent to ${e164}`);
+          if (!code) throw new Error("Verification canceled.");
+          await confirmation.confirm(code);
+        }
+
+        await saveContact(user.uid, { phone: e164 });
+        curPhoneEl.textContent = e164;
+        phoneEl.value = "";
+        alert("✅ Phone number verified and saved.");
+      } catch (e) {
+        const c = e.code || "";
+        let msg = "Could not verify that phone number.";
+        if (c.includes("credential-already-in-use")) msg = "That phone number is already linked to another account.";
+        else if (c.includes("too-many-requests"))    msg = "Too many attempts—please try again later.";
+        else if (c.includes("captcha-check-failed")) msg = "reCAPTCHA failed—please try again.";
+        alert("❌ " + msg + (e.message ? `\n\n(${e.message})` : ""));
+      }
+    });
   </script>
 </body>
 </html>

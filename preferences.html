@@ -3,202 +3,252 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Preferences</title>
+
+  <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <title>Preferences</title>
+
+  <!-- 🌓 Instant theme hint (prevents flash on dark users) -->
+  <script>
+  (function () {
+    try {
+      const cached = localStorage.getItem('ec_dark');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (cached === 'true' || (cached === null && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    } catch {}
+  })();
+  </script>
+
   <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-      color: white;
-      background: linear-gradient(180deg, #c2e9fb 0%, #a1c4fd 50%, #fbc2eb 100%);
-      background-attachment: fixed;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3)
+    /* ===== Base page background + mural ===== */
+    body{
+      margin:0;
+      font-family:'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      color:white;
+      background: linear-gradient(180deg,#c2e9fb 0%,#a1c4fd 50%,#fbc2eb 100%);
+      min-height:100vh;
+      text-shadow:1px 1px 3px rgba(0,0,0,.3);
+      overflow-x:hidden;
+      padding:2rem 1rem 3rem;
     }
-    .main-container { width: 90%; max-width: 600px; margin: 0 auto; padding: 1rem; }
-    .preference-card {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: bold;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      background:url('Mural.PNG') no-repeat center top;
+      background-size:contain;
+      opacity:.2; pointer-events:none; z-index:0;
     }
-    .preference-card input[type="checkbox"] { transform: scale(1.2); accent-color: #dc81ff; }
-    .section-header { margin-top: 2rem; margin-bottom: 0.5rem; font-size: 1.1rem; font-weight: 600; }
-    button {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 8px;
-      background: white;
-      color: #2f77a7;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 1.5rem;
+    body > *{ position:relative; z-index:1; }
+
+    /* Layout */
+    .main-container{ width:90%; max-width:600px; margin:0 auto; }
+
+    /* Sticky header (site-wide look) */
+    #header{
+      position:sticky; top:0; z-index:10;
+      background:rgba(255,255,255,.15);
+      backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+      border-radius:12px; border-bottom:1px solid rgba(255,255,255,.3);
+      padding:1rem; display:flex; align-items:center; justify-content:space-between;
     }
-    body.dark { background: #121212; }
-    body.dark .preference-card { background: rgba(255, 255, 255, 0.08); }
-    .sticky-header {
-      position: sticky;
-      top: 0;
-      background-color: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      padding: 1rem;
-      z-index: 10;
+    #title{ margin:0; font-size:1.5rem; font-weight:700; text-align:center; flex:1; }
+
+    /* Buttons (white with blue text) */
+    .btn{
+      background:#fff; color:#2f77a7;
+      border:0; border-radius:8px; font-weight:700; cursor:pointer;
+      padding:.6rem 1rem; display:inline-flex; align-items:center; gap:.5rem;
+      box-shadow:0 4px 10px rgba(0,0,0,.15); text-decoration:none;
+    }
+
+    /* Cards */
+    .preference-card{
+      background:rgba(255,255,255,.15);
+      backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+      border-radius:12px; padding:1rem; margin:.75rem 0 1rem;
+      display:flex; align-items:center; justify-content:space-between;
+      font-weight:600; box-shadow:0 2px 8px rgba(0,0,0,.1);
+    }
+    .preference-card input[type="checkbox"]{ transform:scale(1.2); accent-color:#dc81ff; }
+    .section-header{ margin:1.5rem 0 .5rem; font-size:1.1rem; font-weight:700; }
+
+    /* Utility */
+    .muted{ opacity:.95; }
+
+    /* Dark mode (with mural as mask) */
+    body.dark{ background:#121212; color:white; }
+    body.dark .preference-card{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); }
+    html.dark body::before, body.dark::before{
+      -webkit-mask-image:url('Mural.PNG'); mask-image:url('Mural.PNG');
+      -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+      -webkit-mask-position:center top; mask-position:center top;
+      -webkit-mask-size:contain; mask-size:contain;
+      background-color:rgba(255,255,255,.3); opacity:1; background-image:none;
     }
   </style>
 </head>
-<body style="display: none;">
-  <div class="main-container" id="mainContent" style="display: none;">
+
+<body style="display:none;">
+  <div class="main-container" id="mainContent" style="display:none;">
+    <!-- Header -->
+    <div id="header">
+      <button class="btn" onclick="goHome()"><i class="fas fa-house"></i> Home</button>
+      <h2 id="title">Preferences</h2>
+      <span style="width:92px;"></span>
+    </div>
+
     <div id="preferencesPage"></div>
   </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
-  authDomain: "the-enchanted-checklist.firebaseapp.com",
-  projectId: "the-enchanted-checklist",
-  storageBucket: "the-enchanted-checklist.appspot.com",
-  messagingSenderId: "971177969419",
-  appId: "1:971177969419:web:3a48e119cb866f6551840e"
-};
+    // 🔥 Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLDycGnK6Nm8m5KqbhhPSKz7GNb3PjZCo",
+      authDomain: "the-enchanted-checklist.firebaseapp.com",
+      projectId: "the-enchanted-checklist",
+      storageBucket: "the-enchanted-checklist.appspot.com",
+      messagingSenderId: "971177969419",
+      appId: "1:971177969419:web:3a48e119cb866f6551840e"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+    let prefs = {};
 
-let prefs = {};
+    // 🔐 Auth guard + reveal after theme/prefs
+    onAuthStateChanged(auth, async user => {
+      if (!user) { window.location.href = "index.html"; return; }
 
-onAuthStateChanged(auth, async user => {
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
+      const docRef = doc(db, "users", user.uid, "preferences", "default");
+      const snap = await getDoc(docRef);
+      prefs = snap.exists() ? snap.data() : {};
 
-  document.body.style.display = "block";
-  document.getElementById("mainContent").style.display = "block";
+      // Apply dark and cache to avoid flash next time
+      const isDark = prefs.dark_mode === true;
+      document.body.classList.toggle("dark", isDark);
+      try { localStorage.setItem('ec_dark', String(isDark)); } catch {}
 
-  const docRef = doc(db, "users", user.uid, "preferences", "default");
-  const snap = await getDoc(docRef);
-  prefs = snap.exists() ? snap.data() : {};
-  renderPreferences();
+      document.body.style.display = "block";
+      document.getElementById("mainContent").style.display = "block";
 
-  if (prefs.dark_mode) {
-    document.body.classList.add("dark");
-  }
-});
+      renderPreferences();
+    });
 
-window.renderPreferences = function renderPreferences() {
-  const container = document.getElementById("preferencesPage");
+    // 🧩 UI render
+    window.renderPreferences = function renderPreferences(){
+      const container = document.getElementById("preferencesPage");
 
-container.innerHTML = `
-  <div class="sticky-header">
-    <button onclick="goHome()"><i class="fas fa-house" style="margin-right:0.5rem;"></i>Home</button>
-    <h2 style="margin:0.5rem 0;">Preferences</h2>
-  </div>
+      container.innerHTML = `
+        <div class="section-header">Checklist Customization</div>
+        <div class="preference-card" onclick="openCustomizeChecklist()">
+          <span><i class="fas fa-folder-open" style="margin-right:.5rem;"></i>Customize My Checklist</span>
+          <i class="fas fa-chevron-right"></i>
+        </div>
 
-  <div class="section-header">Checklist Customization</div>
-  <div class="preference-card" onclick="openCustomizeChecklist()">
-    <i class="fas fa-folder-open" style="margin-right: 0.5rem;"></i>
-    Customize My Checklist
-  </div>
+        <div class="section-header">App Settings</div>
+        <div class="preference-card" style="justify-content:flex-start;">
+          <input type="checkbox" id="darkModeToggle" ${prefs.dark_mode ? "checked" : ""} style="margin-right:.75rem;" />
+          <div style="flex:1; text-align:right;">Dark Mode</div>
+        </div>
 
-  <div class="section-header">App Settings</div>
- <div class="preference-card" style="justify-content: flex-start;">
-  <input type="checkbox" id="darkModeToggle" ${prefs.dark_mode ? "checked" : ""} style="margin-right: 0.75rem;" />
-  <div style="flex-grow: 1; text-align: right;">Dark Mode</div>
-</div>
+        <div class="preference-card" onclick="window.location.href='account.html'">
+          <span><i class="fas fa-user-cog" style="margin-right:.5rem;"></i>Account Management</span>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      `;
 
-  <div class="preference-card" onclick="window.location.href='account.html'">
-    <i class="fas fa-user-cog" style="margin-right: 0.5rem;"></i>
-    Account Management
-  </div>
-`;
-
-  document.getElementById("darkModeToggle").onchange = async e => {
-    prefs.dark_mode = e.target.checked;
-    document.body.classList.toggle("dark", prefs.dark_mode);
-    const uid = auth.currentUser.uid;
-    await setDoc(doc(db, "users", uid, "preferences", "default"), prefs, { merge: true });
-  };
-};
-
-window.openCustomizeChecklist = async function () {
-  const container = document.getElementById("preferencesPage");
-
-  const wdwParks = [
-    "Magic Kingdom", "EPCOT", "Animal Kingdom", "Hollywood Studios",
-    "Park Hopper Plus", "Disney Springs", "Walt Disney World Resorts"
-  ];
-  const dlrParks = [
-    "Disneyland Park", "Disney California Adventure", "Downtown Disney District",
-    "Disneyland Resorts", "Seasonal Events and Festivals", "Bonus"
-  ];
-
-  const allParks = [...wdwParks, ...dlrParks, "Disney Cruise Line"];
-
-  let html = `
-    <div class="sticky-header">
-      <button onclick="renderPreferences()">← Back</button>
-      <h2>Customize My Checklist</h2>
-    </div>
-    <div class="section-header">Walt Disney World</div>
-  `;
-
-  wdwParks.forEach(park => {
-    const key = `include_${park}`;
-    html += `
-      <div class="preference-card">
-        <span>${park}</span>
-        <input type="checkbox" id="${key}" ${prefs[key] !== false ? "checked" : ""}>
-      </div>
-    `;
-  });
-
-  html += `<div class="section-header">Disneyland</div>`;
-  dlrParks.forEach(park => {
-    const key = `include_${park}`;
-    html += `
-      <div class="preference-card">
-        <span>${park}</span>
-        <input type="checkbox" id="${key}" ${prefs[key] !== false ? "checked" : ""}>
-      </div>
-    `;
-  });
-
-  html += `<div class="section-header">Disney Cruise Line</div>
-    <div class="preference-card">
-      <span>Disney Cruise Line</span>
-      <input type="checkbox" id="include_Disney Cruise Line" ${prefs["include_Disney Cruise Line"] !== false ? "checked" : ""}>
-    </div>
-  `;
-
-  container.innerHTML = html;
-
-  allParks.forEach(park => {
-    const key = `include_${park}`;
-    const box = document.getElementById(key);
-    if (box) {
-      box.onchange = async () => {
-        prefs[key] = box.checked;
-        await setDoc(doc(db, "users", auth.currentUser.uid, "preferences", "default"), prefs, { merge: true });
+      // Dark mode toggle
+      const box = document.getElementById("darkModeToggle");
+      box.onchange = async (e) => {
+        prefs.dark_mode = e.target.checked;
+        document.body.classList.toggle("dark", prefs.dark_mode);
+        try { localStorage.setItem('ec_dark', String(prefs.dark_mode)); } catch {}
+        const uid = auth.currentUser.uid;
+        await setDoc(doc(db, "users", uid, "preferences", "default"), prefs, { merge: true });
       };
-    }
-  });
-};
+    };
 
-		window.goHome = function () {
-  window.location.href = "home.html";
-};
+    // 🧭 Customize Checklist subpage
+    window.openCustomizeChecklist = async function(){
+      const container = document.getElementById("preferencesPage");
 
-</script>
+      const wdwParks = [
+        "Magic Kingdom","EPCOT","Animal Kingdom","Hollywood Studios",
+        "Park Hopper Plus","Disney Springs","Walt Disney World Resorts"
+      ];
+      const dlrParks = [
+        "Disneyland Park","Disney California Adventure","Downtown Disney District",
+        "Disneyland Resorts","Seasonal Events and Festivals","Bonus"
+      ];
+      const allParks = [...wdwParks, ...dlrParks, "Disney Cruise Line"];
+
+      let html = `
+        <div class="preference-card" style="justify-content:space-between;">
+          <button class="btn" onclick="renderPreferences()"><i class="fas fa-arrow-left"></i> Back</button>
+          <div style="font-weight:700;">Customize My Checklist</div>
+          <span style="width:92px;"></span>
+        </div>
+
+        <div class="section-header">Walt Disney World</div>
+      `;
+
+      wdwParks.forEach(park => {
+        const key = `include_\${park}`;
+        html += `
+          <div class="preference-card">
+            <span>${park}</span>
+            <input type="checkbox" id="${key}" ${prefs[key] !== false ? "checked" : ""}>
+          </div>
+        `;
+      });
+
+      html += `<div class="section-header">Disneyland</div>`;
+      dlrParks.forEach(park => {
+        const key = `include_\${park}`;
+        html += `
+          <div class="preference-card">
+            <span>${park}</span>
+            <input type="checkbox" id="${key}" ${prefs[key] !== false ? "checked" : ""}>
+          </div>
+        `;
+      });
+
+      html += `
+        <div class="section-header">Disney Cruise Line</div>
+        <div class="preference-card">
+          <span>Disney Cruise Line</span>
+          <input type="checkbox" id="include_Disney Cruise Line" ${prefs["include_Disney Cruise Line"] !== false ? "checked" : ""}>
+        </div>
+      `;
+
+      container.innerHTML = html;
+
+      // Wire up all toggles
+      allParks.forEach(park => {
+        const key = `include_\${park}`;
+        const box = document.getElementById(key);
+        if (box) {
+          box.onchange = async () => {
+            prefs[key] = box.checked;
+            await setDoc(
+              doc(db, "users", auth.currentUser.uid, "preferences", "default"),
+              prefs, { merge: true }
+            );
+          };
+        }
+      });
+    };
+
+    // Home button
+    window.goHome = function(){ window.location.href = "home.html"; };
+  </script>
 </body>
 </html>
